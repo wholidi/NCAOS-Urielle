@@ -1,0 +1,109 @@
+[
+  {
+    "event_id": 1,
+    "event_type": "policy_violation",
+    "timestamp": "2026-04-02T10:15:00Z",
+    "action_taken": "blocked",
+    "affected_layer": "boundary",
+    "severity": "HIGH",
+    "control_category": "Governance & Accountability",
+    "nist_rmf": [
+      "Govern 1.2",
+      "Manage 4.1",
+      "Measure 2.7"
+    ],
+    "japan_gfb": [
+      "Part 2.C.7",
+      "Part 2.D.V",
+      "Appendix 3.B.7"
+    ],
+    "audit_finding": "Boundary enforcement triggered policy violation signal. Requires governance review against defined behavioral constraints.",
+    "recommended_actions": [
+      "Log event to immutable audit trail",
+      "Trigger policy review cycle",
+      "Escalate to AI governance committee"
+    ],
+    "gap_flag": null
+  },
+  {
+    "event_id": 2,
+    "event_type": "unauthorized_access",
+    "timestamp": "2026-04-02T10:20:00Z",
+    "action_taken": "denied",
+    "affected_layer": "boundary",
+    "severity": "CRITICAL",
+    "control_category": "Secure & Resilient",
+    "nist_rmf": [
+      "Govern 4.1",
+      "Manage 4.1",
+      "Measure 2.7"
+    ],
+    "japan_gfb": [
+      "Part 2.C.8",
+      "Appendix 3.A.D-5.i",
+      "Appendix 4.A.P-5.ii"
+    ],
+    "audit_finding": "Access denial at boundary layer. Maps to security resilience controls. No internal context available — audit relies solely on boundary signal.",
+    "recommended_actions": [
+      "Record denial event with timestamp chain",
+      "Cross-reference against access policy baseline",
+      "Flag for adversarial pattern analysis"
+    ],
+    "gap_flag": "Missing: source identity, session ID, asset context"
+  },
+  {
+    "event_id": 3,
+    "event_type": "state_anomaly",
+    "timestamp": "2026-04-02T10:25:00Z",
+    "action_taken": "restricted",
+    "affected_layer": "boundary",
+    "severity": "MEDIUM",
+    "control_category": "Risky Emergent Behavior / Drift",
+    "nist_rmf": [
+      "Manage 4.2",
+      "Measure 2.4",
+      "Govern 4.3"
+    ],
+    "japan_gfb": [
+      "Part 2.C.5",
+      "Appendix 3.A.D-6.i",
+      "Appendix 3.A.D-7.i"
+    ],
+    "audit_finding": "State anomaly detected at boundary. Consistent with drift or emergent behavior risk categories. No internal state observable — classification is inferred.",
+    "recommended_actions": [
+      "Tag event for drift tracking baseline",
+      "Initiate continuous monitoring review",
+      "Document inferred classification rationale"
+    ],
+    "gap_flag": "Missing: anomaly magnitude, prior state reference"
+  },
+  {
+    "event_id": 4,
+    "event_type": "integrity_breach",
+    "timestamp": "2026-04-02T10:30:00Z",
+    "action_taken": "shutdown",
+    "affected_layer": "boundary",
+    "severity": "CRITICAL",
+    "control_category": "AI Incidents / Safety",
+    "nist_rmf": [
+      "Govern 4.3",
+      "Manage 4.1",
+      "Measure 2.7",
+      "Map 4.1"
+    ],
+    "japan_gfb": [
+      "Part 2.C.2",
+      "Appendix 2.A.3-3",
+      "Appendix 3.A.D-2.ii",
+      "Appendix 4.A.P-6.ii"
+    ],
+    "audit_finding": "Shutdown action confirms integrity breach severity. Highest-impact boundary event. Triggers full incident response chain.",
+    "recommended_actions": [
+      "Open formal AI incident record",
+      "Preserve full event chain for post-incident review",
+      "Notify designated AI governance authority",
+      "Initiate decommission protocol review"
+    ],
+    "gap_flag": null
+  }
+]
