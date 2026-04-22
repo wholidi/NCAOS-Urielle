@@ -1,0 +1,47 @@
+1. Policy Violation
+ Execution attempted outside permitted boundaries.
+
+2. Unauthorized Access Attempt
+ External connection or API call not on whitelist.
+
+3. State Anomaly
+ Internal behavior diverged from verified baseline.
+
+4. Integrity Breach
+ Hash inconsistency detected — possible tampering.
+
+Each event includes: timestamp, event type,
+action taken, and affected layer.
+
+Severity classification and logging consistency
+would be defined at the enterprise level —
+depending on what needs to be governed and how.
+
+
+{
+ "event_type": "policy_violation",
+ "timestamp": "2026-04-02T10:15:00Z",
+ "action_taken": "blocked",
+ "affected_layer": "boundary"
+}
+
+{
+ "event_type": "unauthorized_access",
+ "timestamp": "2026-04-02T10:20:00Z",
+ "action_taken": "denied",
+ "affected_layer": "boundary"
+}
+
+{
+ "event_type": "state_anomaly",
+ "timestamp": "2026-04-02T10:25:00Z",
+ "action_taken": "restricted",
+ "affected_layer": "boundary"
+}
+
+{
+ "event_type": "integrity_breach",
+ "timestamp": "2026-04-02T10:30:00Z",
+ "action_taken": "shutdown",
+ "affected_layer": "boundary"
+}
