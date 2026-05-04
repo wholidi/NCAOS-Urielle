@@ -80,5 +80,5 @@ Add one dashboard screenshot here, for example:
 
 ## Author
 
-William Holidi Hartono  
-Urielle AI
+Toru Takahashi  / William Holidi Hartono  
+NCAOS / Urielle AI
