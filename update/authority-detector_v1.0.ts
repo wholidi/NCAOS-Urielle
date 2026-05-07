@@ -171,6 +171,7 @@ export class AuthorityDetector {
     // Step 8: Build audit entry
     const auditEntry: AuthorityAuditEntry = {
       requestId: input.requestId,
+      workflowId: input.workflowId,
       requestedAuthority: input.requestedAuthority,
       grantedAuthority: effectiveAuthority,
       overrideAttempted: actualOverride,
@@ -179,9 +180,6 @@ export class AuthorityDetector {
       timestamp: new Date().toISOString(),
     };
 
-    if (input.workflowId !== undefined && input.workflowId !== '') {
-      auditEntry.workflowId = input.workflowId;
-    }   
     this.auditLog.append(auditEntry);
 
     const mttdMs = stop();

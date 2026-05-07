@@ -12,12 +12,10 @@ export default defineConfig({
       resolveId(id, importer) {
         if (importer && id.endsWith('.js')) {
           const tsPath = id.slice(0, -3) + '.ts';
-          const dir = importer.includes('shell/src')
+          const dir = importer.includes('shell/src') || importer.includes('api/src')
             ? importer.substring(0, importer.lastIndexOf('/'))
             : null;
-          if (dir) {
-            return resolve(dir, tsPath);
-          }
+          if (dir) return resolve(dir, tsPath);
         }
         return null;
       },
@@ -27,6 +25,8 @@ export default defineConfig({
     alias: {
       '@ncaos/core': resolve(__dirname, '../core/src/index.ts'),
       '@ncaos/shell': resolve(__dirname, '../shell/src/index.ts'),
+      '@ncaos/detection': resolve(__dirname, '../detection/src/index.ts'),
     },
+    extensions: ['.ts', '.js'],
   },
 });

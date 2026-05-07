@@ -52,7 +52,6 @@ export interface LayerResult {
 export interface JudgmentResult {
   requestId: string;
   evidenceHandle: string;
-  workflowId?: string;
 
   // Aggregate verdict inputs
   triggered: boolean;               // Any layer triggered
@@ -206,28 +205,21 @@ export class Judge {
       }
     }
 
-    const result: JudgmentResult = {
-  requestId: req.requestId,
-  evidenceHandle: req.evidenceHandle,
-  triggered: anyTriggered,
-  dominantLayer,
-  severity: aggSeverity,
-  scope: aggScope,
-  type: aggType,
-  layers,
-  integrity,
-  authority,
-  routing,
-  totalMttdMs,
-  judgedAt: nowIso(),
-};
-
-if (req.workflowId !== undefined && req.workflowId !== '') {
-  result.workflowId = req.workflowId;
-}
-
-return result;
-    
+    return {
+      requestId: req.requestId,
+      evidenceHandle: req.evidenceHandle,
+      triggered: anyTriggered,
+      dominantLayer,
+      severity: aggSeverity,
+      scope: aggScope,
+      type: aggType,
+      layers,
+      integrity,
+      authority,
+      routing,
+      totalMttdMs,
+      judgedAt: nowIso(),
+    };
   }
 }
 

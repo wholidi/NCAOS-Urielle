@@ -234,24 +234,10 @@ export async function buildServer(): Promise<FastifyInstance> {
       return reply.status(400).send({ error: 'INVALID_QUERY', issues: qParsed.error.issues });
     }
 
-//  const query: EventQuery = { ...qParsed.data, partnerId };
+    const query: EventQuery = { ...qParsed.data, partnerId };
+    const page = eventStore.query(query);
 
-//  const page = eventStore.query(query);
-    const query: EventQuery = {
-      partnerId,
-      limit: qParsed.data.limit,
-};
-
-if (qParsed.data.layer !== undefined) query.layer = qParsed.data.layer;
-if (qParsed.data.severity !== undefined) query.severity = qParsed.data.severity;
-if (qParsed.data.action !== undefined) query.action = qParsed.data.action;
-if (qParsed.data.fromDate !== undefined) query.fromDate = qParsed.data.fromDate;
-if (qParsed.data.toDate !== undefined) query.toDate = qParsed.data.toDate;
-if (qParsed.data.cursor !== undefined) query.cursor = qParsed.data.cursor;
-
-const page = eventStore.query(query);
-    
-      return reply.status(200).send({
+    return reply.status(200).send({
       records: page.records,
       pagination: {
         total: page.total,

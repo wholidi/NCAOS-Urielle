@@ -15,6 +15,7 @@
   "dependencies": {
     "@ncaos/core": "*",
     "zod": "^3.23.0"
+
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

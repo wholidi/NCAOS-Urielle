@@ -116,7 +116,6 @@ export class Enforcer extends EventEmitter {
     return {
       requestId: j.requestId as `REQ-${string}`,
       evidenceHandle: j.evidenceHandle as `EVD-${string}`,
-      workflowId: j.workflowId,
       tenant: this.tenant,
       type: j.type,
       layer: dominantLayer,

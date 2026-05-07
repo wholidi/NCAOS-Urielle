@@ -13,10 +13,12 @@
   "dependencies": {
     "@ncaos/core": "*",
     "@ncaos/shell": "*",
+    "@ncaos/detection": "*",
     "fastify": "^4.27.0",
     "@fastify/websocket": "^8.3.1",
     "@fastify/cors": "^9.0.1",
     "zod": "^3.23.0"
+
   },
   "devDependencies": {
     "@types/node": "^20.12.0",

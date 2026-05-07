@@ -117,7 +117,7 @@ function computeContinuityScore(tests: EquivalenceTest[]): number {
 
 export class ContinuityDetector {
   private lastScore: number | null = null;
-  private readonly _scoreHistory: number[] = [];
+  private readonly scoreHistory: number[] = [];
   private readonly HISTORY_LIMIT = 20;
 
   /**
@@ -247,9 +247,9 @@ export class ContinuityDetector {
 
   private _recordScore(score: number): void {
     this.lastScore = score;
-    this._scoreHistory.push(score);
-    if (this._scoreHistory.length > this.HISTORY_LIMIT) {
-      this._scoreHistory.shift();
+    this.scoreHistory.push(score);
+    if (this.scoreHistory.length > this.HISTORY_LIMIT) {
+      this.scoreHistory.shift();
     }
   }
 
