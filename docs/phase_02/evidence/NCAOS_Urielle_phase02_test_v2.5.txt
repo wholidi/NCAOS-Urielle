@@ -1,0 +1,70 @@
+PS C:\Users\conve\downloads\NCAOS-Urielle\egs\api> npm test
+
+> @ncaos/api@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/api
+
+ · tests/api.test.ts (8)
+   · GET /v1/health (1)
+     · returns 200 when shell is running
+   · POST /v1/process (4)
+     · returns 401 without X-Partner-ID
+{"level":30,"time":1777477492530,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":5.796199977397919,"msg":"request completed"}
+{"level":30,"time":1777477492533,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477492537,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":3.765500009059906,"msg":"request completed"}
+{"level":30,"time":1777477492537,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+stdout | ShellLoop.start (C:\Users\conve\Downloads\NCAOS-Urielle\egs\shell\src\shell-loop.ts:86:13)
+[ShellLoop] Started — policy: STRICT-PROD
+
+stdout | Watchdog._spawnShell (C:\Users\conve\Downloads\NCAOS-Urielle\egs\shell\src\watchdog\watchdog.ts:106:15)
+[Watchdog] Shell started
+
+stdout | main (C:\Users\conve\Downloads\NCAOS-Urielle\egs\api\src\server.ts:271:11)
+[API] EGS API running on http://0.0.0.0:3000
+
+stdout | tests/api.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+ · tests/api.test.ts (8)
+   · GET /v1/health (1)
+     · returns 200 when shell is running
+   · POST /v1/process (4)
+     · returns 401 without X-Partner-ID
+     · returns 400 for invalid payload
+     · returns 200 with verdict for clean request
+     · returns evidenceHandle when containment triggered
+   · GET /v1/state (1)
+     · returns current GovState after processing
+   · GET /v1/audit/:handle (2)
+     · returns 404 for unknown evidence handle
+     · returns event for known evidence handle
+{"level":30,"time":1777477492547,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":400},"responseTime":9.065999984741211,"msg":"request completed"}
+{"level":30,"time":1777477492547,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477492551,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":3.494200050830841,"msg":"request completed"}
+{"level":30,"time":1777477492554,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477492556,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":1.4620000123977661,"msg":"request completed"}
+{"level":30,"time":1777477492557,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477492558,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":0.9296000003814697,"msg":"request completed"}
+{"level":30,"time":1777477492558,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/state","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477492558,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":200},"responseTime":0.3651999831199646,"msg":"request completed"}
+{"level":30,"time":1777477492559,"pid":30324,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0. ✓ tests/api.test.ts (8)
+   ✓ GET /v1/health (1)
+     ✓ returns 200 when shell is running
+   ✓ POST /v1/process (4)
+     ✓ returns 401 without X-Partner-ID
+     ✓ returns 400 for invalid payload
+     ✓ returns 200 with verdict for clean request
+     ✓ returns evidenceHandle when containment triggered
+   ✓ GET /v1/state (1)
+     ✓ returns current GovState after processing
+   ✓ GET /v1/audit/:handle (2)
+     ✓ returns 404 for unknown evidence handle
+     ✓ returns event for known evidence handle
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:44:50
+   Duration  1.75s (transform 297ms, setup 0ms, collect 878ms, tests 68ms, environment 1ms, prepare 319ms)

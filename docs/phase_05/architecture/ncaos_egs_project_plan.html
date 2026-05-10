@@ -1,0 +1,469 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-mono, monospace); }
+  .root { padding: 1.5rem 1rem; color: var(--color-text-primary); }
+
+  /* Header */
+  .header { border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .project-title { font-size: 18px; font-weight: 500; letter-spacing: 0.04em; }
+  .project-sub { font-size: 12px; color: var(--color-text-tertiary); margin-top: 4px; letter-spacing: 0.03em; }
+  .status-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; padding: 4px 10px; border-radius: 20px; background: var(--color-background-success); color: var(--color-text-success); border: 0.5px solid var(--color-border-success); white-space: nowrap; }
+  .dot-pulse { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: dpulse 1.8s ease-in-out infinite; }
+  @keyframes dpulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .tab { font-size: 11px; padding: 5px 12px; border-radius: 6px; border: 0.5px solid var(--color-border-tertiary); background: transparent; color: var(--color-text-secondary); cursor: pointer; letter-spacing: 0.03em; transition: all .15s; }
+  .tab:hover { border-color: var(--color-border-secondary); color: var(--color-text-primary); }
+  .tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-secondary); }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Phases */
+  .phase-grid { display: flex; flex-direction: column; gap: 12px; }
+  .phase-card { background: var(--color-background-secondary); border-radius: 10px; border: 0.5px solid var(--color-border-tertiary); overflow: hidden; }
+  .phase-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; user-select: none; }
+  .phase-num { font-size: 10px; font-weight: 500; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .phase-title { font-size: 13px; font-weight: 500; flex: 1; }
+  .phase-meta { font-size: 11px; color: var(--color-text-tertiary); white-space: nowrap; }
+  .phase-toggle { font-size: 12px; color: var(--color-text-tertiary); transition: transform .2s; }
+  .phase-toggle.open { transform: rotate(90deg); }
+  .phase-body { display: none; border-top: 0.5px solid var(--color-border-tertiary); padding: 12px 14px; }
+  .phase-body.open { display: block; }
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .task-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--color-text-secondary); }
+  .task-bullet { width: 14px; height: 14px; border-radius: 3px; border: 0.5px solid var(--color-border-secondary); flex-shrink: 0; margin-top: 1px; }
+  .task-item.done .task-bullet { background: var(--color-background-success); border-color: var(--color-border-success); }
+  .task-item.done span { color: var(--color-text-tertiary); text-decoration: line-through; }
+  .deliverable { margin-top: 10px; padding: 8px 10px; border-radius: 6px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); font-size: 11px; color: var(--color-text-tertiary); }
+  .deliverable strong { color: var(--color-text-secondary); }
+
+  /* Stack table */
+  .stack-section { margin-bottom: 1.5rem; }
+  .stack-label { font-size: 11px; color: var(--color-text-tertiary); letter-spacing: 0.05em; margin-bottom: 8px; }
+  .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  .stack-item { background: var(--color-background-secondary); border-radius: 8px; border: 0.5px solid var(--color-border-tertiary); padding: 10px 12px; }
+  .stack-name { font-size: 12px; font-weight: 500; }
+  .stack-role { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .stack-tag { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-top: 5px; }
+  .tag-core { background: var(--color-background-info); color: var(--color-text-info); }
+  .tag-opt { background: var(--color-background-secondary); color: var(--color-text-tertiary); border: 0.5px solid var(--color-border-tertiary); }
+  .tag-infra { background: var(--color-background-warning); color: var(--color-text-warning); }
+
+  /* Architecture */
+  .arch-layers { display: flex; flex-direction: column; gap: 6px; }
+  .arch-layer { border-radius: 8px; border: 0.5px solid var(--color-border-tertiary); padding: 10px 14px; position: relative; overflow: hidden; }
+  .arch-layer::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+  .layer-ext::before { background: var(--color-background-danger); }
+  .layer-shell::before { background: var(--color-background-warning); }
+  .layer-logic::before { background: var(--color-background-info); }
+  .layer-core::before { background: var(--color-background-success); }
+  .layer-store::before { background: var(--color-text-tertiary); opacity: .4; }
+  .arch-layer-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+  .arch-layer-desc { font-size: 11px; color: var(--color-text-secondary); }
+  .arch-layer-modules { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .module-chip { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); }
+
+  /* Risks */
+  .risk-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .risk-table th { font-size: 10px; color: var(--color-text-tertiary); letter-spacing: 0.05em; padding: 4px 8px; text-align: left; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .risk-table td { padding: 8px; border-bottom: 0.5px solid var(--color-border-tertiary); vertical-align: top; }
+  .risk-table tr:last-child td { border-bottom: none; }
+  .sev { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 4px; }
+  .sev-h { background: var(--color-background-danger); color: var(--color-text-danger); }
+  .sev-m { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .sev-l { background: var(--color-background-success); color: var(--color-text-success); }
+  .mitigation { color: var(--color-text-tertiary); }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: flex; gap: 12px; position: relative; }
+  .tl-item:not(:last-child)::after { content:''; position:absolute; left:17px; top:32px; bottom:0; width:0.5px; background:var(--color-border-tertiary); }
+  .tl-dot-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .tl-dot { width:12px; height:12px; border-radius:50%; border:0.5px solid var(--color-border-secondary); margin-top:10px; flex-shrink:0; }
+  .tl-dot.done { background: var(--color-background-success); border-color: var(--color-border-success); }
+  .tl-dot.active { background: var(--color-background-info); border-color: var(--color-border-info); }
+  .tl-dot.future { background: var(--color-background-secondary); }
+  .tl-content { padding: 8px 0 20px; flex: 1; }
+  .tl-week { font-size: 10px; color: var(--color-text-tertiary); letter-spacing: 0.05em; }
+  .tl-title { font-size: 13px; font-weight: 500; margin-top: 2px; }
+  .tl-desc { font-size: 11px; color: var(--color-text-secondary); margin-top: 4px; }
+  .tl-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+  .tl-tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-tertiary); }
+
+  /* Connections section */
+  .conn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .conn-grid { grid-template-columns: 1fr; } }
+  .conn-card { background: var(--color-background-secondary); border-radius: 8px; border: 0.5px solid var(--color-border-tertiary); padding: 10px 12px; }
+  .conn-title { font-size: 11px; color: var(--color-text-tertiary); letter-spacing: 0.04em; margin-bottom: 6px; }
+  .conn-item { font-size: 12px; color: var(--color-text-secondary); padding: 3px 0; display: flex; align-items: center; gap: 6px; }
+  .conn-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .dot-green { background: var(--color-text-success); }
+  .dot-amber { background: var(--color-text-warning); }
+  .dot-blue { background: var(--color-text-info); }
+  .dot-gray { background: var(--color-text-tertiary); }
+</style>
+
+<div class="root">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="project-title">NCAOS // EGS Build Plan</div>
+        <div class="project-sub">External Governance Shell · Prototype v0.1 → Production v1.0</div>
+      </div>
+      <div class="status-pill"><span class="dot-pulse"></span>PLANNING PHASE</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('phases')">Build Phases</button>
+    <button class="tab" onclick="switchTab('arch')">Architecture</button>
+    <button class="tab" onclick="switchTab('stack')">Tech Stack</button>
+    <button class="tab" onclick="switchTab('timeline')">Timeline</button>
+    <button class="tab" onclick="switchTab('risks')">Risk Register</button>
+    <button class="tab" onclick="switchTab('connections')">Connections</button>
+  </div>
+
+  <!-- PHASES -->
+  <div class="panel active" id="panel-phases">
+    <div class="phase-grid" id="phaseGrid"></div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="panel" id="panel-arch">
+    <div class="arch-layers" id="archLayers"></div>
+  </div>
+
+  <!-- STACK -->
+  <div class="panel" id="panel-stack">
+    <div id="stackContent"></div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="panel" id="panel-timeline">
+    <div class="timeline" id="tlContent"></div>
+  </div>
+
+  <!-- RISKS -->
+  <div class="panel" id="panel-risks">
+    <table class="risk-table" id="riskTable">
+      <thead><tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr></thead>
+      <tbody id="riskBody"></tbody>
+    </table>
+  </div>
+
+  <!-- CONNECTIONS -->
+  <div class="panel" id="panel-connections">
+    <div class="conn-grid" id="connGrid"></div>
+  </div>
+</div>
+
+<script>
+const PHASES = [
+  {
+    num: '01', color: '#0C447C', bg: '#E6F1FB',
+    title: 'Foundation & Repo Setup',
+    duration: 'Week 1–2',
+    tasks: [
+      'Scaffold monorepo: /core, /shell, /ui, /api, /tests',
+      'Set up TypeScript + ESLint + Prettier baseline',
+      'Define shared type contracts (Event, GovState, Policy, Verdict)',
+      'Wire GitHub Actions CI: lint → type-check → test',
+      'Port PoC HTML logic to modular TS functions',
+      'Write unit tests for severity/authority/routing logic',
+    ],
+    deliverable: 'Typed monorepo with CI pipeline and PoC logic ported to testable modules'
+  },
+  {
+    num: '02', color: '#3B6D11', bg: '#EAF3DE',
+    title: 'Core Shell Engine',
+    duration: 'Week 2–4',
+    tasks: [
+      'Implement Observer module: I/O boundary tap interface',
+      'Implement Judge module: premise consistency + authority checks',
+      'Implement Enforcer module: verdict → containment action mapping',
+      'Build Policy Profile loader (JSON schema + runtime validator)',
+      'Implement FAIL_SAFE default-deny fallback path',
+      'Implement scoring formula: integrity score + continuity score',
+      'Write STRIDE threat model for each shell layer',
+    ],
+    deliverable: 'Core EGS engine: observe → judge → enforce loop with policy-driven verdicts'
+  },
+  {
+    num: '03', color: '#854F0B', bg: '#FAEEDA',
+    title: 'Detection Layer',
+    duration: 'Week 4–6',
+    tasks: [
+      'External Gate: real-time I/O boundary pattern matching',
+      'Premise Consistency: semantic contract validation per request',
+      'Authority Boundary: output authority state machine',
+      'Continuity Watch: post-update equivalence testing harness',
+      'MTTD instrumentation on each detection path',
+      'Event schema: type, layer, scope, severity, RID, timestamp',
+    ],
+    deliverable: 'Four detection modules, each independently testable with MTTD metrics'
+  },
+  {
+    num: '04', color: '#534AB7', bg: '#EEEDFE',
+    title: 'API & Integration Surface',
+    duration: 'Week 6–8',
+    tasks: [
+      'REST API: POST /events, GET /state, GET /audit/:handle',
+      'WebSocket feed: real-time gov state push to UI',
+      'Tenant isolation middleware (PARTNER_ID scoping)',
+      'Policy profile CRUD endpoints (admin-only)',
+      'Evidence handle generation + log store interface',
+      'OpenAPI spec + Postman collection',
+    ],
+    deliverable: 'REST + WebSocket API with tenant isolation and audit trail endpoints'
+  },
+  {
+    num: '05', color: '#3C3489', bg: '#EEEDFE',
+    title: 'Admin UI (Production)',
+    duration: 'Week 8–10',
+    tasks: [
+      'Refactor PoC HTML into React + Vite component tree',
+      'Live WebSocket state binding (replace setInterval mocks)',
+      'Role-based views: SOC Operator, Architect, Auditor, Exec',
+      'Event log with real RIDs, evidence handles, pagination',
+      'Policy profile editor (GOV_LEVEL, thresholds, IMPACT_SCOPE)',
+      'Export: audit log CSV / JSON per EVIDENCE_HANDLE',
+      'Dark/light theme, responsive layout',
+    ],
+    deliverable: 'Production Admin Terminal replacing PoC mockups with live data'
+  },
+  {
+    num: '06', color: '#712B13', bg: '#FAECE7',
+    title: 'Hardening & Compliance',
+    duration: 'Week 10–12',
+    tasks: [
+      'Full STRIDE pass: spoofing, tampering, repudiation, info-disclosure, DoS, elevation',
+      'AI/ML threat model: model drift, adversarial inputs, context manipulation',
+      'Pen test: auth bypass, tenant isolation breakout, log injection',
+      'MTTD SLA validation across all four detection layers',
+      'ISO 42001 control mapping per EGS architectural claim',
+      'Structural Audit Trail: immutable log with signed entries',
+    ],
+    deliverable: 'STRIDE + AI/ML threat model report, pen test findings, ISO 42001 control map'
+  },
+  {
+    num: '07', color: '#085041', bg: '#E1F5EE',
+    title: 'Stakeholder Demo & Handoff',
+    duration: 'Week 12–14',
+    tasks: [
+      'Executive demo: live containment scenario, RAW vs GOVERNED visualization',
+      'Architect review: decoupling proof, shell independence demo',
+      'Legal/Compliance: audit trail walkthrough, EVIDENCE_HANDLE chain',
+      'Write Architecture Decision Records (ADRs) for key design choices',
+      'Prepare engagement package: PoC → commercial pilot scope',
+      'Tag v1.0-rc, release notes, GitHub Pages demo deploy',
+    ],
+    deliverable: 'v1.0 release candidate + stakeholder materials + commercial pilot proposal'
+  },
+];
+
+const ARCH = [
+  { cls: 'layer-ext', title: 'External Environment', desc: 'Untrusted inputs, external API calls, user requests. All traffic enters through the shell — nothing bypasses it.', modules: ['Ingress Gate', 'Egress Filter', 'Credential Boundary'] },
+  { cls: 'layer-shell', title: 'External Governance Shell (EGS)', desc: 'The decoupled observer-judge-enforce loop. Treats the internal AI/OS as an untrusted black box. Fails safe by default.', modules: ['Observer', 'Judge', 'Enforcer', 'Policy Loader', 'Fail-Safe Path'] },
+  { cls: 'layer-logic', title: 'Detection & Scoring', desc: 'Four independent containment layers, each producing structured events with severity, scope, and routing hints.', modules: ['External Gate', 'Premise Consistency', 'Authority Boundary', 'Continuity Watch'] },
+  { cls: 'layer-core', title: 'Protected Core (Black Box)', desc: 'AI model weights, OS kernel logic, internal state. EGS never modifies or exposes this layer — it only observes I/O.', modules: ['Model Runtime', 'Internal State', 'OS Layer'] },
+  { cls: 'layer-store', title: 'Persistence & Audit', desc: 'Immutable event log, evidence handles, policy profiles, tenant configs. Structurally isolated from the core.', modules: ['Event Store', 'Audit Log', 'Policy DB', 'Evidence Archive'] },
+];
+
+const STACK = {
+  'Core Engine': [
+    { name: 'TypeScript', role: 'Primary language', tag: 'core' },
+    { name: 'Node.js', role: 'Runtime', tag: 'core' },
+    { name: 'Zod', role: 'Schema / type validation', tag: 'core' },
+    { name: 'Vitest', role: 'Unit + integration tests', tag: 'core' },
+  ],
+  'API Layer': [
+    { name: 'Fastify', role: 'REST API server', tag: 'core' },
+    { name: 'Socket.io', role: 'Real-time WebSocket feed', tag: 'core' },
+    { name: 'OpenAPI / Zod', role: 'Schema-first API spec', tag: 'core' },
+    { name: 'JWT + RBAC', role: 'Auth & tenant isolation', tag: 'core' },
+  ],
+  'Admin UI': [
+    { name: 'React + Vite', role: 'Component framework', tag: 'core' },
+    { name: 'TanStack Query', role: 'Server state management', tag: 'core' },
+    { name: 'Recharts', role: 'RAW vs GOVERNED viz', tag: 'core' },
+    { name: 'Tailwind CSS', role: 'Utility styling', tag: 'core' },
+  ],
+  'Persistence': [
+    { name: 'PostgreSQL', role: 'Policy + tenant data', tag: 'infra' },
+    { name: 'Redis', role: 'Live gov state cache', tag: 'infra' },
+    { name: 'S3 / Object store', role: 'Evidence archive', tag: 'infra' },
+    { name: 'TimescaleDB', role: 'Time-series event log', tag: 'opt' },
+  ],
+  'Security & Compliance': [
+    { name: 'OWASP ZAP', role: 'Automated pen test', tag: 'core' },
+    { name: 'Semgrep', role: 'Static analysis SAST', tag: 'core' },
+    { name: 'STRIDE templates', role: 'AI/ML threat modeling', tag: 'core' },
+    { name: 'ISO 42001 controls', role: 'AI governance mapping', tag: 'opt' },
+  ],
+};
+
+const TIMELINE = [
+  { week: 'W1–2', title: 'Foundation', desc: 'Monorepo scaffold, type contracts, CI pipeline, PoC logic ported', status: 'active' },
+  { week: 'W2–4', title: 'Shell Engine', desc: 'Observer-Judge-Enforcer loop, policy loader, fail-safe path', status: 'future' },
+  { week: 'W4–6', title: 'Detection Modules', desc: 'All four layers instrumented with MTTD metrics', status: 'future' },
+  { week: 'W6–8', title: 'API Surface', desc: 'REST + WebSocket, tenant isolation, audit endpoints', status: 'future' },
+  { week: 'W8–10', title: 'Production UI', desc: 'React admin terminal with live data, RBAC views, log export', status: 'future' },
+  { week: 'W10–12', title: 'Hardening', desc: 'STRIDE + AI/ML threat model, pen test, ISO 42001 mapping', status: 'future' },
+  { week: 'W12–14', title: 'v1.0 Release', desc: 'Stakeholder demos, ADRs, commercial pilot proposal, GitHub Pages', status: 'future' },
+];
+
+const RISKS = [
+  { risk: 'Shell coupling to core — if EGS shares process with AI runtime, an OS crash can disable governance', sev: 'H', mit: 'Process isolation: EGS runs as separate service. Health-check watchdog restarts shell independently.' },
+  { risk: 'Tenant data bleed across PARTNER_ID boundaries in multi-tenant deployment', sev: 'H', mit: 'Row-level security in DB, JWT scoping per tenant, integration test suite for isolation boundary.' },
+  { risk: 'Log injection via malformed RID or evidence handle values', sev: 'M', mit: 'Strict Zod validation on all inbound fields. Parameterized queries only. SAST rule for log concatenation.' },
+  { risk: 'MTTD SLA miss on External Gate under high request volume', sev: 'M', mit: 'Benchmark under load (k6). Redis hot-path for live state. Async evidence write, synchronous verdict.' },
+  { risk: 'Policy profile misconfiguration by enterprise admin sets GOV_LEVEL too permissive', sev: 'M', mit: 'Policy schema enforces minimum threshold floor. Changes require second approver. Audit logged.' },
+  { risk: 'Scope creep: PoC stakeholders expect production feature parity from demo UI', sev: 'L', mit: 'Architecture Interpretation Guide clearly states demo is illustrative. Separate roadmap doc for v1.0 delta.' },
+  { risk: 'ISO 42001 control gaps discovered late in hardening phase', sev: 'L', mit: 'Map controls at phase 2, not phase 6. Flag gaps early as design constraints, not compliance afterthoughts.' },
+];
+
+const CONNECTIONS = [
+  { title: 'GitHub Repo', items: [
+    { dot: 'dot-green', text: 'wholidi/NCAOS-Urielle (existing)' },
+    { dot: 'dot-amber', text: '/core, /shell, /ui, /api to be scaffolded' },
+    { dot: 'dot-gray', text: 'GitHub Actions CI pipeline' },
+  ]},
+  { title: 'PoC Artifacts', items: [
+    { dot: 'dot-green', text: 'NCAOS_UI_final.html — Admin Terminal UI' },
+    { dot: 'dot-green', text: 'Proof_of_Concept_final.docx — Architecture guide' },
+    { dot: 'dot-amber', text: 'Event injection logic → core/detection modules' },
+    { dot: 'dot-amber', text: 'UI label map → production component contracts' },
+  ]},
+  { title: 'Stakeholder Views', items: [
+    { dot: 'dot-blue', text: 'SOC Operator: event log, routing, MTTD' },
+    { dot: 'dot-blue', text: 'Architect: shell decoupling, isolation proofs' },
+    { dot: 'dot-blue', text: 'Legal/Audit: evidence handles, audit trail' },
+    { dot: 'dot-blue', text: 'Executive: RAW vs GOVERNED, risk containment' },
+  ]},
+  { title: 'Key Design Invariants', items: [
+    { dot: 'dot-green', text: 'EGS never modifies core model weights' },
+    { dot: 'dot-green', text: 'Shell fails SAFE (deny) by default' },
+    { dot: 'dot-green', text: 'No root-cause inference — impact signals only' },
+    { dot: 'dot-green', text: 'Evidence trail structurally independent of AI logs' },
+  ]},
+];
+
+// Render phases
+const pg = document.getElementById('phaseGrid');
+PHASES.forEach((p, i) => {
+  const card = document.createElement('div');
+  card.className = 'phase-card';
+  card.innerHTML = `
+    <div class="phase-header" onclick="togglePhase(${i})">
+      <div class="phase-num" style="background:${p.bg};color:${p.color}">${p.num}</div>
+      <div class="phase-title">${p.title}</div>
+      <div class="phase-meta">${p.duration}</div>
+      <div class="phase-toggle" id="tog-${i}">▶</div>
+    </div>
+    <div class="phase-body" id="body-${i}">
+      <ul class="task-list">
+        ${p.tasks.map(t => `<li class="task-item"><div class="task-bullet"></div><span>${t}</span></li>`).join('')}
+      </ul>
+      <div class="deliverable"><strong>Deliverable:</strong> ${p.deliverable}</div>
+    </div>
+  `;
+  pg.appendChild(card);
+});
+
+function togglePhase(i) {
+  const body = document.getElementById('body-'+i);
+  const tog = document.getElementById('tog-'+i);
+  const open = body.classList.toggle('open');
+  tog.classList.toggle('open', open);
+}
+
+// Render arch
+const al = document.getElementById('archLayers');
+ARCH.forEach(a => {
+  const div = document.createElement('div');
+  div.className = 'arch-layer ' + a.cls;
+  div.innerHTML = `
+    <div class="arch-layer-title">${a.title}</div>
+    <div class="arch-layer-desc">${a.desc}</div>
+    <div class="arch-layer-modules">${a.modules.map(m => `<span class="module-chip">${m}</span>`).join('')}</div>
+  `;
+  al.appendChild(div);
+});
+
+// Render stack
+const sc = document.getElementById('stackContent');
+Object.entries(STACK).forEach(([cat, items]) => {
+  const sec = document.createElement('div');
+  sec.className = 'stack-section';
+  const tagLabel = { core: 'tag-core', opt: 'tag-opt', infra: 'tag-infra' };
+  const tagText = { core: 'core', opt: 'optional', infra: 'infra' };
+  sec.innerHTML = `
+    <div class="stack-label">${cat.toUpperCase()}</div>
+    <div class="stack-grid">
+      ${items.map(it => `
+        <div class="stack-item">
+          <div class="stack-name">${it.name}</div>
+          <div class="stack-role">${it.role}</div>
+          <span class="stack-tag ${tagLabel[it.tag]}">${tagText[it.tag]}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  sc.appendChild(sec);
+});
+
+// Render timeline
+const tl = document.getElementById('tlContent');
+TIMELINE.forEach(t => {
+  const item = document.createElement('div');
+  item.className = 'tl-item';
+  item.innerHTML = `
+    <div class="tl-dot-wrap"><div class="tl-dot ${t.status}"></div></div>
+    <div class="tl-content">
+      <div class="tl-week">${t.week}</div>
+      <div class="tl-title">${t.title}</div>
+      <div class="tl-desc">${t.desc}</div>
+    </div>
+  `;
+  tl.appendChild(item);
+});
+
+// Render risks
+const rb = document.getElementById('riskBody');
+RISKS.forEach(r => {
+  const tr = document.createElement('tr');
+  const sevCls = r.sev === 'H' ? 'sev-h' : r.sev === 'M' ? 'sev-m' : 'sev-l';
+  const sevLabel = r.sev === 'H' ? 'HIGH' : r.sev === 'M' ? 'MED' : 'LOW';
+  tr.innerHTML = `
+    <td>${r.risk}</td>
+    <td><span class="sev ${sevCls}">${sevLabel}</span></td>
+    <td class="mitigation">${r.mit}</td>
+  `;
+  rb.appendChild(tr);
+});
+
+// Render connections
+const cg = document.getElementById('connGrid');
+CONNECTIONS.forEach(c => {
+  const card = document.createElement('div');
+  card.className = 'conn-card';
+  card.innerHTML = `
+    <div class="conn-title">${c.title.toUpperCase()}</div>
+    ${c.items.map(i => `<div class="conn-item"><span class="conn-dot ${i.dot}"></span>${i.text}</div>`).join('')}
+  `;
+  cg.appendChild(card);
+});
+
+// Tab switching
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+}
+</script>

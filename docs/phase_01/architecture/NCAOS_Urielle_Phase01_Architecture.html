@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCAOS-Urielle · EGS Phase 01 Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --coral:    #993C1D; --coral-l: #FAECE7; --coral-m: #F0997B;
+    --amber:    #854F0B; --amber-l: #FAEEDA; --amber-m: #EF9F27;
+    --blue:     #0C447C; --blue-l:  #E6F1FB; --blue-m:  #378ADD;
+    --purple:   #3C3489; --purple-l:#EEEDFE; --purple-m:#7F77DD;
+    --teal:     #085041; --teal-l:  #E1F5EE; --teal-m:  #1D9E75;
+    --gray:     #444441; --gray-l:  #F1EFE8; --gray-m:  #888780;
+    --red:      #791F1F; --red-l:   #FCEBEB;
+    --green:    #27500A; --green-l: #EAF3DE; --green-m: #639922;
+    --text:     #1A1A18; --muted:   #5F5E5A; --border:  #D3D1C7;
+    --bg:       #F8F7F4; --surface: #FFFFFF;
+    --font-sans: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.05);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Top nav ─────────────────────────────────────── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(248,247,244,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; align-items: center; gap: 24px; height: 56px;
+  }
+  .nav-brand {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    color: var(--blue); letter-spacing: .04em; white-space: nowrap;
+  }
+  .nav-sep { width: 1px; height: 20px; background: var(--border); }
+  .nav-title { font-size: 12px; color: var(--muted); flex: 1; }
+  .badge-complete {
+    font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+    color: var(--green); background: var(--green-l); border: 1px solid var(--green-m);
+    padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .nav-stats {
+    display: flex; gap: 16px; font-size: 11px; color: var(--muted);
+  }
+  .nav-stat b { color: var(--text); font-weight: 500; }
+
+  /* ── Main layout ─────────────────────────────────── */
+  main { max-width: 1100px; margin: 0 auto; padding: 40px 32px 80px; }
+
+  /* ── Page header ─────────────────────────────────── */
+  .page-header { margin-bottom: 40px; }
+  .page-header h1 {
+    font-size: 28px; font-weight: 600; letter-spacing: -.02em; margin-bottom: 6px;
+  }
+  .page-header p { font-size: 14px; color: var(--muted); }
+  .stat-row {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px;
+    margin-top: 24px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px 14px;
+    text-align: center;
+  }
+  .stat-card .label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+  .stat-card .value { font-size: 13px; font-weight: 600; color: var(--text); font-family: var(--font-mono); }
+  .stat-card .value.pass { color: var(--green); }
+
+  /* ── Section heading ─────────────────────────────── */
+  .section-title {
+    font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); margin: 40px 0 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── Layer cards ─────────────────────────────────── */
+  .layer { margin-bottom: 12px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+  .layer-header {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 20px; cursor: pointer; user-select: none;
+    transition: opacity .15s;
+  }
+  .layer-header:hover { opacity: .92; }
+  .layer-num {
+    font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .layer-header-text { flex: 1; }
+  .layer-header-text h3 { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .layer-header-text p { font-size: 12px; opacity: .78; line-height: 1.5; }
+  .layer-toggle {
+    font-size: 12px; margin-top: 4px; transition: transform .2s; flex-shrink: 0;
+    opacity: .6;
+  }
+  .layer-toggle.open { transform: rotate(90deg); }
+
+  .layer-body {
+    padding: 0 20px 16px;
+    border-top: 1px solid rgba(0,0,0,.08);
+    display: none;
+  }
+  .layer-body.open { display: block; }
+
+  /* Module chips grid */
+  .modules { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .module {
+    border-radius: 6px; padding: 8px 14px; font-size: 12px;
+    cursor: pointer; transition: transform .1s, box-shadow .1s;
+    border: 1px solid transparent;
+  }
+  .module:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+  .module .mod-name { font-weight: 500; margin-bottom: 2px; }
+  .module .mod-fn { font-family: var(--font-mono); font-size: 10px; opacity: .7; }
+  .module .mod-desc { font-size: 11px; margin-top: 4px; opacity: .8; line-height: 1.4; }
+  .module .mod-badge {
+    display: inline-block; margin-top: 6px;
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 4px; background: rgba(255,255,255,.5);
+  }
+
+  /* Layer colour themes */
+  .theme-coral  { background: var(--coral-l);  color: var(--coral);  }
+  .theme-coral  .layer-num { background: var(--coral); color: white; }
+  .theme-amber  { background: var(--amber-l);  color: var(--amber);  }
+  .theme-amber  .layer-num { background: var(--amber); color: white; }
+  .theme-blue   { background: var(--blue-l);   color: var(--blue);   }
+  .theme-blue   .layer-num { background: var(--blue); color: white; }
+  .theme-purple { background: var(--purple-l); color: var(--purple); }
+  .theme-purple .layer-num { background: var(--purple); color: white; }
+  .theme-teal   { background: var(--teal-l);   color: var(--teal);   }
+  .theme-teal   .layer-num { background: var(--teal); color: white; }
+  .theme-gray   { background: var(--gray-l);   color: var(--gray);   }
+  .theme-gray   .layer-num { background: var(--gray); color: white; }
+
+  /* Verdict row */
+  .verdict-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .verdict-card {
+    flex: 1; min-width: 120px; border-radius: 8px; padding: 12px 14px;
+    border: 1px solid rgba(0,0,0,.08);
+    cursor: pointer; transition: transform .1s;
+  }
+  .verdict-card:hover { transform: translateY(-1px); }
+  .verdict-card .v-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; margin-bottom: 4px; }
+  .verdict-card .v-desc { font-size: 11px; opacity: .8; line-height: 1.4; }
+  .v-pass   { background: var(--green-l); color: var(--green); }
+  .v-down   { background: var(--amber-l); color: var(--amber); }
+  .v-block  { background: var(--red-l);   color: var(--red); }
+  .v-fail   { background: var(--red-l);   color: var(--red); border: 1px dashed var(--red); }
+
+  /* Profiles strip */
+  .profiles { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .profile-chip {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    background: var(--purple-l); color: var(--purple);
+    border: 1px solid var(--purple-m); border-radius: 6px;
+    padding: 5px 12px; cursor: pointer; transition: background .15s;
+  }
+  .profile-chip:hover { background: var(--purple-m); color: white; }
+
+  /* ── Test results table ──────────────────────────── */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th {
+    text-align: left; font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border);
+    background: var(--gray-l);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+  tbody tr:hover { background: var(--blue-l); }
+  tbody td { padding: 8px 12px; vertical-align: top; }
+  tbody td.mono { font-family: var(--font-mono); font-size: 11px; color: var(--blue); }
+  tbody td.pass-cell { font-family: var(--font-mono); font-size: 11px; color: var(--green); font-weight: 500; }
+  tbody tr.total-row { background: var(--green-l); font-weight: 600; }
+  tbody tr.total-row td { color: var(--green); }
+
+  /* ── Type contracts table ────────────────────────── */
+  .contracts-table tbody td:first-child { font-family: var(--font-mono); font-size: 11px; color: var(--blue); width: 160px; }
+  .contracts-table tbody tr:nth-child(odd) { background: var(--surface); }
+  .contracts-table tbody tr:nth-child(even) { background: var(--gray-l); }
+
+  /* ── ADR cards ───────────────────────────────────── */
+  .adr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .adr-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+    cursor: pointer; transition: box-shadow .15s, transform .1s;
+  }
+  .adr-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+  .adr-id { font-family: var(--font-mono); font-size: 10px; color: var(--blue); margin-bottom: 6px; }
+  .adr-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .adr-body { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+  /* ── Invariants ──────────────────────────────────── */
+  .invariant {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--teal); border-radius: var(--radius);
+    padding: 12px 16px; margin-bottom: 8px;
+  }
+  .invariant .inv-key { font-size: 12px; font-weight: 600; color: var(--teal); flex: 0 0 220px; }
+  .invariant .inv-val { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── Next phase ──────────────────────────────────── */
+  .next-phase {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 22px;
+  }
+  .next-phase h4 { font-size: 14px; font-weight: 600; color: var(--purple); margin-bottom: 12px; }
+  .next-phase ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .next-phase li { font-size: 12px; color: var(--muted); display: flex; gap: 10px; }
+  .next-phase li::before {
+    content: '→'; color: var(--purple); font-weight: 600; flex-shrink: 0;
+  }
+  .next-deliverable {
+    margin-top: 14px; padding: 10px 14px; background: var(--purple-l);
+    border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--purple);
+  }
+
+  /* ── Tooltip ─────────────────────────────────────── */
+  .tooltip {
+    position: fixed; z-index: 999; max-width: 280px;
+    background: var(--text); color: white;
+    font-size: 12px; line-height: 1.5; padding: 10px 14px;
+    border-radius: 8px; pointer-events: none;
+    opacity: 0; transition: opacity .15s;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  }
+  .tooltip.show { opacity: 1; }
+
+  /* ── Footer ──────────────────────────────────────── */
+  footer {
+    text-align: center; padding: 24px; font-size: 11px; color: var(--muted);
+    border-top: 1px solid var(--border); margin-top: 40px;
+  }
+  footer a { color: var(--blue); text-decoration: none; }
+
+  @media (max-width: 700px) {
+    .stat-row { grid-template-columns: repeat(4, 1fr); }
+    .adr-grid { grid-template-columns: 1fr; }
+    .nav-stats { display: none; }
+    main { padding: 24px 16px 60px; }
+    header { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tooltip" id="tooltip"></div>
+
+<header>
+  <span class="nav-brand">NCAOS // EGS</span>
+  <div class="nav-sep"></div>
+  <span class="nav-title">Phase 01 Architecture — External Governance Shell</span>
+  <span class="badge-complete">● PHASE 01 COMPLETE</span>
+  <div class="nav-stats">
+    <span><b>47</b> tests</span>
+    <span><b>36</b> activities</span>
+    <span><b>4</b> layers</span>
+    <span><b>~1,100</b> LOC</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-header">
+    <h1>NCAOS-Urielle · External Governance Shell</h1>
+    <p>Phase 01 Architecture · Foundation &amp; Repo Setup · Week 1–2 · Repository: wholidi/NCAOS-Urielle</p>
+    <div class="stat-row">
+      <div class="stat-card"><div class="label">Phase status</div><div class="value pass">COMPLETE</div></div>
+      <div class="stat-card"><div class="label">Tests</div><div class="value pass">47 / 47</div></div>
+      <div class="stat-card"><div class="label">Activities</div><div class="value pass">36 / 36</div></div>
+      <div class="stat-card"><div class="label">TS source files</div><div class="value">8</div></div>
+      <div class="stat-card"><div class="label">Lines of code</div><div class="value">~1,100</div></div>
+      <div class="stat-card"><div class="label">ADRs</div><div class="value">2</div></div>
+      <div class="stat-card"><div class="label">Detection layers</div><div class="value">4</div></div>
+      <div class="stat-card"><div class="label">Policy profiles</div><div class="value">3</div></div>
+    </div>
+  </div>
+
+  <!-- ── Architecture layers ───────────────────────── -->
+  <div class="section-title">Architecture layers</div>
+
+  <!-- L1 External -->
+  <div class="layer theme-coral">
+    <div class="layer-header" onclick="toggleLayer('l1')">
+      <div class="layer-num">L1</div>
+      <div class="layer-header-text">
+        <h3>External environment</h3>
+        <p>Untrusted inputs — all traffic enters through the shell. Nothing bypasses it.</p>
+      </div>
+      <div class="layer-toggle" id="tog-l1">▶</div>
+    </div>
+    <div class="layer-body" id="body-l1">
+      <div class="modules">
+        <div class="module theme-coral" onclick="tip(event,'Ingress gate','Real-time I/O boundary — all inbound traffic is intercepted here before reaching the shell. Never bypassed.')">
+          <div class="mod-name">Ingress gate</div>
+          <div class="mod-desc">All inbound traffic intercepted</div>
+        </div>
+        <div class="module theme-coral" onclick="tip(event,'Egress filter','Outbound responses are filtered before leaving. Authority state determines what exits.')">
+          <div class="mod-name">Egress filter</div>
+          <div class="mod-desc">Outbound responses filtered by verdict</div>
+        </div>
+        <div class="module theme-coral" onclick="tip(event,'Credential boundary','External credentials are validated at the boundary. TenantContext scopes all downstream governance state.')">
+          <div class="mod-name">Credential boundary</div>
+          <div class="mod-desc">External credential validation point</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L2 EGS Shell -->
+  <div class="layer theme-amber">
+    <div class="layer-header" onclick="toggleLayer('l2')">
+      <div class="layer-num">L2</div>
+      <div class="layer-header-text">
+        <h3>External governance shell (EGS)</h3>
+        <p>Decoupled observe → judge → enforce loop. Treats core AI as untrusted black box. Fails safe by default.</p>
+      </div>
+      <div class="layer-toggle" id="tog-l2">▶</div>
+    </div>
+    <div class="layer-body" id="body-l2">
+      <div class="modules">
+        <div class="module theme-amber" onclick="tip(event,'Observer','I/O boundary tap interface. Phase 2: process-isolated service replaces PoC setInterval triggers with real I/O tap.')">
+          <div class="mod-name">Observer</div>
+          <div class="mod-fn">Phase 2: I/O tap interface</div>
+          <div class="mod-desc">Watches boundary without touching core</div>
+        </div>
+        <div class="module theme-amber" onclick="tip(event,'Judge','Runs premise consistency checks and authority validation. Produces typed GovEvent with severity, scope, and MTTD.')">
+          <div class="mod-name">Judge</div>
+          <div class="mod-fn">Premise + authority checks</div>
+          <div class="mod-desc">Consistency check → structured event</div>
+        </div>
+        <div class="module theme-amber" onclick="tip(event,'Enforcer','Maps verdict to containment action: PASS / DOWNGRADE / BLOCK. Deterministic given event + policy. No internal state access.')">
+          <div class="mod-name">Enforcer</div>
+          <div class="mod-fn">enforce() · 10 tests ✓</div>
+          <div class="mod-desc">Verdict → PASS / DOWNGRADE / BLOCK</div>
+        </div>
+        <div class="module theme-amber" onclick="tip(event,'Policy loader','Zod-validated JSON schema with runtime validator. 3 builtin profiles: STRICT-PROD, CRITICAL-STRICT, PILOT-OBS. loadPolicy() + validatePolicyConsistency().')">
+          <div class="mod-name">Policy loader</div>
+          <div class="mod-fn">Zod-validated JSON schema</div>
+          <div class="mod-desc">3 builtin profiles · 5 tests ✓</div>
+        </div>
+        <div class="module" style="background:var(--red-l);color:var(--red);border:1px dashed var(--red);" onclick="tip(event,'Fail-safe path (ADR-002)','Shell error → action=FAIL_SAFE, authority=invalid, score=0. Unconditional. Cannot be disabled by policy config. Process isolation requirement noted for Phase 2.')">
+          <div class="mod-name">Fail-safe path</div>
+          <div class="mod-fn">ADR-002 invariant</div>
+          <div class="mod-desc">Shell error → BLOCK unconditionally</div>
+          <div class="mod-badge" style="background:var(--red);color:white;">1 test ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L3 Detection -->
+  <div class="layer theme-blue">
+    <div class="layer-header" onclick="toggleLayer('l3')">
+      <div class="layer-num">L3</div>
+      <div class="layer-header-text">
+        <h3>Detection &amp; scoring · @ncaos/core · 47 tests passing</h3>
+        <p>Four independent containment layers producing typed GovEvents with severity, scope, MTTD, and routing hints.</p>
+      </div>
+      <div class="layer-toggle" id="tog-l3">▶</div>
+    </div>
+    <div class="layer-body" id="body-l3">
+      <div class="modules">
+        <div class="module theme-blue" onclick="tip(event,'detectGate()','Critical/warning flag classification. INJECTION_PATTERN / SIGNATURE_INVALID → HIGH/sys. RATE_EXCEEDED → MED/req. Routes to SOC. MTTD SLA: gate=50ms.')">
+          <div class="mod-name">External gate</div>
+          <div class="mod-fn">detectGate(GateInput)</div>
+          <div class="mod-desc">Flag classification → severity + scope<br>Routes to SOC</div>
+          <div class="mod-badge" style="background:var(--blue);color:white;">5 tests ✓</div>
+        </div>
+        <div class="module theme-blue" onclick="tip(event,'detectPremise()','Unvalidated claim ratio → severity. ≥70% unvalidated → HIGH/flow. ≥30% → MED/req. Legitimacy revoked pre-authority check. Routes to Arch review.')">
+          <div class="mod-name">Premise consistency</div>
+          <div class="mod-fn">detectPremise(PremiseInput)</div>
+          <div class="mod-desc">Claim validation ratio → severity<br>Routes to Arch review</div>
+          <div class="mod-badge" style="background:var(--blue);color:white;">4 tests ✓</div>
+        </div>
+        <div class="module theme-blue" onclick="tip(event,'detectAuthority()','Override attempt → HIGH/sys. Legitimate policy downgrade → MED/req. Triggered=false when policy grants decision-ready. Routes to Gov review.')">
+          <div class="mod-name">Authority boundary</div>
+          <div class="mod-fn">detectAuthority(AuthorityInput)</div>
+          <div class="mod-desc">Override attempt → HIGH/sys<br>Routes to Gov review</div>
+          <div class="mod-badge" style="background:var(--blue);color:white;">3 tests ✓</div>
+        </div>
+        <div class="module theme-blue" onclick="tip(event,'detectContinuity()','Equivalence test fail rate + continuity score. ≥40% fail OR score&lt;55 → HIGH. ≥10% OR score&lt;75 → MED. Always scope=sys (design invariant). Routes to Change mgmt.')">
+          <div class="mod-name">Continuity watch</div>
+          <div class="mod-fn">detectContinuity(ContinuityInput)</div>
+          <div class="mod-desc">Equivalence test fail rate → severity<br>Always scope=sys · Routes to Change mgmt</div>
+          <div class="mod-badge" style="background:var(--blue);color:white;">4 tests ✓</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:10px 14px;background:rgba(14,68,124,.08);border-radius:6px;font-family:var(--font-mono);font-size:11px;color:var(--blue);">
+        Scoring: computeIntegrity() · computeAuthority() · computeContainmentMetrics() · scoreToContinuityState()
+      </div>
+    </div>
+  </div>
+
+  <!-- L4 Verdict -->
+  <div class="layer theme-purple">
+    <div class="layer-header" onclick="toggleLayer('l4')">
+      <div class="layer-num">L4</div>
+      <div class="layer-header-text">
+        <h3>Verdict engine · enforce() + failSafeVerdict()</h3>
+        <p>GovEvent × PolicyProfile → deterministic Verdict. No internal state access. govLevel × severity → action.</p>
+      </div>
+      <div class="layer-toggle" id="tog-l4">▶</div>
+    </div>
+    <div class="layer-body" id="body-l4">
+      <div class="verdict-row">
+        <div class="verdict-card v-pass" onclick="tip(event,'PASS verdict','Allow output. Authority: decision-ready. Pilot profile: low/med always PASS. ENTERPRISE_STRICT: low with blockOnContainment=false → PASS.')">
+          <div class="v-label">PASS</div>
+          <div class="v-desc">Allow output<br>authority: decision-ready</div>
+        </div>
+        <div class="verdict-card v-down" onclick="tip(event,'DOWNGRADE verdict','Output downgraded to reference-only. ENTERPRISE_STRICT: low severity → DOWNGRADE. PILOT: high → DOWNGRADE (never blocks). Authority becomes reference-only.')">
+          <div class="v-label">DOWNGRADE</div>
+          <div class="v-desc">Output allowed, authority: reference-only</div>
+        </div>
+        <div class="verdict-card v-block" onclick="tip(event,'BLOCK verdict','Output blocked. Authority: invalid, score=0. ENTERPRISE_STRICT: med+high → BLOCK. CRITICAL_STRICT: all severities → BLOCK. Routing hint included in verdict.')">
+          <div class="v-label">BLOCK</div>
+          <div class="v-desc">Output blocked<br>authority: invalid</div>
+        </div>
+        <div class="verdict-card v-fail" onclick="tip(event,'FAIL_SAFE verdict (ADR-002)','Shell error → FAIL_SAFE unconditionally. action=FAIL_SAFE, authority=invalid, score=0. Cannot be disabled by policy config. FAIL_SAFE is the safest possible outcome.')">
+          <div class="v-label">FAIL_SAFE</div>
+          <div class="v-desc">Shell error → unconditional block<br>Cannot be disabled by policy</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--muted);margin-bottom:8px;">Policy profiles</div>
+      <div class="profiles">
+        <div class="profile-chip" onclick="tip(event,'ENTERPRISE_STRICT (STRICT-PROD)','govLevel=ENTERPRISE_STRICT. Blocks med+high severity. MTTD SLA: gate=50ms, premise=200ms. Reference profile for enterprise deployments. Low severity → DOWNGRADE.')">ENTERPRISE_STRICT</div>
+        <div class="profile-chip" onclick="tip(event,'CRITICAL_STRICT (CRITICAL-STRICT)','govLevel=CRITICAL_STRICT. Blocks ALL severities including low. Tightest thresholds. Available threshold=90 (vs 80 for ENTERPRISE). For high-assurance environments only.')">CRITICAL_STRICT</div>
+        <div class="profile-chip" onclick="tip(event,'PILOT_OBS (PILOT-OBS)','govLevel=PILOT. blockOnContainment=false — never blocks. High severity → DOWNGRADE only. Low/med → PASS. For initial evaluation phases.')">PILOT_OBS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L5 Protected Core -->
+  <div class="layer theme-teal">
+    <div class="layer-header" onclick="toggleLayer('l5')">
+      <div class="layer-num">L5</div>
+      <div class="layer-header-text">
+        <h3>Protected core (black box)</h3>
+        <p>AI model weights, OS kernel logic, internal state. EGS observes I/O only — never modifies or exposes core.</p>
+      </div>
+      <div class="layer-toggle" id="tog-l5">▶</div>
+    </div>
+    <div class="layer-body" id="body-l5">
+      <div class="modules">
+        <div class="module theme-teal" onclick="tip(event,'Model runtime','AI model inference process. EGS never accesses weights, activations, or internal reasoning. Observed only at I/O boundary.')">
+          <div class="mod-name">Model runtime</div>
+          <div class="mod-desc">AI inference — observed at I/O only</div>
+        </div>
+        <div class="module theme-teal" onclick="tip(event,'Internal state','Internal model or application state. Completely opaque to EGS. GovState (WebSocket payload) is derived from boundary signals, not internal reads.')">
+          <div class="mod-name">Internal state</div>
+          <div class="mod-desc">Opaque to EGS — impact signals only</div>
+        </div>
+        <div class="module theme-teal" onclick="tip(event,'OS layer','Kernel and OS primitives. Phase 2: EGS will run as a separate process to achieve true isolation — not a shared-process library call.')">
+          <div class="mod-name">OS layer</div>
+          <div class="mod-desc">Phase 2: process isolation required</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:8px 14px;background:rgba(8,80,65,.08);border-radius:6px;font-size:11px;color:var(--teal);font-weight:500;">
+        Design invariant: EGS never modifies core model weights · No root-cause inference — impact signals only
+      </div>
+    </div>
+  </div>
+
+  <!-- L6 Persistence -->
+  <div class="layer theme-gray">
+    <div class="layer-header" onclick="toggleLayer('l6')">
+      <div class="layer-num">L6</div>
+      <div class="layer-header-text">
+        <h3>Persistence &amp; audit · structurally isolated from core</h3>
+        <p>Immutable event log, evidence handles (EVD-{ts}-{hash}), policy profiles, tenant configs.</p>
+      </div>
+      <div class="layer-toggle" id="tog-l6">▶</div>
+    </div>
+    <div class="layer-body" id="body-l6">
+      <div class="modules">
+        <div class="module theme-gray" onclick="tip(event,'Event store','Stores typed GovEvents. Phase 4 target: TimescaleDB for time-series event log. Each event includes requestId, evidenceHandle, mttdMs, tenant, integrity, authority, routing.')">
+          <div class="mod-name">Event store</div>
+          <div class="mod-desc">Typed GovEvent log · Phase 4: TimescaleDB</div>
+        </div>
+        <div class="module theme-gray" onclick="tip(event,'Audit log','Immutable log with structured entries. Phase 6 upgrades from FNV hash to HMAC-signed entries. Evidence trail structurally independent of AI logs.')">
+          <div class="mod-name">Audit log</div>
+          <div class="mod-desc">Immutable · Phase 6: HMAC-signed entries</div>
+        </div>
+        <div class="module theme-gray" onclick="tip(event,'Policy DB','PostgreSQL: policy profile CRUD, tenant configs, admin-only endpoints. Row-level security for tenant isolation. Phase 4 REST API: POST /events, GET /state, GET /audit/:handle.')">
+          <div class="mod-name">Policy DB</div>
+          <div class="mod-desc">PostgreSQL · tenant isolation · RLS</div>
+        </div>
+        <div class="module theme-gray" onclick="tip(event,'Evidence archive','S3 / object store for evidence archives. EVD-{ts}-{hash} handles using FNV hash of RID+timestamp. Seedable generateEvidenceHandle(rid, ts).')">
+          <div class="mod-name">Evidence archive</div>
+          <div class="mod-desc">S3 / object store · EVD-{ts}-{hash}</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:8px 14px;background:rgba(68,68,65,.08);border-radius:6px;font-size:11px;color:var(--gray);font-family:var(--font-mono);">
+        generateRequestId(seed?) → REQ-XXXXXX · generateEvidenceHandle(rid, ts) → EVD-{ts}-{FNV-hash}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Type contracts ─────────────────────────────── -->
+  <div class="section-title">Core type contracts · @ncaos/core/src/types/contracts.ts</div>
+  <table class="contracts-table">
+    <thead><tr><th>Type</th><th>Description</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>TenantContext</td><td>PARTNER_ID · INSTANCE_ID · deployment tier</td><td>Scopes all governance state to tenant. Isolation invariant.</td></tr>
+      <tr><td>GovEvent</td><td>Primary unit of work through EGS</td><td>requestId, evidenceHandle, layer, scope, severity, mttdMs, tenant, integrity, authority, routing</td></tr>
+      <tr><td>GovState</td><td>Live WebSocket payload to Admin Terminal</td><td>rawExposurePct, governedOutputPct, coreIsolationPct, contextDriftPressurePct, operationalMode</td></tr>
+      <tr><td>PolicyProfile</td><td>Enterprise-defined enforcement config</td><td>govLevel × integrityThresholds × continuityThresholds × mttdSlaMs — Zod-validated at runtime</td></tr>
+      <tr><td>Verdict</td><td>Enforcer output per request</td><td>PASS / DOWNGRADE / BLOCK / FAIL_SAFE — deterministic given event + policy; no internal state access</td></tr>
+      <tr><td>OutputAuthority</td><td>decision-ready / reference-only / invalid</td><td>Structurally granted by shell, not self-reported. Maps to green/yellow/red in Admin Terminal.</td></tr>
+      <tr><td>IntegrityState</td><td>Available / Limited / Degraded / Critical + score 0–100</td><td>No root-cause inference — impact signal only. Nominal=88, low=74, med=61, high=29.</td></tr>
+      <tr><td>RoutingDecision</td><td>hint + recommendedAction</td><td>gate→SOC · premise→Arch Review · authority→Gov Review · continuity→Change Mgmt</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ── Test results ───────────────────────────────── -->
+  <div class="section-title">Test results · 47 / 47 passing</div>
+  <table>
+    <thead><tr><th>File</th><th>Suite</th><th>Tests</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">scoring.test.ts</td><td>computeIntegrity</td><td>5</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">scoring.test.ts</td><td>computeAuthority</td><td>4</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">scoring.test.ts</td><td>computeContainmentMetrics</td><td>3</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">scoring.test.ts</td><td>scoreToContinuityState</td><td>4</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">detection.test.ts</td><td>detectGate</td><td>5</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">detection.test.ts</td><td>detectPremise</td><td>4</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">detection.test.ts</td><td>detectAuthority</td><td>3</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">detection.test.ts</td><td>detectContinuity</td><td>4</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">verdict.test.ts</td><td>enforce — ENTERPRISE_STRICT</td><td>6</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">verdict.test.ts</td><td>enforce — CRITICAL_STRICT</td><td>1</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">verdict.test.ts</td><td>enforce — PILOT</td><td>2</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">verdict.test.ts</td><td>failSafeVerdict</td><td>1</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr><td class="mono">verdict.test.ts</td><td>validatePolicyConsistency + loadPolicy</td><td>5</td><td class="pass-cell">PASS ✓</td></tr>
+      <tr class="total-row"><td></td><td>TOTAL</td><td>47</td><td>ALL PASS ✓</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ── ADRs ───────────────────────────────────────── -->
+  <div class="section-title">Architecture decision records</div>
+  <div class="adr-grid">
+    <div class="adr-card" onclick="tip(event,'ADR-001','Zod-first schema — all packages import types from @ncaos/core. Breaking changes require core version bump. New fields must be optional to avoid breaking downstream packages.')">
+      <div class="adr-id">ADR-001 · docs/adr/ADR-001-type-contracts.md</div>
+      <div class="adr-title">Type contracts as architectural boundary</div>
+      <div class="adr-body">Zod-first schema; all packages import from @ncaos/core. Breaking changes require core version bump; new fields must be optional.</div>
+    </div>
+    <div class="adr-card" onclick="tip(event,'ADR-002','Shell failure always produces the safest possible outcome. No policy setting can override this. Process isolation (Phase 2) is required to prevent shared-process crashes from disabling governance.')">
+      <div class="adr-id">ADR-002 · docs/adr/ADR-002-fail-safe-invariant.md</div>
+      <div class="adr-title">Fail-safe default-deny invariant</div>
+      <div class="adr-body">Shell fails BLOCK/invalid on any error — unconditional. Cannot be disabled by policy. Process isolation noted for Phase 2. Chaos test scheduled Phase 6.</div>
+    </div>
+  </div>
+
+  <!-- ── Design invariants ──────────────────────────── -->
+  <div class="section-title">Key design invariants</div>
+
+  <div class="invariant">
+    <div class="inv-key">EGS never modifies core model weights</div>
+    <div class="inv-val">The shell observes I/O only. Core is a structurally opaque black box. EGS cannot read activations, weights, or internal reasoning at any point.</div>
+  </div>
+  <div class="invariant">
+    <div class="inv-key">Shell fails SAFE (deny) by default</div>
+    <div class="inv-val">ADR-002: any shell error → FAIL_SAFE verdict unconditionally. action=FAIL_SAFE, authority=invalid, score=0. Cannot be overridden by policy configuration.</div>
+  </div>
+  <div class="invariant">
+    <div class="inv-key">No root-cause inference</div>
+    <div class="inv-val">EGS emits impact signals only — severity, scope, routing hints. No internal AI logic is exposed or inferred. IntegrityState carries a numeric score, not a root-cause explanation.</div>
+  </div>
+  <div class="invariant">
+    <div class="inv-key">Evidence trail structurally independent of AI logs</div>
+    <div class="inv-val">Audit log is isolated from core. EVD handles use FNV hash of RID+timestamp. Phase 6 upgrades to HMAC-signed entries. Evidence archive in S3 is structurally separate from the AI runtime.</div>
+  </div>
+  <div class="invariant">
+    <div class="inv-key">Tenant isolation enforced at type level</div>
+    <div class="inv-val">TenantContext (PARTNER_ID, INSTANCE_ID) scopes all governance state. Row-level security in DB. JWT scoping per tenant. Integration test suite validates isolation boundary.</div>
+  </div>
+
+  <!-- ── Next phase ─────────────────────────────────── -->
+  <div class="section-title">Next · Phase 02 — Core shell engine (Week 2–4)</div>
+  <div class="next-phase">
+    <h4>Process-isolated Observer-Judge-Enforcer loop</h4>
+    <ul>
+      <li>Implement Observer module: I/O boundary tap interface (process-isolated service)</li>
+      <li>Implement Judge module: premise consistency + authority checks</li>
+      <li>Implement Enforcer module: verdict → containment action mapping</li>
+      <li>Build Policy Profile loader (JSON schema + runtime validator)</li>
+      <li>Implement FAIL_SAFE default-deny fallback path</li>
+      <li>Implement scoring formula: integrity score + continuity score</li>
+      <li>Write STRIDE threat model for each shell layer</li>
+    </ul>
+    <div class="next-deliverable">Deliverable: Core EGS engine — observe → judge → enforce loop with policy-driven verdicts</div>
+  </div>
+
+</main>
+
+<footer>
+  NCAOS-Urielle · EGS Phase 01 · wholidi/NCAOS-Urielle ·
+  <a href="https://urielle-ai.com" target="_blank">urielle-ai.com</a> ·
+  Built 2026
+</footer>
+
+<script>
+  const tooltip = document.getElementById('tooltip');
+  let hideTimer;
+
+  function tip(e, title, body) {
+    e.stopPropagation();
+    clearTimeout(hideTimer);
+    tooltip.innerHTML = '<strong>' + title + '</strong><br>' + body;
+    const pad = 14;
+    let x = e.clientX + pad, y = e.clientY + pad;
+    const tw = 280, th = 100;
+    if (x + tw > window.innerWidth - 8) x = e.clientX - tw - pad;
+    if (y + th > window.innerHeight - 8) y = e.clientY - th - pad;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top  = y + 'px';
+    tooltip.classList.add('show');
+    hideTimer = setTimeout(() => tooltip.classList.remove('show'), 4000);
+  }
+
+  document.addEventListener('click', () => {
+    clearTimeout(hideTimer);
+    tooltip.classList.remove('show');
+  });
+
+  function toggleLayer(id) {
+    const body = document.getElementById('body-' + id);
+    const tog  = document.getElementById('tog-'  + id);
+    const open = body.classList.toggle('open');
+    tog.classList.toggle('open', open);
+  }
+
+  // Open L3 and L4 by default
+  ['l3','l4'].forEach(id => {
+    document.getElementById('body-' + id).classList.add('open');
+    document.getElementById('tog-'  + id).classList.add('open');
+  });
+</script>
+</body>
+</html>

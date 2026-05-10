@@ -1,0 +1,56 @@
+PS C:\Users\conve\downloads\NCAOS-Urielle\egs> npm test
+> ncaos@0.1.0 test
+> npm run test --workspaces
+> @ncaos/core@0.1.0 test
+> vitest run
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/core
+ ✓ tests/detection.test.ts (16)
+ ❯ tests/scoring.test.ts (16)
+   ✓ computeIntegrity (5)
+   ❯ computeAuthority (4)
+     ✓ returns decision-ready for nominal state
+     ✓ returns reference-only for low severity
+     × returns reference-only for med severity
+     ✓ returns invalid for high severity
+   ✓ computeContainmentMetrics (3)
+   ✓ scoreToContinuityState (4)
+ ✓ tests/verdict.test.ts (15)
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/scoring.test.ts > computeAuthority > returns reference-only for med severity
+AssertionError: expected 'invalid' to be 'reference-only' // [Object.is](http://Object.is) equality
+- Expected
++ Received
+- reference-only
++ invalid
+ ❯ tests/scoring.test.ts:69:30
+     67|     const result = computeAuthority('med', ENTERPRISE_STRICT_PROFILE);
+     68|     expect(result.score).toBe(58);
+     69|     expect(result.authority).toBe('reference-only');
+       |                              ^
+     70|   });
+     71|
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 46 passed (47)
+   Start at  23:04:22
+   Duration  1.36s (transform 617ms, setup 1ms, collect 902ms, tests 84ms, environment 3ms, prepare 1.31s)
+npm error Lifecycle script test failed with error:
+npm error code 1
+npm error path C:\Users\conve\Downloads\NCAOS-Urielle\egs\core
+npm error workspace @ncaos/core@0.1.0
+npm error location C:\Users\conve\Downloads\NCAOS-Urielle\egs\core
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run
+PS C:\Users\conve\downloads\NCAOS-Urielle\egs> npm test
+> ncaos@0.1.0 test
+> npm run test --workspaces
+> @ncaos/core@0.1.0 test
+> vitest run
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/core
+ ✓ tests/detection.test.ts (16)
+ ✓ tests/scoring.test.ts (16)
+ ✓ tests/verdict.test.ts (15)
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  23:07:19
+   Duration  1.04s (transform 428ms, setup 1ms, collect 701ms, tests 56ms, environment 1ms, prepare 771ms)

@@ -1,0 +1,138 @@
+PS C:\Users\conve\downloads\NCAOS-Urielle\egs> npm test
+
+> ncaos@0.1.0 test
+> npm run test --workspaces
+
+
+> @ncaos/core@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/core
+
+ ✓ tests/detection.test.ts (16)
+ ✓ tests/verdict.test.ts (15)
+ ✓ tests/scoring.test.ts (16)
+
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  23:29:29
+   Duration  2.78s (transform 1.31s, setup 1ms, collect 1.38s, tests 51ms, environment 2ms, prepare 2.06s)
+
+
+> @ncaos/shell@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/shell
+
+stdout | tests/shell-loop.test.ts > ShellLoop — lifecycle > starts and stops cleanly
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stderr | tests/shell-loop.test.ts > ShellLoop — lifecycle > returns FAIL_SAFE when not running
+[ShellLoop] FAIL_SAFE: Shell not running
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > returns PASS for clean input
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets operationalMode to NORMAL on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets shellIntegrity=true and failSafeEnabled=true
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > no containment event emitted on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > produces a valid requestId
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > governed output < raw exposure
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > returns BLOCK for high-severity threat
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets operationalMode to CONTAINMENT on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > emits containment event on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets integrity to Critical on high severity
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > includes routing hint on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — event emission > emits shell:output event on each process() call
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+ ✓ tests/shell-loop.test.ts (15)
+   ✓ ShellLoop — lifecycle (3)
+     ✓ starts and stops cleanly
+     ✓ returns FAIL_SAFE when not running
+     ✓ throws on invalid policy consistency
+   ✓ ShellLoop — clean request (PILOT) (6)
+     ✓ returns PASS for clean input
+     ✓ sets operationalMode to NORMAL on PASS
+     ✓ sets shellIntegrity=true and failSafeEnabled=true
+     ✓ no containment event emitted on PASS
+     ✓ produces a valid requestId
+     ✓ governed output < raw exposure
+   ✓ ShellLoop — threat request (ENTERPRISE_STRICT) (5)
+     ✓ returns BLOCK for high-severity threat
+     ✓ sets operationalMode to CONTAINMENT on BLOCK
+     ✓ emits containment event on BLOCK
+     ✓ sets integrity to Critical on high severity
+     ✓ includes routing hint on BLOCK
+   ✓ ShellLoop — event emission (1)
+     ✓ emits shell:output event on each process() call
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  23:29:34
+   Duration  1.45s (transform 351ms, setup 0ms, collect 477ms, tests 33ms, environment 0ms, prepare 377ms)
+
+
+> @ncaos/api@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/api
+
+ ❯ tests/api.test.ts (0)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/api.test.ts [ tests/api.test.ts ]
+Error: Failed to load url ./shell-loop.js (resolved id: ./shell-loop.js) in C:/Users/conve/Downloads/NCAOS-Urielle/egs/shell/src/watchdog/watchdog.ts. Does the file exist?
+ ❯ loadAndTransform ../node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  23:29:38
+   Duration  2.26s (transform 335ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 324ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path C:\Users\conve\Downloads\NCAOS-Urielle\egs\api
+npm error workspace @ncaos/api@0.2.0
+npm error location C:\Users\conve\Downloads\NCAOS-Urielle\egs\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run

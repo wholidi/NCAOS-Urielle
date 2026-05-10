@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCAOS-Urielle · EGS Phase 03 Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --coral:#993C1D;--coral-l:#FAECE7;--coral-m:#F0997B;
+    --amber:#854F0B;--amber-l:#FAEEDA;--amber-m:#EF9F27;
+    --blue:#0C447C;--blue-l:#E6F1FB;--blue-m:#378ADD;
+    --purple:#3C3489;--purple-l:#EEEDFE;
+    --teal:#085041;--teal-l:#E1F5EE;--teal-m:#1D9E75;
+    --gray:#444441;--gray-l:#F1EFE8;
+    --red:#791F1F;--red-l:#FCEBEB;--red-m:#E24B4A;
+    --green:#27500A;--green-l:#EAF3DE;--green-m:#639922;
+    --text:#1A1A18;--muted:#5F5E5A;--border:#D3D1C7;
+    --bg:#F8F7F4;--surface:#FFFFFF;
+    --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+    --r:8px;--shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05)
+  }
+  body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+  header{position:sticky;top:0;z-index:100;background:rgba(248,247,244,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;gap:18px;height:56px}
+  .nb{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--coral);white-space:nowrap}
+  .ns{width:1px;height:20px;background:var(--border)}
+  .np{font-size:11px;color:var(--muted);flex:1}
+  .badge{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
+  .bc{color:var(--green);background:var(--green-l);border:1px solid var(--green-m)}
+  .bn{color:var(--coral);background:var(--coral-l);border:1px solid var(--coral-m)}
+  .nst{display:flex;gap:14px;font-size:11px;color:var(--muted)}
+  .nst b{color:var(--text);font-weight:500}
+  main{max-width:1100px;margin:0 auto;padding:36px 32px 80px}
+  h1{font-size:26px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+  .sub{font-size:14px;color:var(--muted);margin-bottom:20px}
+  .sr{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:32px}
+  .sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;text-align:center}
+  .sc .l{font-size:10px;color:var(--muted);margin-bottom:3px}
+  .sc .v{font-size:12px;font-weight:600;font-family:var(--mono)}
+  .sc .vp{color:var(--green)}.sc .vh{color:var(--coral)}
+  .sec{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:32px 0 14px;display:flex;align-items:center;gap:10px}
+  .sec::after{content:'';flex:1;height:1px;background:var(--border)}
+  .layer{margin-bottom:10px;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+  .lh{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;transition:opacity .15s}
+  .lh:hover{opacity:.92}
+  .lbg{font-family:var(--mono);font-size:9px;font-weight:500;padding:2px 8px;border-radius:12px;flex-shrink:0;margin-top:3px}
+  .lht{flex:1}
+  .lht h3{font-size:14px;font-weight:600;margin-bottom:2px}
+  .lht p{font-size:12px;opacity:.75;line-height:1.5}
+  .ltg{font-size:11px;margin-top:4px;transition:transform .2s;opacity:.5;flex-shrink:0}
+  .ltg.open{transform:rotate(90deg)}
+  .lb{padding:0 18px 16px;border-top:1px solid rgba(0,0,0,.07);display:none}
+  .lb.open{display:block}
+  .tc{background:var(--coral-l);color:var(--coral)}.tc .lbg{background:var(--coral);color:#fff}
+  .ta{background:var(--amber-l);color:var(--amber)}.ta .lbg{background:var(--amber);color:#fff}
+  .tp{background:var(--purple-l);color:var(--purple)}.tp .lbg{background:var(--purple);color:#fff}
+  .tbl{background:var(--blue-l);color:var(--blue)}.tbl .lbg{background:var(--blue);color:#fff}
+  .tt2{background:var(--teal-l);color:var(--teal)}.tt2 .lbg{background:var(--teal);color:#fff}
+  .mb{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--coral);border-radius:var(--r);padding:12px 16px;margin:14px 0 10px;cursor:pointer;transition:box-shadow .15s}
+  .mb:hover{box-shadow:var(--shadow)}
+  .mb h4{font-size:13px;font-weight:600;color:var(--coral);margin-bottom:4px}
+  .mb p{font-size:12px;color:var(--muted);line-height:1.5}
+  .ms{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;background:var(--coral-l);color:var(--coral);margin:4px 4px 0 0}
+  .dg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px}
+  .dc{border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:transform .1s,box-shadow .1s;border:1px solid rgba(0,0,0,.06)}
+  .dc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.12)}
+  .dc .dn{font-size:12px;font-weight:600;margin-bottom:4px}
+  .dc .df{font-family:var(--mono);font-size:10px;opacity:.65;margin-bottom:6px}
+  .dc .dd{font-size:11px;line-height:1.45}
+  .dc .db{display:inline-block;margin-top:8px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;background:rgba(255,255,255,.6)}
+  .dco{background:var(--coral-l);color:var(--coral)}
+  .cr{display:grid;grid-template-columns:110px 1fr 1fr;gap:8px;margin-bottom:6px;font-size:12px}
+  .cl{font-weight:600;color:var(--blue);padding-top:2px}
+  .co{color:var(--muted);background:var(--gray-l);border-radius:4px;padding:6px 10px;line-height:1.4}
+  .cn{color:var(--coral);background:var(--coral-l);border-radius:4px;padding:6px 10px;line-height:1.4}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  thead th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:7px 12px;border-bottom:1px solid var(--border);background:var(--gray-l)}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+  tbody tr:hover{background:rgba(0,0,0,.025)}
+  tbody td{padding:7px 12px;vertical-align:top}
+  td.mo{font-family:var(--mono);font-size:11px}
+  td.sh{color:var(--red);font-weight:600}
+  td.sm{color:var(--amber);font-weight:600}
+  td.xc{background:var(--red-l)}
+  td.xw{background:var(--amber-l)}
+  td.ok{color:var(--green);font-weight:600;font-family:var(--mono)}
+  td.p1{color:var(--blue);font-weight:500}
+  td.p2{color:var(--amber);font-weight:500}
+  td.p3{color:var(--purple);font-weight:500}
+  td.p4{color:var(--coral);font-weight:500}
+  td.fi{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:500}
+  tr.xf:nth-child(odd){background:var(--red-l)}
+  tr.tot{background:var(--green-l) !important}
+  tr.tot td{color:var(--green);font-weight:600}
+  .rm{display:flex;flex-direction:column;gap:6px}
+  .ri{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px 16px}
+  .ri.rc{border-left:3px solid var(--green)}
+  .ri.rn{border-left:3px solid var(--blue)}
+  .ri.rp{border-left:3px solid var(--border)}
+  .rn2{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--blue);flex:0 0 64px}
+  .rt{font-size:13px;flex:1}
+  .rw{font-size:11px;color:var(--muted);flex:0 0 50px}
+  .rst{font-size:10px;font-weight:600;font-family:var(--mono);padding:2px 8px;border-radius:12px}
+  .sc2{color:var(--green);background:var(--green-l)}
+  .sn2{color:var(--blue);background:var(--blue-l)}
+  .sp2{color:var(--muted);background:var(--gray-l)}
+  .ttp{position:fixed;z-index:999;max-width:290px;background:var(--text);color:#fff;font-size:12px;line-height:1.5;padding:10px 14px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+  .ttp.show{opacity:1}
+  footer{text-align:center;padding:20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
+  footer a{color:var(--blue);text-decoration:none}
+  @media(max-width:700px){.sr{grid-template-columns:repeat(4,1fr)}.dg{grid-template-columns:repeat(2,1fr)}.cr{grid-template-columns:80px 1fr}.cn{display:none}.nst{display:none}main{padding:20px 14px 60px}header{padding:0 14px}}
+</style>
+</head>
+<body>
+<div class="ttp" id="tt"></div>
+<header>
+  <span class="nb">NCAOS // EGS</span>
+  <div class="ns"></div>
+  <span class="np">Phase 03 — Detection Layer · MTTD Instrumentation</span>
+  <span class="badge bc">● PHASE 03 COMPLETE</span>
+  <span class="badge bn">NEW: @ncaos/detection</span>
+  <div class="nst"><span><b>124</b> cumulative</span><span><b>54</b> new tests</span><span><b>5</b> new modules</span><span><b>ADR-004</b></span></div>
+</header>
+
+<main>
+  <h1>NCAOS-Urielle · External Governance Shell</h1>
+  <p class="sub">Phase 03 Architecture · Detection Layer — MTTD Instrumentation · Week 4–6 · @ncaos/detection v0.3.0</p>
+  <div class="sr">
+    <div class="sc"><div class="l">Phase status</div><div class="v vp">COMPLETE</div></div>
+    <div class="sc"><div class="l">Cumulative tests</div><div class="v vp">124 / 124</div></div>
+    <div class="sc"><div class="l">New package</div><div class="v vh">@ncaos/detection</div></div>
+    <div class="sc"><div class="l">New tests (P03)</div><div class="v vp">54 / 54</div></div>
+    <div class="sc"><div class="l">MTTD tests</div><div class="v vp">12</div></div>
+    <div class="sc"><div class="l">Gate tests</div><div class="v vp">18</div></div>
+    <div class="sc"><div class="l">Detection tests</div><div class="v vp">24</div></div>
+    <div class="sc"><div class="l">Defects fixed</div><div class="v">3</div></div>
+  </div>
+
+  <div class="sec">Architecture layers — click any module for details</div>
+
+  <div class="layer tp">
+    <div class="lh" onclick="tog('api')"><div class="lbg">v0.2.0</div>
+      <div class="lht"><h3>@ncaos/api · Fastify REST + WebSocket · Phase 02 unchanged</h3>
+        <p>POST /v1/process · GET /v1/state · GET /v1/audit/:handle · GET /v1/health · WS /v1/state/stream · 8 tests ✓</p></div>
+      <div class="ltg" id="tog-api">▶</div></div>
+    <div class="lb" id="body-api"><p style="font-size:12px;color:var(--muted);margin-top:14px">No changes in Phase 03. Phase 04 will upgrade these routes and add 9 new endpoints: /v1/events, /v1/events/stats, /v1/events/sequence/:id, /v1/events/sequence/:id/summary, /v1/mttd, /v1/policy (GET/POST), /v1/policy/history, /v1/detectors.</p></div>
+  </div>
+
+  <div class="layer ta">
+    <div class="lh" onclick="tog('shell')"><div class="lbg">v0.2.0</div>
+      <div class="lht"><h3>@ncaos/shell · Observer → Judge → Enforcer · Phase 02 unchanged</h3>
+        <p>ShellLoop.process() · Watchdog 3-restart + exponential backoff · ADR-003 process isolation · 15 tests ✓</p></div>
+      <div class="ltg" id="tog-shell">▶</div></div>
+    <div class="lb" id="body-shell"><p style="font-size:12px;color:var(--muted);margin-top:14px">No changes in Phase 03. Judge still calls @ncaos/core detection functions. Phase 04 upgrade: Judge will call @ncaos/detection detector classes directly, enabling per-tenant instances via TenantDetectorRegistry (ADR-005).</p></div>
+  </div>
+
+  <div class="layer tc">
+    <div class="lh" onclick="tog('det')"><div class="lbg">NEW</div>
+      <div class="lht"><h3>@ncaos/detection · v0.3.0 · ADR-004: detection layer independence</h3>
+        <p>Each detector is a class, not a function. MTTD measured inside each detector. Rule sets configurable at construction. 54 tests ✓</p></div>
+      <div class="ltg open" id="tog-det">▶</div></div>
+    <div class="lb open" id="body-det">
+      <div class="mb" onclick="tip(event,'MTTD Tracker · mttd/tracker.ts','Ring buffer of 1000 samples per layer. Statistics: min, max, mean, p50, p95, p99, slaBreachRate. SLA source: PolicyProfile.mttdSlaMs per detection layer. isSlaHealthy(): true when all layers have breach rate below 5%. console.warn on every SLA breach — Phase 06 adds alerting infrastructure. DetectionRegistry initialises one MttdTracker per layer per policy profile. startTimer() uses performance.now() for sub-millisecond precision.')">
+        <h4>MTTD Tracker · mttd/tracker.ts</h4>
+        <p>Ring buffer (1000 samples) · p50/p95/p99 statistics · SLA breach detection · DetectionRegistry: one tracker per layer per policy</p>
+        <span class="ms">p50</span><span class="ms">p95</span><span class="ms">p99</span><span class="ms">slaBreachRate</span><span class="ms">isSlaHealthy()</span><span class="ms">12 tests ✓</span>
+      </div>
+      <div class="dg">
+        <div class="dc dco" onclick="tip(event,'GateDetector · gate/gate-detector.ts','10 configurable rules: 5 critical (INJECTION_PATTERN, SIGNATURE_INVALID, KNOWN_BAD_SOURCE, REPLAY_ATTACK, TAMPERED_PAYLOAD) → HIGH severity, sys scope. 5 warning (RATE_EXCEEDED, UNRECOGNIZED_SOURCE, GEO_MISMATCH, SCHEMA_VIOLATION, OVERSIZED_PAYLOAD) → MED severity, req or flow scope. Source allowlist: auto-adds UNRECOGNIZED_SOURCE flag when sourceId not in allowedSources[]. addRule() for enterprise custom rule injection scoped per tenant in Phase 04. getRules() returns all active rules. Critical flag wins over warning in same request. MTTD measured on every call.')">
+          <div class="dn">Gate detector</div><div class="df">gate/gate-detector.ts</div>
+          <div class="dd">10 configurable rules<br>5 critical → HIGH/sys<br>INJECTION_PATTERN etc<br>5 warning → MED<br>Source allowlist<br>addRule() custom rules</div>
+          <div class="db">18 tests ✓</div>
+        </div>
+        <div class="dc dco" onclick="tip(event,'PremiseDetector · premise/premise-detector.ts','Weighted premises across three tiers: critical, standard, info — each contributing differently to severity. Expiry windows per premise (stale premises trigger violation). Per-workflow PremiseRegistry tracks premise state across a request chain. Contract version mismatch detection (e.g. client sends 1.0 vs expected 2.0). Unknown claim flagging with reason=unknown_claim in DetectionResult. MTTD measured on every call. 9 tests passing.')">
+          <div class="dn">Premise detector</div><div class="df">premise/premise-detector.ts</div>
+          <div class="dd">Weighted premises<br>critical/standard/info<br>Expiry windows<br>Per-workflow PremiseRegistry<br>Contract version mismatch<br>Unknown claim flagging</div>
+          <div class="db">9 tests ✓</div>
+        </div>
+        <div class="dc dco" onclick="tip(event,'AuthorityDetector · authority/authority-detector.ts','Full state machine: GRANT / DOWNGRADE / DENY / ESCALATION decisions. Chain constraint: authority can only be downgraded in a request chain, never upgraded — previous=reference-only forces effective=reference-only regardless of what is requested. Immutable AuthorityAuditLog appends every decision (2 entries confirmed in test). escalation_attempt (requesting higher than policy grants) → HIGH/sys. D-01 fix: this is correctly HIGH, not med — it is an escalation attempt, not a legitimate downgrade.')">
+          <div class="dn">Authority detector</div><div class="df">authority/authority-detector.ts</div>
+          <div class="dd">Full state machine<br>GRANT/DOWNGRADE/<br>DENY/ESCALATION<br>Chain constraint (no upgrade)<br>Immutable AuthorityAuditLog<br>escalation_attempt → HIGH</div>
+          <div class="db">9 tests ✓ · D-01 fix</div>
+        </div>
+        <div class="dc dco" onclick="tip(event,'ContinuityDetector · continuity/continuity-detector.ts','Weighted equivalence scoring across test tiers. Change window FSM: OPEN → WATCHING → CLOSED → CONTAINMENT. OPEN→WATCHING is the first transition when tests run; WATCHING→CLOSED requires a subsequent stable check (D-02 fix). Trend tracking across change windows. 12-test template generator for systematic equivalence testing. failRate = failedTests/totalTests. Always scope=sys (design invariant). MTTD measured on every call. 6 tests passing.')">
+          <div class="dn">Continuity detector</div><div class="df">continuity/continuity-detector.ts</div>
+          <div class="dd">Weighted equivalence scoring<br>Change window FSM:<br>OPEN → WATCHING<br>→ CLOSED → CONTAINMENT<br>Trend tracking<br>12-test template gen</div>
+          <div class="db">6 tests ✓ · D-02 fix</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:9px 14px;background:rgba(153,60,29,.07);border-radius:6px;font-size:11px;color:var(--coral)">
+        vs Phase 01: function → class · stateless → configurable rules · no MTTD → p50/p95/p99 ring buffer · no registry → DetectionRegistry per policy · per-tenant instances in Phase 04
+      </div>
+    </div>
+  </div>
+
+  <div class="layer tbl">
+    <div class="lh" onclick="tog('core')"><div class="lbg">v0.1.0</div>
+      <div class="lht"><h3>@ncaos/core · Type contracts + scoring + verdict · Phase 01</h3>
+        <p>Shared foundation — all packages import from here. 47 tests ✓ — regression passing in every phase.</p></div>
+      <div class="ltg" id="tog-core">▶</div></div>
+    <div class="lb" id="body-core"><p style="font-size:12px;color:var(--muted);margin-top:14px">No changes in Phase 03. Detection classes call core scoring functions internally (computeIntegrity, computeAuthority). GovEvent, GovState, PolicyProfile, Verdict, and all Zod schemas remain the canonical types imported by every package.</p></div>
+  </div>
+
+  <div class="layer tt2">
+    <div class="lh" onclick="tog('persist')"><div class="lbg">P02</div>
+      <div class="lht"><h3>Protected core + persistence · Phase 02 baseline</h3>
+        <p>AI black box (observe-only) · in-memory event store · Phase 04: TimescaleDB + S3 + per-tenant DetectorRegistry</p></div>
+      <div class="ltg" id="tog-persist">▶</div></div>
+    <div class="lb" id="body-persist"><p style="font-size:12px;color:var(--muted);margin-top:14px">Phase 04 replaces the in-memory EventStore with TimescaleDB, adds cursor-based pagination, layer/severity/action/sequenceId filters, summarizeSequence() for Toru-William behavioral pattern analysis, and TenantDetectorRegistry (one detector set per tenant, ADR-005).</p></div>
+  </div>
+
+  <div class="sec">Gate detection rules — 10 configurable · 5 critical + 5 warning</div>
+  <table>
+    <thead><tr><th>Rule ID</th><th>Flag</th><th>Severity</th><th>Scope</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td class="mo xc">G-C-001</td><td>INJECTION_PATTERN</td><td class="sh xc">HIGH</td><td class="xc">sys</td><td class="xc">Critical</td></tr>
+      <tr><td class="mo xc">G-C-002</td><td>SIGNATURE_INVALID</td><td class="sh xc">HIGH</td><td class="xc">sys</td><td class="xc">Critical</td></tr>
+      <tr><td class="mo xc">G-C-003</td><td>KNOWN_BAD_SOURCE</td><td class="sh xc">HIGH</td><td class="xc">sys</td><td class="xc">Critical</td></tr>
+      <tr><td class="mo xc">G-C-004</td><td>REPLAY_ATTACK</td><td class="sh xc">HIGH</td><td class="xc">sys</td><td class="xc">Critical</td></tr>
+      <tr><td class="mo xc">G-C-005</td><td>TAMPERED_PAYLOAD</td><td class="sh xc">HIGH</td><td class="xc">sys</td><td class="xc">Critical</td></tr>
+      <tr><td class="mo xw">G-W-001</td><td>RATE_EXCEEDED</td><td class="sm xw">MED</td><td class="xw">req</td><td class="xw">Warning</td></tr>
+      <tr><td class="mo xw">G-W-002</td><td>UNRECOGNIZED_SOURCE</td><td class="sm xw">MED</td><td class="xw">req</td><td class="xw">Warning</td></tr>
+      <tr><td class="mo xw">G-W-003</td><td>GEO_MISMATCH</td><td class="sm xw">MED</td><td class="xw">req</td><td class="xw">Warning</td></tr>
+      <tr><td class="mo xw">G-W-004</td><td>SCHEMA_VIOLATION</td><td class="sm xw">MED</td><td class="xw">flow</td><td class="xw">Warning</td></tr>
+      <tr><td class="mo xw">G-W-005</td><td>OVERSIZED_PAYLOAD</td><td class="sm xw">MED</td><td class="xw">req</td><td class="xw">Warning</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec">Phase 01 → Phase 03: function to class upgrade</div>
+  <div style="display:grid;grid-template-columns:110px 1fr 1fr;gap:8px;margin-bottom:6px;font-size:11px;font-weight:600;color:var(--muted);padding:0 4px"><span>Capability</span><span>Phase 01 — function</span><span>Phase 03 — class upgrade</span></div>
+  <div class="cr"><span class="cl">Gate</span><span class="co">detectGate() — stateless, hardcoded flags, no MTTD</span><span class="cn">GateDetector — 10 configurable rules, source allowlist, MTTD ring buffer, addRule() custom injection</span></div>
+  <div class="cr"><span class="cl">Premise</span><span class="co">detectPremise() — ratio-based, no registry</span><span class="cn">PremiseDetector — weighted tiers, expiry windows, per-workflow PremiseRegistry, contract version checks</span></div>
+  <div class="cr"><span class="cl">Authority</span><span class="co">detectAuthority() — simple override flag</span><span class="cn">AuthorityDetector — full FSM, chain constraint, immutable AuthorityAuditLog, escalation classification</span></div>
+  <div class="cr"><span class="cl">Continuity</span><span class="co">detectContinuity() — simple score threshold</span><span class="cn">ContinuityDetector — weighted scoring, OPEN→WATCHING→CLOSED→CONTAINMENT FSM, trend tracking</span></div>
+  <div class="cr"><span class="cl">MTTD</span><span class="co">mttdMs field present, not tracked</span><span class="cn">MttdTracker: 1000-sample ring buffer, p50/p95/p99, SLA breach detection, isSlaHealthy()</span></div>
+
+  <div class="sec">Defects found &amp; fixed — 3 issues · all resolved</div>
+  <table>
+    <thead><tr><th>ID</th><th>Test</th><th>Root cause</th><th>Fix applied</th></tr></thead>
+    <tbody>
+      <tr class="xf"><td class="fi">D-01</td><td>AuthorityDetector — downgrade severity</td><td>Requesting decision-ready when policy grants only reference-only is escalation_attempt → correctly HIGH. Test expected 'med'.</td><td>Changed: expect(result.severity).toBe('high') — test alignment, not runtime bug</td></tr>
+      <tr class="xf"><td class="fi">D-02</td><td>ContinuityDetector — window transition</td><td>OPEN→WATCHING is first transition when tests run. WATCHING→CLOSED requires subsequent stable check. Test expected 'CLOSED'.</td><td>Changed: expect(result.changeWindowState).toBe('WATCHING')</td></tr>
+      <tr class="xf"><td class="fi">D-03</td><td>File save path mismatch (VS Code / PowerShell)</td><td>VS Code opened from different folder — edited file was not the file npm test was reading. Classic monorepo path trap.</td><td>Used Set-Content at correct PowerShell path. Going forward: always run code . from egs/ directory.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec">Cumulative test results — 124 / 124 · 4 packages · 8 test files</div>
+  <table>
+    <thead><tr><th>Package</th><th>File</th><th>Suite / scope</th><th>Tests</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="p1">@ncaos/core</td><td class="mo">scoring.test.ts</td><td>computeIntegrity + computeAuthority + metrics + continuity</td><td>16</td><td class="ok">PASS ✓</td></tr>
+      <tr><td class="p1"></td><td class="mo">detection.test.ts</td><td>detectGate + detectPremise + detectAuthority + detectContinuity</td><td>16</td><td class="ok">PASS ✓</td></tr>
+      <tr><td class="p1"></td><td class="mo">verdict.test.ts</td><td>enforce (all profiles) + failSafeVerdict + policy validation</td><td>15</td><td class="ok">47 total ✓</td></tr>
+      <tr><td class="p2">@ncaos/shell</td><td class="mo">shell-loop.test.ts</td><td>lifecycle + clean PILOT + threat ENTERPRISE_STRICT + event emission</td><td>15</td><td class="ok">15 total ✓</td></tr>
+      <tr><td class="p3">@ncaos/api</td><td class="mo">api.test.ts</td><td>health + process (401/400/200/EVD) + state + audit handle</td><td>8</td><td class="ok">8 total ✓</td></tr>
+      <tr><td class="p4">@ncaos/detection</td><td class="mo">mttd.test.ts</td><td>MttdTracker stats + breach count + reset + DetectionRegistry + startTimer</td><td>12</td><td class="ok">PASS ✓</td></tr>
+      <tr><td class="p4"></td><td class="mo">gate.test.ts</td><td>clean + 5 critical flags + warning flags + source allowlist + custom rules</td><td>18</td><td class="ok">PASS ✓</td></tr>
+      <tr><td class="p4"></td><td class="mo">detection.test.ts</td><td>PremiseDetector + AuthorityDetector + ContinuityDetector — all scenarios</td><td>24</td><td class="ok">54 total ✓</td></tr>
+      <tr class="tot"><td>CUMULATIVE</td><td>Phases 01–03</td><td>4 packages · 8 test files</td><td>124</td><td>ALL PASS ✓</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec">Architecture decision records — ADR-001 through ADR-004</div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--r);padding:12px 16px"><div style="font-family:var(--mono);font-size:10px;color:var(--blue);margin-bottom:4px">ADR-001 · Phase 01</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Zod-first type contracts as architectural boundary</div><div style="font-size:12px;color:var(--muted)">All packages import from @ncaos/core. Breaking changes require version bump. New fields must be .optional().</div></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:var(--r);padding:12px 16px"><div style="font-family:var(--mono);font-size:10px;color:var(--red);margin-bottom:4px">ADR-002 · Phase 01</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Fail-safe default-deny as unconditional invariant</div><div style="font-size:12px;color:var(--muted)">failSafeVerdict() cannot be disabled by policy. Shell failure → BLOCK + authority=invalid + score=0. Chaos test Phase 06.</div></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:var(--r);padding:12px 16px"><div style="font-family:var(--mono);font-size:10px;color:var(--amber);margin-bottom:4px">ADR-003 · Phase 02</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Process isolation strategy</div><div style="font-size:12px;color:var(--muted)">ShellLoop as separate process. Watchdog: 3-restart with exponential backoff (500→1000→2000ms). Permanent FAIL_SAFE on exhaustion.</div></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--coral);border-radius:var(--r);padding:12px 16px"><div style="font-family:var(--mono);font-size:10px;color:var(--coral);margin-bottom:4px">ADR-004 · Phase 03</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Detection layer independence</div><div style="font-size:12px;color:var(--muted)">Each detector is a class, not a function. MTTD measured inside each detector using performance.now(). Rule sets configurable at construction. Per-tenant detector instances via TenantDetectorRegistry in Phase 04 (ADR-005).</div></div>
+  </div>
+
+  <div class="sec">Phase roadmap</div>
+  <div class="rm">
+    <div class="ri rc"><span class="rn2">Phase 01</span><span class="rt">Foundation &amp; repo setup · type contracts · CI pipeline · 47 tests</span><span class="rw">W1–2</span><span class="rst sc2">COMPLETE</span></div>
+    <div class="ri rc"><span class="rn2">Phase 02</span><span class="rt">Core shell engine + API skeleton · Observer→Judge→Enforcer · 70 tests</span><span class="rw">W2–4</span><span class="rst sc2">COMPLETE</span></div>
+    <div class="ri rc"><span class="rn2">Phase 03</span><span class="rt">Detection layer — MTTD instrumentation · 4 detector classes · 124 cumulative tests</span><span class="rw">W4–6</span><span class="rst sc2">COMPLETE</span></div>
+    <div class="ri rn"><span class="rn2">Phase 04</span><span class="rt">API integration surface · TimescaleDB · per-tenant detectors · sequence interface (Toru-William)</span><span class="rw">W6–8</span><span class="rst sn2">NEXT</span></div>
+    <div class="ri rp"><span class="rn2">Phase 05</span><span class="rt">Admin UI (production) · React Admin Terminal · role-based views · AuditSignal schema</span><span class="rw">W8–10</span><span class="rst sp2">PLANNED</span></div>
+    <div class="ri rp"><span class="rn2">Phase 06</span><span class="rt">Hardening &amp; compliance · STRIDE + AI/ML threat model · pen test · ISO 42001</span><span class="rw">W10–12</span><span class="rst sp2">PLANNED</span></div>
+    <div class="ri rp"><span class="rn2">Phase 07</span><span class="rt">Stakeholder demo &amp; handoff · v1.0-rc · commercial pilot proposal</span><span class="rw">W12–14</span><span class="rst sp2">PLANNED</span></div>
+  </div>
+</main>
+<footer>NCAOS-Urielle · EGS Phase 03 · wholidi/NCAOS-Urielle · <a href="https://urielle-ai.com" target="_blank">urielle-ai.com</a> · Built 2026</footer>
+<script>
+  const tt=document.getElementById('tt');let h;
+  function tip(e,title,body){e.stopPropagation();clearTimeout(h);tt.innerHTML='<strong>'+title+'</strong><br>'+body;let x=e.clientX+14,y=e.clientY+14;if(x+290>window.innerWidth-8)x=e.clientX-304;if(y+130>window.innerHeight-8)y=e.clientY-144;tt.style.left=x+'px';tt.style.top=y+'px';tt.classList.add('show');h=setTimeout(()=>tt.classList.remove('show'),5000);}
+  document.addEventListener('click',()=>{clearTimeout(h);tt.classList.remove('show')});
+  function tog(id){const b=document.getElementById('body-'+id),t=document.getElementById('tog-'+id);const o=b.classList.toggle('open');t.classList.toggle('open',o);}
+</script>
+</body>
+</html>

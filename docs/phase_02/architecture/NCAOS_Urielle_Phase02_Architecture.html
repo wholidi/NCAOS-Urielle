@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCAOS-Urielle · EGS Phase 02 Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --purple:#3C3489;--purple-l:#EEEDFE;--purple-m:#7F77DD;
+    --amber:#854F0B;--amber-l:#FAEEDA;--amber-m:#EF9F27;
+    --blue:#0C447C;--blue-l:#E6F1FB;--blue-m:#378ADD;
+    --teal:#085041;--teal-l:#E1F5EE;--teal-m:#1D9E75;
+    --gray:#444441;--gray-l:#F1EFE8;--gray-m:#888780;
+    --red:#791F1F;--red-l:#FCEBEB;--red-m:#E24B4A;
+    --green:#27500A;--green-l:#EAF3DE;--green-m:#639922;
+    --text:#1A1A18;--muted:#5F5E5A;--border:#D3D1C7;
+    --bg:#F8F7F4;--surface:#FFFFFF;
+    --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+    --r:8px;--shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05)
+  }
+  body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+  header{position:sticky;top:0;z-index:100;background:rgba(248,247,244,.93);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;gap:20px;height:56px}
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--purple);white-space:nowrap}
+  .nav-sep{width:1px;height:20px;background:var(--border)}
+  .nav-phase{font-size:11px;color:var(--muted);flex:1}
+  .badge{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
+  .badge-complete{color:var(--green);background:var(--green-l);border:1px solid var(--green-m)}
+  .badge-new{color:var(--amber);background:var(--amber-l);border:1px solid var(--amber-m)}
+  .nav-stats{display:flex;gap:16px;font-size:11px;color:var(--muted)}
+  .nav-stats b{color:var(--text);font-weight:500}
+  main{max-width:1100px;margin:0 auto;padding:36px 32px 80px}
+  .page-header{margin-bottom:36px}
+  .page-header h1{font-size:26px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+  .page-header p{font-size:14px;color:var(--muted)}
+  .stat-row{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:20px}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px 12px;text-align:center}
+  .stat-card .label{font-size:10px;color:var(--muted);margin-bottom:4px}
+  .stat-card .value{font-size:12px;font-weight:600;font-family:var(--mono)}
+  .stat-card .value.pass{color:var(--green)}
+  .sec{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    margin:36px 0 14px;display:flex;align-items:center;gap:10px}
+  .sec::after{content:'';flex:1;height:1px;background:var(--border)}
+  /* Layer cards */
+  .layer{margin-bottom:10px;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+  .layer-hdr{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;transition:opacity .15s}
+  .layer-hdr:hover{opacity:.92}
+  .layer-badge{font-family:var(--mono);font-size:9px;font-weight:500;padding:2px 8px;border-radius:12px;flex-shrink:0;margin-top:3px}
+  .layer-hdr-text{flex:1}
+  .layer-hdr-text h3{font-size:14px;font-weight:600;margin-bottom:3px}
+  .layer-hdr-text p{font-size:12px;opacity:.78;line-height:1.5}
+  .layer-tog{font-size:11px;margin-top:4px;transition:transform .2s;opacity:.55;flex-shrink:0}
+  .layer-tog.open{transform:rotate(90deg)}
+  .layer-body{padding:0 20px 16px;border-top:1px solid rgba(0,0,0,.08);display:none}
+  .layer-body.open{display:block}
+  /* Themes */
+  .th-purple{background:var(--purple-l);color:var(--purple)}
+  .th-purple .layer-badge{background:var(--purple);color:#fff}
+  .th-amber{background:var(--amber-l);color:var(--amber)}
+  .th-amber .layer-badge{background:var(--amber);color:#fff}
+  .th-blue{background:var(--blue-l);color:var(--blue)}
+  .th-blue .layer-badge{background:var(--blue);color:#fff}
+  .th-gray{background:var(--gray-l);color:var(--gray)}
+  .th-gray .layer-badge{background:var(--gray);color:#fff}
+  /* Module grid */
+  .mod-grid{display:grid;gap:8px;margin-top:14px}
+  .mod-grid-4{grid-template-columns:repeat(4,1fr)}
+  .mod-grid-5{grid-template-columns:repeat(5,1fr)}
+  .mod-grid-2{grid-template-columns:repeat(2,1fr)}
+  .module{border-radius:var(--r);padding:10px 13px;cursor:pointer;transition:transform .1s,box-shadow .1s;border:1px solid transparent}
+  .module:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+  .module .mn{font-size:12px;font-weight:500;margin-bottom:3px}
+  .module .mf{font-family:var(--mono);font-size:10px;opacity:.7;margin-bottom:3px}
+  .module .md{font-size:11px;opacity:.8;line-height:1.4}
+  .module .mb{display:inline-block;margin-top:6px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.5)}
+  .m-purple{background:var(--purple-l);color:var(--purple)}
+  .m-amber{background:var(--amber-l);color:var(--amber)}
+  .m-blue{background:var(--blue-l);color:var(--blue)}
+  .m-red{background:var(--red-l);color:var(--red);border:1px dashed var(--red-m) !important}
+  .m-gray{background:var(--gray-l);color:var(--gray)}
+  /* Tables */
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  thead th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+    padding:8px 12px;border-bottom:1px solid var(--border);background:var(--gray-l)}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+  tbody tr:hover{background:rgba(0,0,0,.025)}
+  tbody td{padding:8px 12px;vertical-align:top}
+  td.mono{font-family:var(--mono);font-size:11px;color:var(--blue)}
+  td.pass{font-family:var(--mono);font-size:11px;color:var(--green);font-weight:500}
+  td.fail{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:500}
+  tr.pkg-core td:first-child{color:var(--blue);font-weight:500}
+  tr.pkg-shell td:first-child{color:var(--amber);font-weight:500}
+  tr.pkg-api td:first-child{color:var(--purple);font-weight:500}
+  tr.total-row{background:var(--green-l) !important}
+  tr.total-row td{color:var(--green);font-weight:600}
+  /* Fix table */
+  .fix-table tbody tr:nth-child(odd){background:var(--red-l)}
+  td.fix-id{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:500}
+  td.adr-ref{font-family:var(--mono);font-size:11px;color:var(--purple)}
+  /* Roadmap */
+  .roadmap{display:flex;flex-direction:column;gap:6px}
+  .phase-item{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--r);padding:10px 16px}
+  .phase-item.complete{border-left:3px solid var(--green)}
+  .phase-item.next{border-left:3px solid var(--blue)}
+  .phase-item.planned{border-left:3px solid var(--border)}
+  .phase-num{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--blue);flex:0 0 64px}
+  .phase-title{font-size:13px;flex:1}
+  .phase-week{font-size:11px;color:var(--muted);flex:0 0 54px}
+  .phase-status{font-size:10px;font-weight:600;font-family:var(--mono);padding:2px 8px;border-radius:12px}
+  .s-complete{color:var(--green);background:var(--green-l)}
+  .s-next{color:var(--blue);background:var(--blue-l)}
+  .s-planned{color:var(--muted);background:var(--gray-l)}
+  /* Tooltip */
+  .tt{position:fixed;z-index:999;max-width:280px;background:var(--text);color:#fff;font-size:12px;
+    line-height:1.5;padding:10px 14px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .15s;
+    box-shadow:0 8px 24px rgba(0,0,0,.25)}
+  .tt.show{opacity:1}
+  footer{text-align:center;padding:22px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
+  footer a{color:var(--blue);text-decoration:none}
+  @media(max-width:700px){.stat-row{grid-template-columns:repeat(4,1fr)}.nav-stats{display:none}.mod-grid-4,.mod-grid-5{grid-template-columns:repeat(2,1fr)}main{padding:22px 14px 60px}header{padding:0 14px}}
+</style>
+</head>
+<body>
+<div class="tt" id="tt"></div>
+<header>
+  <span class="nav-brand">NCAOS // EGS</span>
+  <div class="nav-sep"></div>
+  <span class="nav-phase">Phase 02 — Core Shell Engine + API Skeleton</span>
+  <span class="badge badge-complete">● PHASE 02 COMPLETE</span>
+  <span class="badge badge-new">NEW: @ncaos/shell + @ncaos/api</span>
+  <div class="nav-stats">
+    <span><b>70</b> tests</span>
+    <span><b>5/5</b> manual</span>
+    <span><b>7</b> fixes</span>
+    <span><b>19 files</b> committed</span>
+  </div>
+</header>
+
+<main>
+  <div class="page-header">
+    <h1>NCAOS-Urielle · External Governance Shell</h1>
+    <p>Phase 02 Architecture · Core Shell Engine + API Skeleton · Week 2–4 · Observer → Judge → Enforcer · git 2066733</p>
+    <div class="stat-row">
+      <div class="stat-card"><div class="label">Phase status</div><div class="value pass">COMPLETE</div></div>
+      <div class="stat-card"><div class="label">Core tests</div><div class="value pass">47 / 47</div></div>
+      <div class="stat-card"><div class="label">Shell tests</div><div class="value pass">15 / 15</div></div>
+      <div class="stat-card"><div class="label">API tests</div><div class="value pass">8 / 8</div></div>
+      <div class="stat-card"><div class="label">Total tests</div><div class="value pass">70 / 70</div></div>
+      <div class="stat-card"><div class="label">Manual API</div><div class="value pass">5 / 5</div></div>
+      <div class="stat-card"><div class="label">Fixes applied</div><div class="value">7</div></div>
+      <div class="stat-card"><div class="label">Files committed</div><div class="value">19</div></div>
+    </div>
+  </div>
+
+  <div class="sec">Architecture layers — click any module for details</div>
+
+  <!-- API layer -->
+  <div class="layer th-purple">
+    <div class="layer-hdr" onclick="tog('l-api')">
+      <div class="layer-badge">NEW</div>
+      <div class="layer-hdr-text">
+        <h3>@ncaos/api · Fastify REST + WebSocket · v0.2.0</h3>
+        <p>HTTP server on :3000 · X-Partner-ID tenant isolation · Watchdog-supervised shell · 8 tests ✓</p>
+      </div>
+      <div class="layer-tog" id="tog-l-api">▶</div>
+    </div>
+    <div class="layer-body open" id="body-l-api">
+      <div class="mod-grid mod-grid-5">
+        <div class="module m-purple" onclick="tip(event,'POST /v1/process','Submit boundary signal → returns Verdict + OutputAuthority. Returns 401 without X-Partner-ID, 400 for invalid Zod payload, 200 with verdict + requestId. Returns evidenceHandle when containment triggered.')">
+          <div class="mn">POST /v1/process</div>
+          <div class="mf">Submit signal → Verdict</div>
+          <div class="md">401 no header · 400 bad payload · EVD handle on containment</div>
+          <div class="mb">4 tests ✓</div>
+        </div>
+        <div class="module m-purple" onclick="tip(event,'GET /v1/state','Returns current GovState scoped to X-Partner-ID tenant. Includes systemStatus, operationalMode, integrity, authority, rawExposurePct, governedOutputPct, latencyOverheadMs, activeEvent, lastRouting.')">
+          <div class="mn">GET /v1/state</div>
+          <div class="mf">Current GovState</div>
+          <div class="md">Full state object incl. rawExposurePct, operationalMode</div>
+          <div class="mb">1 test ✓</div>
+        </div>
+        <div class="module m-purple" onclick="tip(event,'GET /v1/audit/:handle','Retrieve containment event by EVD-{ts}-{hash} evidence handle. Returns 404 for unknown handle, 200 + full GovEvent for known. Audit trail confirmed working in manual T-04.')">
+          <div class="mn">GET /v1/audit/:handle</div>
+          <div class="mf">Retrieve by EVD handle</div>
+          <div class="md">404 unknown · 200 + full GovEvent for known</div>
+          <div class="mb">2 tests ✓</div>
+        </div>
+        <div class="module m-purple" onclick="tip(event,'GET /v1/health','Returns status=OK, watchdog=RUNNING, shell=True, policy=STRICT-PROD, timestamp. Returns 200 when shell is running. Used for liveness checks.')">
+          <div class="mn">GET /v1/health</div>
+          <div class="mf">Liveness check</div>
+          <div class="md">status=OK, watchdog=RUNNING, shell=True</div>
+          <div class="mb">1 test ✓</div>
+        </div>
+        <div class="module m-purple" onclick="tip(event,'WS /v1/state/stream','Live GovState WebSocket push to Admin Terminal. Phase 05 Admin UI target. Replaces the setInterval polling from the PoC HTML. Emitted by Enforcer shell:output event.')">
+          <div class="mn">WS /v1/state/stream</div>
+          <div class="mf">Live GovState push</div>
+          <div class="md">Phase 05 Admin Terminal target</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:9px 14px;background:rgba(60,52,137,.07);border-radius:6px;font-size:11px;color:var(--purple)">
+        Auth: X-Partner-ID header required — returns 401 without it (tenant isolation enforced at API layer, not just DB) · Zod body validation on /v1/process — returns 400 on schema violation
+      </div>
+    </div>
+  </div>
+
+  <!-- Shell layer -->
+  <div class="layer th-amber">
+    <div class="layer-hdr" onclick="tog('l-shell')">
+      <div class="layer-badge">NEW</div>
+      <div class="layer-hdr-text">
+        <h3>@ncaos/shell · Observer → Judge → Enforcer · v0.2.0</h3>
+        <p>Process-isolated shell engine · single ShellLoop.process() entry point · ADR-003 · 15 tests ✓</p>
+      </div>
+      <div class="layer-tog open" id="tog-l-shell">▶</div>
+    </div>
+    <div class="layer-body open" id="body-l-shell">
+      <div style="margin-bottom:8px;font-size:11px;color:var(--amber);font-family:var(--mono)">shell-loop.ts · ShellLoop.process() — single entry point wiring all three modules</div>
+      <div class="mod-grid mod-grid-4">
+        <div class="module m-amber" onclick="tip(event,'Observer · observer/observer.ts','I/O boundary tap. Emits ObservedRequest from boundary signals, or null if observation fails (null → FAIL_SAFE path, ADR-002 invariant). Phase 2: simulates boundary tap; Phase 3 will add real detection inputs.')">
+          <div class="mn">Observer</div>
+          <div class="mf">observer/observer.ts</div>
+          <div class="md">I/O boundary tap → ObservedRequest or null</div>
+        </div>
+        <div class="module m-amber" onclick="tip(event,'Judge · judge/judge.ts','Runs all 4 detection layers from @ncaos/core: detectGate(), detectPremise(), detectAuthority(), detectContinuity(). Aggregates worst severity and scope across all triggered layers. Passes GovEvent to Enforcer.')">
+          <div class="mn">Judge</div>
+          <div class="mf">judge/judge.ts</div>
+          <div class="md">Runs all 4 detection layers, aggregates worst severity+scope</div>
+        </div>
+        <div class="module m-amber" onclick="tip(event,'Enforcer · enforcer/enforcer.ts','Verdict + GovState builder. Calls enforce() from @ncaos/core. Builds the GovState payload and emits it as a shell:output event, which the API WebSocket feed picks up for live streaming to the Admin Terminal.')">
+          <div class="mn">Enforcer</div>
+          <div class="mf">enforcer/enforcer.ts</div>
+          <div class="md">Verdict + GovState builder · emits shell:output event</div>
+        </div>
+        <div class="module m-red" onclick="tip(event,'Watchdog · watchdog/watchdog.ts (ADR-003)','3-restart policy with exponential backoff. On restart exhaustion → permanent FAIL_SAFE (shell cannot be revived without operator intervention). Process-isolated supervisor — EGS shell runs as a separate process from the AI runtime. F-03 fix: corrected import path ../shell-loop.js.')">
+          <div class="mn">Watchdog</div>
+          <div class="mf">watchdog/watchdog.ts</div>
+          <div class="md">3-restart policy · exponential backoff · permanent FAIL_SAFE on exhaustion</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:var(--amber)">
+        Test suites: ShellLoop lifecycle (3) · clean request PILOT-OBS (6) · threat request ENTERPRISE_STRICT (5) · event emission (1)
+      </div>
+    </div>
+  </div>
+
+  <!-- Core layer -->
+  <div class="layer th-blue">
+    <div class="layer-hdr" onclick="tog('l-core')">
+      <div class="layer-badge">v0.1.0</div>
+      <div class="layer-hdr-text">
+        <h3>@ncaos/core · Detection + scoring + verdict · Phase 01</h3>
+        <p>47 tests — all passing (regression confirmed). Judge delegates all detection calls into this package.</p>
+      </div>
+      <div class="layer-tog" id="tog-l-core">▶</div>
+    </div>
+    <div class="layer-body" id="body-l-core">
+      <div class="mod-grid mod-grid-4" style="margin-bottom:8px">
+        <div class="module m-blue" onclick="tip(event,'detectGate()','INJECTION_PATTERN / SIGNATURE_INVALID → HIGH/sys. RATE_EXCEEDED → MED/req. Critical flags override warning flags. MTTD measured. Routes to SOC. 5 tests passing.')">
+          <div class="mn">External gate</div><div class="mf">detectGate()</div>
+          <div class="md">Flag classification → severity+scope · SOC routing</div><div class="mb">5 tests ✓</div>
+        </div>
+        <div class="module m-blue" onclick="tip(event,'detectPremise()','≥70% unvalidated → HIGH/flow. 30–70% → MED/req. Zero-claim guard. Routes to Arch review. 4 tests passing.')">
+          <div class="mn">Premise check</div><div class="mf">detectPremise()</div>
+          <div class="md">Claim validation ratio → severity · Arch review</div><div class="mb">4 tests ✓</div>
+        </div>
+        <div class="module m-blue" onclick="tip(event,'detectAuthority()','Override attempt → HIGH/sys. Legitimate policy downgrade → MED/req. No trigger when policy grants decision-ready. Routes to Gov review. 3 tests passing.')">
+          <div class="mn">Authority check</div><div class="mf">detectAuthority()</div>
+          <div class="md">Override attempt → HIGH/sys · Gov review</div><div class="mb">3 tests ✓</div>
+        </div>
+        <div class="module m-blue" onclick="tip(event,'detectContinuity()','≥40% fail OR score&lt;55 → HIGH. ≥10% OR score&lt;75 → MED. Always scope=sys (design invariant). Routes to Change mgmt. 4 tests passing.')">
+          <div class="mn">Continuity watch</div><div class="mf">detectContinuity()</div>
+          <div class="md">Equivalence test fail rate · always scope=sys</div><div class="mb">4 tests ✓</div>
+        </div>
+      </div>
+      <div class="mod-grid mod-grid-2">
+        <div class="module m-blue" onclick="tip(event,'Verdict engine','enforce() + failSafeVerdict(). GovEvent × PolicyProfile → deterministic Verdict. PASS / DOWNGRADE / BLOCK / FAIL_SAFE. 3 profiles: ENTERPRISE_STRICT, CRITICAL_STRICT, PILOT_OBS. 10 tests passing.')">
+          <div class="mn">Verdict engine</div><div class="mf">enforce() + failSafeVerdict()</div>
+          <div class="md">PASS / DOWNGRADE / BLOCK / FAIL_SAFE · 3 policy profiles</div><div class="mb">10 tests ✓</div>
+        </div>
+        <div class="module m-blue" onclick="tip(event,'Scoring module','computeIntegrity() — nominal=88, low=74, med=61, high=29. computeAuthority() — nominal=84, low=72, med=58, high=22. computeContainmentMetrics(), scoreToContinuityState(). 16 tests passing.')">
+          <div class="mn">Scoring</div><div class="mf">computeIntegrity() · computeAuthority()</div>
+          <div class="md">Integrity + authority scores 0–100 · policy threshold driven</div><div class="mb">16 tests ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persistence layer -->
+  <div class="layer th-gray">
+    <div class="layer-hdr" onclick="tog('l-persist')">
+      <div class="layer-badge">skeleton</div>
+      <div class="layer-hdr-text">
+        <h3>Persistence &amp; audit · in-memory skeleton (Phase 02)</h3>
+        <p>In-memory store for Phase 02 testing · audit log via evidenceHandle · Phase 04 target: TimescaleDB + S3</p>
+      </div>
+      <div class="layer-tog" id="tog-l-persist">▶</div>
+    </div>
+    <div class="layer-body" id="body-l-persist">
+      <div class="mod-grid mod-grid-4">
+        <div class="module m-gray" onclick="tip(event,'Event store','In-memory map for Phase 02. Phase 04 target: TimescaleDB for time-series event log. Each stored GovEvent includes requestId, evidenceHandle, mttdMs, tenant, integrity, authority, routing.')">
+          <div class="mn">Event store</div><div class="md">In-memory Phase 02 · TimescaleDB Phase 04</div>
+        </div>
+        <div class="module m-gray" onclick="tip(event,'Audit log','Keyed by EVD-{ts}-{FNV-hash} evidenceHandle. GET /v1/audit/:handle retrieves by this key. Phase 06 upgrade: HMAC-signed immutable entries.')">
+          <div class="mn">Audit log</div><div class="md">EVD handle lookup · Phase 06: HMAC-signed</div>
+        </div>
+        <div class="module m-gray" onclick="tip(event,'Policy DB','Builtin profiles loaded from @ncaos/core policy loader. Phase 04: PostgreSQL with admin CRUD endpoints and row-level security per tenant.')">
+          <div class="mn">Policy DB</div><div class="md">Builtin profiles · Phase 04: PostgreSQL + RLS</div>
+        </div>
+        <div class="module m-gray" onclick="tip(event,'Evidence archive','Phase 02: in-memory. Phase 04 target: S3/object store. EVD handles use FNV hash of RID+timestamp. Not cryptographic — Phase 06 upgrades to HMAC.')">
+          <div class="mn">Evidence archive</div><div class="md">In-memory Phase 02 · S3 Phase 04</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manual API results -->
+  <div class="sec">Manual API tests · live server · 5 / 5 PASS</div>
+  <table>
+    <thead><tr><th>#</th><th>Endpoint</th><th>Input summary</th><th>Key response fields</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>T-01</td><td class="mono">GET /v1/health</td><td>X-Partner-ID: TEST</td><td>status=OK | watchdog=RUNNING | shell=True | policy=STRICT-PROD</td><td class="pass">PASS ✓</td></tr>
+      <tr><td>T-02</td><td class="mono">POST /v1/process (clean)</td><td>Clean flags, all premises validated, decision-ready authority</td><td>REQ-000002 | action=DOWNGRADE | authority=reference-only | integrity=Available/88 | EVD-1777478816760-1E5DF748</td><td class="pass">PASS ✓</td></tr>
+      <tr><td>T-03</td><td class="mono">POST /v1/process (threat)</td><td>INJECTION_PATTERN flag, 67% unvalidated premises, reference-only authority</td><td>REQ-000003 | action=BLOCK | authority=invalid | integrity=Critical/29 | routing=SOC | EVD-1777478924474-8C99FBE8</td><td class="pass">PASS ✓</td></tr>
+      <tr><td>T-04</td><td class="mono">GET /v1/audit/:handle</td><td>handle=EVD-1777478924474-8C99FBE8 (from T-03)</td><td>evidenceHandle confirmed | event.requestId=REQ-000003 | full event object with tenant, layer, severity</td><td class="pass">PASS ✓</td></tr>
+      <tr><td>T-05</td><td class="mono">GET /v1/state</td><td>After T-03 threat (ENTERPRISE_STRICT)</td><td>systemStatus=ENFORCING (STRICT) | CONTAINMENT | rawExposurePct=100 | governedOutputPct=54 | blockedLayer=gate | lastRouting=SOC</td><td class="pass">PASS ✓</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Defects & Fixes -->
+  <div class="sec">Defects found &amp; fixed during testing · 7 fixes · all verified PASS</div>
+  <table class="fix-table">
+    <thead><tr><th>ID</th><th>File</th><th>Root cause</th><th>Fix applied</th><th>ADR</th></tr></thead>
+    <tbody>
+      <tr><td class="fix-id">F-01</td><td class="mono">shell/vitest.config.ts</td><td>Vitest cannot resolve @ncaos/core without dist/ — no build step in test flow</td><td>Alias: @ncaos/core → ../core/src/index.ts</td><td>—</td></tr>
+      <tr><td class="fix-id">F-02</td><td class="mono">api/vitest.config.ts</td><td>Same root cause for @ncaos/shell and @ncaos/core both unresolvable</td><td>Aliases for both + JS→TS rewrite plugin in vitest config</td><td>—</td></tr>
+      <tr><td class="fix-id">F-03</td><td class="mono">watchdog/watchdog.ts</td><td>Import ./shell-loop.js resolves relative to watchdog/ folder; shell-loop.ts is one level up</td><td>Changed to ../shell-loop.js</td><td class="adr-ref">ADR-003</td></tr>
+      <tr><td class="fix-id">F-04</td><td class="mono">api/tsconfig.json</td><td>Missing entirely — tsc printed help text instead of compiling (exit 1)</td><td>Created tsconfig.json extending tsconfig.base.json, rootDir=src, outDir=dist</td><td>—</td></tr>
+      <tr><td class="fix-id">F-05</td><td class="mono">api/src/server.ts:71</td><td>TS7016: no declaration file for ws (transitive dep of @fastify/websocket)</td><td>npm install --save-dev @types/ws</td><td>—</td></tr>
+      <tr><td class="fix-id">F-06</td><td class="mono">api/src/server.ts:167</td><td>TS2379: exactOptionalPropertyTypes violation — 4 Zod .optional() fields (workflowId, updateId, equivalenceTestResults, continuityScore)</td><td>Changed .optional() → .default() with appropriate defaults</td><td class="adr-ref">ADR-001</td></tr>
+      <tr><td class="fix-id">F-07</td><td class="mono">api/package.json</td><td>start script pointed to dist/index.js; entry point is server.ts → dist/server.js</td><td>Changed: node dist/index.js → node dist/server.js</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Full test results -->
+  <div class="sec">Full automated test results · 70 / 70 passing</div>
+  <table>
+    <thead><tr><th>Package</th><th>File</th><th>Suite</th><th>Tests</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="pkg-core"><td>@ncaos/core</td><td class="mono">scoring.test.ts</td><td>computeIntegrity</td><td>5</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-core"><td></td><td class="mono"></td><td>computeAuthority</td><td>4</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-core"><td></td><td class="mono"></td><td>computeContainmentMetrics</td><td>3</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-core"><td></td><td class="mono"></td><td>scoreToContinuityState</td><td>4</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-core"><td></td><td class="mono">detection.test.ts</td><td>detectGate</td><td>5</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-core"><td></td><td class="mono"></td><td>detectPremise</td><td>4</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-core"><td></td><td class="mono"></td><td>detectAuthority</td><td>3</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-core"><td></td><td class="mono"></td><td>detectContinuity</td><td>4</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-core"><td></td><td class="mono">verdict.test.ts</td><td>enforce (all profiles) + failSafeVerdict + policy</td><td>15</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-shell"><td>@ncaos/shell</td><td class="mono">shell-loop.test.ts</td><td>ShellLoop — lifecycle</td><td>3</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-shell"><td></td><td class="mono"></td><td>Clean request — PILOT-OBS</td><td>6</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-shell"><td></td><td class="mono"></td><td>Threat request — ENTERPRISE_STRICT</td><td>5</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-shell"><td></td><td class="mono"></td><td>Event emission (shell:output)</td><td>1</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-api"><td>@ncaos/api</td><td class="mono">api.test.ts</td><td>GET /v1/health</td><td>1</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-api"><td></td><td class="mono"></td><td>POST /v1/process</td><td>4</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-api"><td></td><td class="mono"></td><td>GET /v1/state</td><td>1</td><td class="pass">PASS ✓</td></tr>
+      <tr class="pkg-api"><td></td><td class="mono"></td><td>GET /v1/audit/:handle</td><td>2</td><td class="pass">PASS ✓</td></tr>
+      <tr class="total-row"><td>TOTAL</td><td></td><td>3 packages · 5 test files</td><td>70</td><td>ALL PASS ✓</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ADR-003 -->
+  <div class="sec">Architecture decision records — new in Phase 02</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:var(--r);padding:14px 18px">
+    <div style="font-family:var(--mono);font-size:10px;color:var(--amber);margin-bottom:6px">ADR-003 · docs/adr/ADR-003-process-isolation.md</div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px">Process isolation invariant</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6">EGS shell runs as a separate process from the AI runtime. A shared-process architecture risks a core crash disabling governance. Watchdog supervisor manages a 3-restart policy with exponential backoff. On restart exhaustion → permanent FAIL_SAFE (operator intervention required to revive). Chaos test scheduled for Phase 06. F-03 exposed this as a practical path-structure concern during testing.</div>
+  </div>
+
+  <!-- Roadmap -->
+  <div class="sec">Phase roadmap</div>
+  <div class="roadmap">
+    <div class="phase-item complete">
+      <span class="phase-num">Phase 01</span>
+      <span class="phase-title">Foundation &amp; repo setup · monorepo · type contracts · CI pipeline</span>
+      <span class="phase-week">W1–2</span>
+      <span class="phase-status s-complete">COMPLETE</span>
+    </div>
+    <div class="phase-item complete">
+      <span class="phase-num">Phase 02</span>
+      <span class="phase-title">Core shell engine + API skeleton · Observer→Judge→Enforcer · Fastify REST/WS</span>
+      <span class="phase-week">W2–4</span>
+      <span class="phase-status s-complete">COMPLETE</span>
+    </div>
+    <div class="phase-item next">
+      <span class="phase-num">Phase 03</span>
+      <span class="phase-title">Detection layer — 4 modules with real MTTD SLA instrumentation</span>
+      <span class="phase-week">W4–6</span>
+      <span class="phase-status s-next">NEXT</span>
+    </div>
+    <div class="phase-item planned">
+      <span class="phase-num">Phase 04</span>
+      <span class="phase-title">API &amp; integration surface · TimescaleDB · S3 · WebSocket production wiring</span>
+      <span class="phase-week">W6–8</span>
+      <span class="phase-status s-planned">PLANNED</span>
+    </div>
+    <div class="phase-item planned">
+      <span class="phase-num">Phase 05</span>
+      <span class="phase-title">Admin UI (production) · React Admin Terminal replacing PoC HTML</span>
+      <span class="phase-week">W8–10</span>
+      <span class="phase-status s-planned">PLANNED</span>
+    </div>
+    <div class="phase-item planned">
+      <span class="phase-num">Phase 06</span>
+      <span class="phase-title">Hardening &amp; compliance · STRIDE + AI/ML threat model · pen test · ISO 42001</span>
+      <span class="phase-week">W10–12</span>
+      <span class="phase-status s-planned">PLANNED</span>
+    </div>
+    <div class="phase-item planned">
+      <span class="phase-num">Phase 07</span>
+      <span class="phase-title">Stakeholder demo &amp; handoff · v1.0-rc · ADRs · commercial pilot proposal</span>
+      <span class="phase-week">W12–14</span>
+      <span class="phase-status s-planned">PLANNED</span>
+    </div>
+  </div>
+</main>
+
+<footer>
+  NCAOS-Urielle · EGS Phase 02 · wholidi/NCAOS-Urielle ·
+  <a href="https://urielle-ai.com" target="_blank">urielle-ai.com</a> · Built 2026
+</footer>
+
+<script>
+  const tt=document.getElementById('tt');
+  let h;
+  function tip(e,title,body){
+    e.stopPropagation();clearTimeout(h);
+    tt.innerHTML='<strong>'+title+'</strong><br>'+body;
+    let x=e.clientX+14,y=e.clientY+14;
+    if(x+280>window.innerWidth-8)x=e.clientX-294;
+    if(y+120>window.innerHeight-8)y=e.clientY-134;
+    tt.style.left=x+'px';tt.style.top=y+'px';tt.classList.add('show');
+    h=setTimeout(()=>tt.classList.remove('show'),4500);
+  }
+  document.addEventListener('click',()=>{clearTimeout(h);tt.classList.remove('show')});
+  function tog(id){
+    const b=document.getElementById('body-'+id),t=document.getElementById('tog-'+id);
+    const o=b.classList.toggle('open');t.classList.toggle('open',o);
+  }
+</script>
+</body>
+</html>

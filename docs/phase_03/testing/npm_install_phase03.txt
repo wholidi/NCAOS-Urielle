@@ -1,0 +1,17 @@
+npm error code EJSONPARSE
+npm error JSON.parse Invalid package.json: JSONParseError: Expected ',' or ']' after array element in JSON at position 220 (line 11 column 5) while parsing near "...\"api\",\n    \"ui\"\n    \"detection\"\n  ],\n  \"..."
+npm error JSON.parse Failed to parse JSON data.
+npm error JSON.parse Note: package.json must be actual JSON, not just JavaScript.
+npm error A complete log of this run can be found in: C:\Users\conve\AppData\Local\npm-cache\_logs\2026-05-03T05_46_32_116Z-debug-0.log
+PS C:\Users\conve\downloads\NCAOS-Urielle\egs> notepad egs\package.json
+PS C:\Users\conve\downloads\NCAOS-Urielle\egs> cd..
+PS C:\Users\conve\downloads\NCAOS-Urielle> notepad egs\package.json
+PS C:\Users\conve\downloads\NCAOS-Urielle> cd egs
+PS C:\Users\conve\downloads\NCAOS-Urielle\egs> npm install
+added 1 package, and audited 270 packages in 3s
+65 packages are looking for funding
+  run npm fund for details
+5 vulnerabilities (4 moderate, 1 high)
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run npm audit for details.

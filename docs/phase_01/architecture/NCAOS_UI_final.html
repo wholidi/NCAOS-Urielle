@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NCAOS Admin Terminal</title>
+<style>
+  :root{
+    --bg:#020510;
+    --fg:#7efcff;
+    --accent:#35d3ff;
+    --accent2:#00c3ff;
+    --ok:#00ff88;
+    --warn:#ffd166;
+    --bad:#ff4d6d;
+    --muted:#00c3ff44;
+    --panel:rgba(0,20,40,.72);
+    --panel2:rgba(0,40,80,.28);
+    --shadow:0 0 15px #00c3ff44 inset;
+  }
+
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:'Courier New', Courier, monospace;
+    margin:0;
+    padding:15px;
+    overflow-x:hidden;
+  }
+
+  .scanline{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:repeating-linear-gradient(
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 1px,
+      transparent 2px
+    );
+    animation:scan 8s linear infinite;
+    pointer-events:none;
+    z-index:0;
+  }
+  @keyframes scan{ from{transform:translateY(-100%);} to{transform:translateY(100%);} }
+
+  .wrap{
+    max-width:980px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+  }
+
+  .topbar{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+  }
+
+  h1{
+    font-size:1.1rem;
+    border-left:4px solid var(--fg);
+    padding-left:10px;
+    margin:0;
+    letter-spacing:1px;
+  }
+
+  .badge{
+    border:1px solid var(--accent);
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(0,20,40,.35);
+    box-shadow:0 0 12px #00c3ff22 inset;
+    font-size:.75rem;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    white-space:nowrap;
+  }
+
+  .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--ok);
+    box-shadow:0 0 10px var(--ok);
+  }
+  .dot.warn{background:var(--warn); box-shadow:0 0 10px var(--warn);}
+  .dot.bad{background:var(--bad); box-shadow:0 0 10px var(--bad);}
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap:12px;
+  }
+  @media (max-width:900px){
+    .grid{ grid-template-columns:1fr; }
+  }
+
+  .panel{
+    border:1px solid var(--accent);
+    padding:12px;
+    border-radius:10px;
+    background:var(--panel);
+    box-shadow:var(--shadow);
+  }
+
+  .section-title{
+    font-size:.72rem;
+    color:var(--accent2);
+    margin:12px 0 6px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    border-bottom:1px solid var(--muted);
+    padding-bottom:6px;
+  }
+
+  .kvs{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:8px;
+  }
+  @media (max-width:520px){
+    .kvs{ grid-template-columns:1fr; }
+  }
+
+  .metric-box{
+    background:var(--panel2);
+    padding:10px;
+    border-radius:8px;
+    line-height:1.35;
+    font-size:.86rem;
+  }
+
+  .label{ color:#9cf6ff; opacity:.85; }
+  .value{
+    font-weight:bold;
+    color:#fff;
+    text-shadow:0 0 5px var(--fg);
+  }
+
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:2px 8px;
+    border-radius:999px;
+    border:1px solid var(--muted);
+    font-size:.72rem;
+    color:#e9feff;
+    background:rgba(0,0,0,.18);
+  }
+  .pill.ok{ border-color:rgba(0,255,136,.35); }
+  .pill.warn{ border-color:rgba(255,209,102,.35); }
+  .pill.bad{ border-color:rgba(255,77,109,.35); }
+
+  .pulse{ animation:pulse 2s infinite ease-in-out; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.55;} }
+
+  .tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .tab{
+    cursor:pointer;
+    user-select:none;
+    padding:7px 10px;
+    border-radius:8px;
+    border:1px solid var(--muted);
+    font-size:.78rem;
+    background:rgba(0,0,0,.12);
+  }
+  .tab.active{
+    border-color:var(--accent);
+    box-shadow:0 0 12px #00c3ff22 inset;
+    color:#fff;
+  }
+
+  .tabpane{ display:none; margin-top:10px; }
+  .tabpane.active{ display:block; }
+
+  .row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .progress{
+    height:10px;
+    border-radius:999px;
+    border:1px solid var(--muted);
+    overflow:hidden;
+    background:rgba(0,0,0,.25);
+    margin-top:6px;
+  }
+  .bar{
+    height:100%;
+    width:50%;
+    background:linear-gradient(90deg, rgba(126,252,255,.25), rgba(53,211,255,.75));
+  }
+  .bar.ok{ background:linear-gradient(90deg, rgba(0,255,136,.25), rgba(0,255,136,.7)); }
+  .bar.warn{ background:linear-gradient(90deg, rgba(255,209,102,.25), rgba(255,209,102,.7)); }
+  .bar.bad{ background:linear-gradient(90deg, rgba(255,77,109,.25), rgba(255,77,109,.7)); }
+
+  .list{
+    max-height:300px;
+    overflow:auto;
+    border:1px solid var(--muted);
+    border-radius:8px;
+    background:rgba(0,0,0,.12);
+  }
+  .item{
+    padding:10px;
+    border-bottom:1px solid rgba(0,195,255,.18);
+    font-size:.82rem;
+  }
+  .item:last-child{ border-bottom:none; }
+  .mono{ font-variant-ligatures:none; }
+
+  .small{ font-size:.75rem; opacity:.9; }
+  .hint{ color:#b9fbff; opacity:.75; }
+  .rightcol .panel{ position:sticky; top:12px; }
+  @media (max-width:900px){
+    .rightcol .panel{ position:relative; top:auto; }
+  }
+
+  .btnrow{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .btn{
+    cursor:pointer;
+    border:1px solid var(--muted);
+    background:rgba(0,0,0,.15);
+    color:#e9feff;
+    font-family:inherit;
+    font-size:.78rem;
+    padding:8px 10px;
+    border-radius:8px;
+  }
+  .btn:hover{ border-color:var(--accent); }
+</style>
+</head>
+
+<body>
+<div class="scanline"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <h1>NCAOS // ADMIN TERMINAL</h1>
+    <div class="badge">
+      <span id="healthDot" class="dot"></span>
+      <span class="mono">SYSTEM_STATUS:</span>
+      <span id="sysStatus" class="value pulse">ENFORCING</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: MAIN -->
+    <div class="leftcol">
+      <div class="panel">
+        <div class="section-title">▶ Authorization & Identity</div>
+        <div class="kvs">
+          <div class="metric-box">
+            <div><span class="label">PARTNER_ID</span>: <span id="partnerId" class="value">GLOBAL_ENT_2026</span></div>
+            <div><span class="label">INSTANCE_ID</span>: <span id="instanceId" class="value">EGS_INST_001</span></div>
+            <div><span class="label">DEPLOYMENT</span>: <span class="value">ENTERPRISE</span></div>
+          </div>
+          <div class="metric-box">
+            <div><span class="label">GOV_LEVEL</span>: <span id="govLevel" class="value">CRITICAL_STRICT</span></div>
+            <div><span class="label">FAIL_SAFE</span>: <span class="value">ENABLED</span></div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" data-tab="overview">Overview</div>
+          <div class="tab" data-tab="admin">Admin Visibility</div>
+          <div class="tab" data-tab="updates">Update Continuity</div>
+          <div class="tab" data-tab="events">Event Stream</div>
+          <div class="tab" data-tab="policy">Policy Matrix</div>
+        </div>
+
+        <!-- Overview -->
+        <div class="tabpane active" id="tab-overview">
+          <div class="section-title">▶ Governance Metrics (Impact, not internals)</div>
+          <div class="kvs">
+            <div class="metric-box">
+              <div><span class="label">INTEGRITY_LEVEL</span>:
+                <span id="integrityPill" class="pill ok"><span class="dot"></span>Available</span>
+              </div>
+              <div class="small hint">Shows legitimacy impact only. No root-cause inference.</div>
+              <div class="progress"><div id="integrityBar" class="bar ok" style="width:88%"></div></div>
+              <div class="small"><span class="label">SCORE</span>: <span id="integrityScore" class="value">88</span>/100</div>
+            </div>
+
+            <div class="metric-box">
+              <div><span class="label">OUTPUT_AUTHORITY</span>:
+                <span id="authorityPill" class="pill ok">Decision-ready</span>
+              </div>
+              <div class="small hint">Authority is granted/denied structurally.</div>
+              <div class="progress"><div id="authorityBar" class="bar ok" style="width:84%"></div></div>
+              <div class="small"><span class="label">LATENCY_OVERHEAD</span>: <span id="overhead" class="value">0.220</span>ms</div>
+            </div>
+          </div>
+
+          <div class="section-title">▶ Containment & Exposure</div>
+          <div class="kvs">
+            <div class="metric-box">
+              <div><span class="label">RAW_EXPOSURE</span>: <span class="value">14.22%</span></div>
+              <div><span class="label">GOVERNED_OUTPUT</span>: <span id="afterVal" class="value" style="color:var(--ok);">5.97%</span></div>
+              <div class="small hint">Demonstrates containment effect (illustrative).</div>
+            </div>
+            <div class="metric-box">
+              <div><span class="label">CORE_ISOLATION</span>: <span class="value">99.992%</span></div>
+              <div><span class="label">CONTEXT_DRIFT_PRESSURE</span>: <span id="drift" class="value">1.84%</span></div>
+              <div class="small hint">Trend indicator (impact-level), not internal model state.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Visibility -->
+        <div class="tabpane" id="tab-admin">
+          <div class="section-title">▶ Administrative Visibility (Fault Localization)</div>
+
+          <div class="kvs">
+            <div class="metric-box">
+              <div><span class="label">BLOCKED_LAYER</span>:
+                <span id="blockedLayer" class="value">None</span>
+              </div>
+              <div class="small hint">Exactly one dominant layer is marked per event.</div>
+
+              <div class="row small" style="margin-top:8px;">
+                <span class="pill" id="pillGate">External Gate</span>
+                <span class="pill" id="pillPremise">Premise Consistency</span>
+                <span class="pill" id="pillAuthority">Authority</span>
+                <span class="pill" id="pillContinuity">Continuity</span>
+              </div>
+            </div>
+
+            <div class="metric-box">
+              <div><span class="label">IMPACT_SCOPE</span>:
+                <span id="impactScope" class="value">Single Request</span>
+              </div>
+              <div class="small hint">Containment decision becomes deterministic.</div>
+
+              <div class="row small" style="margin-top:8px;">
+                <span class="pill" id="pillReq">Single Request</span>
+                <span class="pill" id="pillFlow">Workflow-Level</span>
+                <span class="pill" id="pillSys">System-Wide</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="kvs" style="margin-top:10px;">
+            <div class="metric-box">
+              <div><span class="label">DETECTED_SINCE</span>:
+                <span id="detectedSince" class="value">—</span>
+              </div>
+              <div class="small hint">Temporal boundary only (no causality claims).</div>
+              <div><span class="label">DETECTION_MODE</span>:
+                <span id="detMode" class="value">—</span>
+              </div>
+            </div>
+
+            <div class="metric-box">
+              <div><span class="label">ROUTING_HINT</span>:
+                <span id="routingHint" class="value">—</span>
+              </div>
+              <div class="small hint">Actionable triage label (not explanation).</div>
+              <div><span class="label">RECOMMENDED_ACTION</span>:
+                <span id="recAction" class="value">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">▶ Optional Admin Fields</div>
+          <div class="kvs">
+            <div class="metric-box">
+              <div><span class="label">AFFECTED_SERVICE</span>: <span id="svc" class="value">agent-orchestrator</span></div>
+              <div><span class="label">WORKFLOW_ID</span>: <span id="wf" class="value">WF-INTAKE-042</span></div>
+              <div><span class="label">REQUEST_ID</span>: <span id="rid" class="value">REQ-000000</span></div>
+            </div>
+            <div class="metric-box">
+              <div><span class="label">POLICY_PROFILE</span>: <span id="policyProfile" class="value">STRICT-PROD</span></div>
+              <div><span class="label">EVIDENCE_HANDLE</span>: <span id="evidence" class="value">EVT-REF-LOCAL</span></div>
+              <div><span class="label">MTTD</span>: <span id="mttd" class="value">0.8s</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Update Continuity -->
+        <div class="tabpane" id="tab-updates">
+          <div class="section-title">▶ Update Continuity Monitor</div>
+          <div class="kvs">
+            <div class="metric-box">
+              <div><span class="label">UPDATE_STATE</span>:
+                <span id="updateState" class="value">STABLE</span>
+              </div>
+              <div class="small hint">Updates are treated as Provisional until continuity holds.</div>
+              <div class="progress"><div id="contBar" class="bar ok" style="width:90%"></div></div>
+              <div class="small"><span class="label">CONTINUITY_SCORE</span>: <span id="contScore" class="value">90</span>/100</div>
+            </div>
+            <div class="metric-box">
+              <div><span class="label">LAST_UPDATE</span>: <span id="lastUpdate" class="value">2026-02-04 09:12</span></div>
+              <div><span class="label">CHANGE_WINDOW</span>: <span class="value">POST-UPDATE WATCH</span></div>
+              <div><span class="label">EQUIVALENCE_TESTS</span>: <span id="eqTests" class="value">PASS (12/12)</span></div>
+              <div class="small hint">Equivalence means structural continuity, not output identity.</div>
+            </div>
+          </div>
+
+          <div class="section-title">▶ Continuity Triggers (examples)</div>
+          <div class="metric-box small">
+            - If the same premise no longer yields legitimate authority → classify as Continuity violation<br/>
+            - If legitimacy degrades across workflows post-update → mark System-Wide scope<br/>
+            - If degradation is gradual → flag "Gradual Degradation Detected" without attributing cause
+          </div>
+        </div>
+
+        <!-- Event Stream -->
+        <div class="tabpane" id="tab-events">
+          <div class="section-title">▶ Live Event Stream (Illustrative)</div>
+          <div class="metric-box small hint">
+            Events show localization labels only (Layer / Scope / Since). No internal reasoning is exposed.
+          </div>
+          <div class="list" id="eventList" aria-label="Event list"></div>
+
+          <div class="btnrow">
+            <button class="btn" id="btnInjectGate">Inject: External Gate</button>
+            <button class="btn" id="btnInjectPremise">Inject: Premise</button>
+            <button class="btn" id="btnInjectAuthority">Inject: Authority</button>
+            <button class="btn" id="btnInjectContinuity">Inject: Continuity</button>
+            <button class="btn" id="btnClear">Clear</button>
+          </div>
+        </div>
+
+        <!-- Policy Matrix -->
+        <div class="tabpane" id="tab-policy">
+          <div class="section-title">▶ Policy Matrix (Authority Levels)</div>
+          <div class="kvs">
+            <div class="metric-box">
+              <div><span class="label">AUTHORITY_LEVELS</span></div>
+              <div class="small">
+                🟢 Decision-ready: usable for action/decision<br/>
+                🟡 Reference-only: visible but non-authoritative<br/>
+                🔴 Invalid state: hidden/blocked, not usable
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">▶ Deterministic Incident Routing (examples)</div>
+          <div class="metric-box small">
+            External Gate × Any Scope → Security / SOC queue<br/>
+            Premise Consistency × Workflow-Level → Architecture / Requirements review<br/>
+            Authority × Single Request → Governance policy check (no deep debug required)<br/>
+            Continuity × System-Wide → Rollback / Change-window response
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: QUICK PANEL -->
+    <div class="rightcol">
+      <div class="panel">
+        <div class="section-title">▶ Quick Summary</div>
+        <div class="metric-box">
+          <div><span class="label">CURRENT_MODE</span>: <span id="currentMode" class="value">NORMAL</span></div>
+          <div><span class="label">ACTIVE_EVENT</span>: <span id="activeEvent" class="value">—</span></div>
+          <div><span class="label">LAST_ROUTING</span>: <span id="lastRouting" class="value">—</span></div>
+        </div>
+
+        <div class="section-title">▶ Minimal Admin Outputs</div>
+        <div class="metric-box small">
+          1) Blocked Layer (Gate / Premise / Authority / Continuity)<br/>
+          2) Impact Scope (Request / Workflow / System)<br/>
+          3) Detected Since (timestamp / post-update / gradual)
+        </div>
+
+        <div class="section-title">▶ Notes</div>
+        <div class="metric-box small hint">
+          This UI intentionally avoids root-cause narratives.<br/>
+          It localizes legitimacy loss to minimize operational cost.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.tabpane').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('tab-' + t.dataset.tab).classList.add('active');
+    });
+  });
+
+  const $ = (id) => document.getElementById(id);
+
+  function nowStamp(){
+    const d = new Date();
+    const pad = (n)=> String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  function setPill(el, state){
+    el.classList.remove('ok','warn','bad');
+    const dot = el.querySelector('.dot');
+    if(dot) dot.className = 'dot';
+    if(state==='ok'){ el.classList.add('ok'); }
+    if(state==='warn'){ el.classList.add('warn'); if(dot) dot.classList.add('warn'); }
+    if(state==='bad'){ el.classList.add('bad'); if(dot) dot.classList.add('bad'); }
+  }
+
+  function setDotState(level){
+    const dot = $('healthDot');
+    dot.className = 'dot';
+    if(level==='warn') dot.classList.add('warn');
+    if(level==='bad') dot.classList.add('bad');
+  }
+
+  const layerPills = {
+    gate: $('pillGate'),
+    premise: $('pillPremise'),
+    authority: $('pillAuthority'),
+    continuity: $('pillContinuity')
+  };
+  const scopePills = {
+    req: $('pillReq'),
+    flow: $('pillFlow'),
+    sys: $('pillSys')
+  };
+
+  function clearMarks(){
+    Object.values(layerPills).forEach(p => p.className = 'pill');
+    Object.values(scopePills).forEach(p => p.className = 'pill');
+  }
+
+  function markLayer(key){
+    clearMarks();
+    if(key && layerPills[key]){
+      layerPills[key].className = 'pill bad';
+      $('blockedLayer').innerText =
+        key === 'gate' ? 'External Gate' :
+        key === 'premise' ? 'Premise Consistency' :
+        key === 'authority' ? 'Authority' :
+        key === 'continuity' ? 'Continuity' : 'None';
+    } else {
+      $('blockedLayer').innerText = 'None';
+    }
+  }
+
+  function markScope(key){
+    if(key && scopePills[key]){
+      scopePills[key].className = 'pill warn';
+      $('impactScope').innerText =
+        key === 'req' ? 'Single Request' :
+        key === 'flow' ? 'Workflow-Level' :
+        key === 'sys' ? 'System-Wide' : 'Single Request';
+    }
+  }
+
+  function routeHint(layer, scope){
+    if(layer==='gate') return {hint:'SOC / Security Queue', action:'Isolate inputs; validate perimeter; rotate credentials if needed.'};
+    if(layer==='continuity') return {hint:'Change Mgmt / Rollback Path', action:'Enter post-update watch; consider rollback if system-wide.'};
+    if(layer==='premise') return {hint:'Architecture / Requirements Review', action:'Validate premise constraints; update workflow assumptions.'};
+    if(layer==='authority') return {hint:'Governance / Policy Review', action:'Check policy profile; confirm stop-right boundaries.'};
+    return {hint:'—', action:'—'};
+  }
+
+  function authorityLevelBySeverity(sev){
+    if(sev==='low') return {pill:'Reference-only', state:'warn', bar:72};
+    if(sev==='med') return {pill:'Reference-only', state:'warn', bar:58};
+    if(sev==='high') return {pill:'Invalid state', state:'bad', bar:22};
+    return {pill:'Decision-ready', state:'ok', bar:84};
+  }
+
+  function integrityBySeverity(sev){
+    if(sev==='low') return {label:'Limited', state:'warn', score:74};
+    if(sev==='med') return {label:'Degraded', state:'warn', score:61};
+    if(sev==='high') return {label:'Critical', state:'bad', score:29};
+    return {label:'Available', state:'ok', score:88};
+  }
+
+  let reqCounter = 0;
+  const eventList = $('eventList');
+
+  function pushEvent({type, layer, scope, severity, detectionMode, note}){
+    reqCounter++;
+    const rid = 'REQ-' + String(reqCounter).padStart(6,'0');
+
+    markLayer(layer);
+    markScope(scope);
+    $('detectedSince').innerText = nowStamp();
+    $('detMode').innerText = detectionMode;
+    $('rid').innerText = rid;
+
+    const routing = routeHint(layer, scope);
+    $('routingHint').innerText = routing.hint;
+    $('recAction').innerText = routing.action;
+    $('lastRouting').innerText = routing.hint;
+
+    $('activeEvent').innerText = `${type} / ${severity.toUpperCase()}`;
+    $('currentMode').innerText = (severity==='high') ? 'CONTAINMENT' : (severity==='med' ? 'LIMITED' : 'NORMAL');
+
+    const a = authorityLevelBySeverity(severity);
+    $('authorityPill').innerText = a.pill;
+    $('authorityPill').className = 'pill ' + (a.state==='ok'?'ok':a.state==='warn'?'warn':'bad');
+    $('authorityBar').className = 'bar ' + (a.state==='ok'?'ok':a.state==='warn'?'warn':'bad');
+    $('authorityBar').style.width = a.bar + '%';
+
+    const i = integrityBySeverity(severity);
+    $('integrityPill').innerHTML = `<span class="dot ${i.state==='warn'?'warn':i.state==='bad'?'bad':''}"></span>${i.label}`;
+    $('integrityPill').className = 'pill ' + (i.state==='ok'?'ok':i.state==='warn'?'warn':'bad');
+    $('integrityBar').className = 'bar ' + (i.state==='ok'?'ok':i.state==='warn'?'warn':'bad');
+    $('integrityBar').style.width = i.score + '%';
+    $('integrityScore').innerText = i.score;
+    setDotState(i.state);
+
+    $('sysStatus').innerText = (severity==='high') ? 'ENFORCING (STRICT)' : (severity==='med' ? 'ENFORCING (LIMITED)' : 'ENFORCING');
+    $('sysStatus').classList.add('pulse');
+
+    const ts = nowStamp();
+    const layerText =
+      layer === 'gate' ? 'External Gate' :
+      layer === 'premise' ? 'Premise Consistency' :
+      layer === 'authority' ? 'Authority' :
+      layer === 'continuity' ? 'Continuity' : 'None';
+
+    const scopeText =
+      scope === 'req' ? 'Single Request' :
+      scope === 'flow' ? 'Workflow-Level' :
+      scope === 'sys' ? 'System-Wide' : 'Single Request';
+
+    const sevColor = severity==='high' ? 'var(--bad)' : severity==='med' ? 'var(--warn)' : 'var(--ok)';
+
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `
+      <div class="mono">
+        <span class="value" style="color:${sevColor};">${type}</span>
+        <span class="small hint"> | ${ts}</span>
+      </div>
+      <div class="small">
+        <span class="label">RID</span>: <span class="value">${rid}</span> &nbsp;
+        <span class="label">LAYER</span>: <span class="value">${layerText}</span> &nbsp;
+        <span class="label">SCOPE</span>: <span class="value">${scopeText}</span>
+      </div>
+      <div class="small">
+        <span class="label">MODE</span>: <span class="value">${detectionMode}</span> &nbsp;
+        <span class="label">ROUTING</span>: <span class="value">${routing.hint}</span>
+      </div>
+      <div class="small hint">${note || ''}</div>
+    `;
+    eventList.prepend(div);
+
+    const items = eventList.querySelectorAll('.item');
+    if(items.length > 40) items[items.length-1].remove();
+  }
+
+  function updateMetrics(){
+    const drift = (Math.random() * 2 + 0.8);
+    const overhead = (Math.random() * 0.35 + 0.12);
+    const governed = (drift * 0.42) + (Math.random()*0.15);
+    $('drift').innerText = drift.toFixed(2) + '%';
+    $('overhead').innerText = overhead.toFixed(3);
+    $('afterVal').innerText = governed.toFixed(2) + '%';
+  }
+
+  setInterval(updateMetrics, 1200);
+  updateMetrics();
+
+  function updateContinuity(){
+    const base = 86 + Math.random()*10;
+    const score = Math.round(base);
+    $('contScore').innerText = score;
+
+    let state = 'STABLE';
+    let barClass = 'ok';
+    if(score < 75){ state = 'PROVISIONAL'; barClass='warn'; }
+    if(score < 55){ state = 'UNSTABLE'; barClass='bad'; }
+
+    $('updateState').innerText = state;
+    $('contBar').className = 'bar ' + barClass;
+    $('contBar').style.width = score + '%';
+
+    const pass = Math.floor(10 + Math.random()*3);
+    $('eqTests').innerText = `PASS (${pass}/12)`;
+  }
+  setInterval(updateContinuity, 2500);
+  updateContinuity();
+
+  function randScope(){
+    const r = Math.random();
+    if(r < 0.55) return 'req';
+    if(r < 0.87) return 'flow';
+    return 'sys';
+  }
+  function randSeverity(){
+    const r = Math.random();
+    if(r < 0.62) return 'low';
+    if(r < 0.9) return 'med';
+    return 'high';
+  }
+
+  $('btnInjectGate').onclick = () => pushEvent({
+    type:'EXTERNAL_THREAT_BLOCKED',
+    layer:'gate',
+    scope:randScope(),
+    severity:randSeverity(),
+    detectionMode:'Real-time Gate Enforcement',
+    note:'Input rejected by external boundary conditions. (No signature required.)'
+  });
+
+  $('btnInjectPremise').onclick = () => pushEvent({
+    type:'PREMISE_MISMATCH',
+    layer:'premise',
+    scope:randScope(),
+    severity:randSeverity(),
+    detectionMode:'Premise Constraint Check',
+    note:'Legitimacy revoked before decision authority is granted.'
+  });
+
+  $('btnInjectAuthority').onclick = () => pushEvent({
+    type:'AUTHORITY_REVOKED',
+    layer:'authority',
+    scope:randScope(),
+    severity:randSeverity(),
+    detectionMode:'Authority Boundary Enforcement',
+    note:'Output may be visible as reference-only or invalid depending on severity.'
+  });
+
+  $('btnInjectContinuity').onclick = () => pushEvent({
+    type:'CONTINUITY_VIOLATION',
+    layer:'continuity',
+    scope:'sys',
+    severity:randSeverity(),
+    detectionMode:'Post-Update Watch',
+    note:'Structural continuity degraded across update window; treat as provisional.'
+  });
+
+  $('btnClear').onclick = () => { eventList.innerHTML=''; $('activeEvent').innerText='—'; $('lastRouting').innerText='—'; };
+
+  function autoEvents(){
+    const r = Math.random();
+    if(r < 0.12) $('btnInjectGate').click();
+    else if(r < 0.22) $('btnInjectPremise').click();
+    else if(r < 0.30) $('btnInjectAuthority').click();
+    else if(r < 0.36) $('btnInjectContinuity').click();
+  }
+  setInterval(autoEvents, 2600);
+
+  $('detectedSince').innerText = '—';
+  $('detMode').innerText = '—';
+  $('routingHint').innerText = '—';
+  $('recAction').innerText = '—';
+  $('rid').innerText = 'REQ-000000';
+</script>
+</body>
+</html>

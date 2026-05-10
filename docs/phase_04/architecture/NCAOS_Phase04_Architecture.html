@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCAOS / EGS — Phase 04 Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg:       #040608;
+    --panel:    #080C14;
+    --panel2:   #0C1020;
+    --border:   #1A2238;
+    --accent:   #00D4FF;
+    --green:    #00FF94;
+    --amber:    #FFB800;
+    --red:      #FF4D6A;
+    --purple:   #9B6FFF;
+    --teal:     #00CEB8;
+    --text:     #E2E8F0;
+    --sub:      #6B7FA8;
+    --core-bg:  #06100D;
+    --core-bd:  #00FF94;
+    --det-bg:   #08081A;
+    --det-bd:   #9B6FFF;
+    --api-bg:   #060A14;
+    --api-bd:   #00D4FF;
+    --shell-bg: #0A0D14;
+    --shell-bd: #FFB800;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─────────────────────────────────────────────────────── */
+  .header {
+    background: #030508;
+    border-bottom: 1px solid var(--accent);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-bar {
+    width: 4px;
+    height: 36px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .header-title {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+  .header-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--sub);
+    margin-top: 2px;
+  }
+  .badges {
+    display: flex;
+    gap: 8px;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── MAIN LAYOUT ────────────────────────────────────────────────── */
+  .main {
+    padding: 20px 20px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ─── BAND ───────────────────────────────────────────────────────── */
+  .band {
+    border-radius: 10px;
+    padding: 14px;
+    border: 1px solid;
+    position: relative;
+  }
+  .band-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .band-label .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* ─── BAND 1: API + SHELL ────────────────────────────────────────── */
+  .band-api {
+    background: var(--api-bg);
+    border-color: var(--api-bd);
+  }
+  .band-api-inner {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 12px;
+  }
+
+  /* ─── SHELL PANEL ────────────────────────────────────────────────── */
+  .shell-panel {
+    background: var(--shell-bg);
+    border: 1px solid var(--shell-bd);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .shell-panel h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    margin-bottom: 10px;
+  }
+  .shell-item {
+    background: #111820;
+    border: 1px solid #3D2A00;
+    border-radius: 5px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .shell-item:hover { border-color: var(--amber); transform: translateX(2px); }
+  .shell-item .si-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px;
+    color: var(--amber);
+    font-weight: 700;
+  }
+  .shell-item .si-desc {
+    font-size: 7px;
+    color: var(--sub);
+    margin-top: 2px;
+  }
+  .mode-badges { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+  .mode-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-align: center;
+    cursor: default;
+  }
+
+  /* ─── API PANEL ──────────────────────────────────────────────────── */
+  .api-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Route server block */
+  .server-block {
+    background: #0A0F1E;
+    border: 1px solid #2244AA;
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .server-block h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: #4488FF;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .server-block .srv-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--sub);
+    margin-bottom: 10px;
+  }
+  .routes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
+  .route-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.12s;
+    border: 1px solid transparent;
+  }
+  .route-row:hover { background: #12192E; border-color: #2244AA; }
+  .method {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    min-width: 28px;
+  }
+  .method.GET  { color: var(--accent); }
+  .method.POST { color: var(--green); }
+  .method.WS   { color: var(--amber); }
+  .route-path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--text);
+    flex: 1;
+  }
+  .route-phase {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px;
+    font-weight: 700;
+    padding: 1.5px 5px;
+    border-radius: 2px;
+  }
+  .ph-new  { background: #00FF9420; color: var(--green); }
+  .ph-up   { background: #FFB80020; color: var(--amber); }
+  .ph-old  { background: #ffffff10; color: var(--sub); }
+
+  /* Store blocks */
+  .stores-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .store-card {
+    background: var(--panel2);
+    border-radius: 7px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .store-card:hover { transform: translateY(-2px); }
+  .store-header {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .store-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+  }
+  .store-fname {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px;
+    color: rgba(255,255,255,0.5);
+    padding: 4px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .store-body { padding: 8px 12px; }
+  .store-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    margin-bottom: 5px;
+    font-size: 8px;
+    color: var(--text);
+  }
+  .store-item::before { content: '▸'; flex-shrink: 0; margin-top: 0.5px; }
+
+  /* ─── BAND 2: DETECTION ──────────────────────────────────────────── */
+  .band-detection {
+    background: var(--det-bg);
+    border-color: var(--det-bd);
+  }
+  .detection-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 160px;
+    gap: 10px;
+  }
+  .detector-card {
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s;
+    border: 1px solid;
+  }
+  .detector-card:hover { transform: translateY(-2px); }
+  .detector-header {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .detector-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+  }
+  .detector-body { padding: 8px 12px; }
+  .flag-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    margin-bottom: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px;
+  }
+  .flag-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+  .mttd-bar {
+    margin: 6px 0 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-align: center;
+  }
+
+  /* MTTD card */
+  .mttd-card {
+    background: #100E1F;
+    border: 1px solid var(--purple);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .mttd-card:hover { transform: translateY(-2px); }
+  .mttd-card h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--purple);
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .mttd-stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px;
+    color: var(--sub);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .mttd-stat::before { content: '◆'; color: var(--purple); font-size: 5px; }
+
+  /* ─── BAND 3: CORE ───────────────────────────────────────────────── */
+  .band-core {
+    background: var(--core-bg);
+    border-color: var(--core-bd);
+  }
+  .core-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+  .core-fn {
+    background: #0D1F18;
+    border: 1px solid #006B3A;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .core-fn:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,255,148,0.1); }
+  .core-fn .fn-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .core-fn .fn-desc {
+    font-size: 7px;
+    color: var(--sub);
+  }
+
+  /* ─── FIXES PANEL ────────────────────────────────────────────────── */
+  .fixes-panel {
+    background: #0E0709;
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .fixes-panel h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--red);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .fixes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 6px;
+  }
+  .fix-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #14080B;
+    border-radius: 4px;
+    border: 1px solid #2D1018;
+    cursor: pointer;
+    transition: border-color 0.12s;
+  }
+  .fix-row:hover { border-color: var(--red); }
+  .fix-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    background: #FF4D6A30;
+    color: var(--red);
+    padding: 2px 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    min-width: 30px;
+    text-align: center;
+  }
+  .fix-detail { flex: 1; }
+  .fix-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--amber);
+    font-weight: 600;
+  }
+  .fix-desc {
+    font-size: 7.5px;
+    color: var(--sub);
+    margin-top: 2px;
+  }
+
+  /* ─── LEGEND ─────────────────────────────────────────────────────── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    border-top: 1px solid var(--border);
+    font-size: 8px;
+    color: var(--sub);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ─── MODAL ──────────────────────────────────────────────────────── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #0C1020;
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 540px;
+    width: 90%;
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+  .modal-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .modal-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--sub);
+    margin-bottom: 16px;
+  }
+  .modal-content { font-size: 12px; color: var(--sub); line-height: 1.6; }
+  .modal-content ul { padding-left: 16px; }
+  .modal-content li { margin-bottom: 4px; }
+  .modal-content li span { color: var(--text); }
+  .modal-close {
+    float: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--sub);
+    cursor: pointer;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .modal-close:hover { color: var(--red); border-color: var(--red); }
+
+  /* ─── FLOW ARROWS (CSS only) ─────────────────────────────────────── */
+  .flow-arrows {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin: -6px 0;
+    z-index: 10;
+    position: relative;
+  }
+  .arrow-block {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: #0A0E18;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+  .arrow-block span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: var(--sub);
+  }
+  .arrow-line { font-size: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-bar"></div>
+    <div>
+      <div class="header-title">NCAOS / EGS — Phase 04 Architecture</div>
+      <div class="header-sub">API Integration Surface · Per-Tenant Isolation · Sequence Interface (Toru-William) · v0.4.0</div>
+    </div>
+  </div>
+  <div class="badges">
+    <div class="badge" style="background:#00FF9420;color:var(--green)">181 TESTS</div>
+    <div class="badge" style="background:#00D4FF20;color:var(--accent)">4 PACKAGES</div>
+    <div class="badge" style="background:#00FF9420;color:var(--green)">ALL PASS</div>
+    <div class="badge" style="background:#9B6FFF20;color:var(--purple)">v0.4.0</div>
+  </div>
+</div>
+
+<!-- ══ MAIN ════════════════════════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- ── BAND 1: API + SHELL ────────────────────────────────────────── -->
+  <div class="band band-api">
+    <div class="band-label">
+      <div class="dot" style="background:var(--accent)"></div>
+      <span style="color:var(--accent)">@ncaos/api</span>
+      <span style="color:var(--sub)">Phase 02→04 · 65 tests · 14 routes</span>
+      <span style="margin-left:auto;color:var(--sub);font-size:9px">+ @ncaos/shell · Phase 02 · 15 tests</span>
+    </div>
+    <div class="band-api-inner">
+
+      <!-- Shell -->
+      <div class="shell-panel">
+        <h3>@ncaos/shell <span style="color:var(--sub)">Phase 02 · 15 tests</span></h3>
+        <div class="shell-item" onclick="openModal('shell-loop')">
+          <div class="si-name">ShellLoop</div>
+          <div class="si-desc">Lifecycle: start / stop / fail-safe (ADR-002)</div>
+        </div>
+        <div class="shell-item" onclick="openModal('watchdog')">
+          <div class="si-name">Watchdog</div>
+          <div class="si-desc">Health monitoring · MTTD SLA reporting</div>
+        </div>
+        <div class="shell-item" onclick="openModal('judge')">
+          <div class="si-name">Judge</div>
+          <div class="si-desc">Scoring orchestrator · workflowId (F-02)</div>
+        </div>
+        <div class="shell-item" onclick="openModal('enforcer')">
+          <div class="si-name">Enforcer</div>
+          <div class="si-desc">_buildGovEvent() · workflowId→sequenceId (F-03)</div>
+        </div>
+        <div class="shell-item" onclick="openModal('events')">
+          <div class="si-name">EventEmitter</div>
+          <div class="si-desc">shell:output · containment events</div>
+        </div>
+        <div class="mode-badges">
+          <div class="mode-badge" style="background:#00CEB820;color:var(--teal)">PILOT-OBS</div>
+          <div class="mode-badge" style="background:#FFB80020;color:var(--amber)">ENTERPRISE_STRICT</div>
+          <div class="mode-badge" style="background:#FF4D6A20;color:var(--red)">CRITICAL_STRICT</div>
+        </div>
+      </div>
+
+      <!-- API inner -->
+      <div class="api-inner">
+
+        <!-- Stores -->
+        <div class="stores-grid">
+          <div class="store-card" style="border:1px solid var(--accent);box-shadow:0 0 12px rgba(0,212,255,0.05)" onclick="openModal('event-store')">
+            <div class="store-header" style="background:#00D4FF15">
+              <span class="store-name" style="color:var(--accent)">EventStore</span>
+              <span class="badge" style="background:#00D4FF20;color:var(--accent);font-size:8px;padding:2px 7px">23 tests</span>
+            </div>
+            <div class="store-fname">api/src/store/event-store.ts · NEW</div>
+            <div class="store-body">
+              <div class="store-item" style="color:var(--sub)">Append-only event log</div>
+              <div class="store-item" style="color:var(--sub)">Cursor-based pagination</div>
+              <div class="store-item" style="color:var(--sub)">layer / severity / action filters</div>
+              <div class="store-item" style="color:var(--teal)">sequenceId linking (Toru-William)</div>
+              <div class="store-item" style="color:var(--teal)">summarizeSequence()</div>
+              <div class="store-item" style="color:var(--sub)">Tenant isolation (ADR-005)</div>
+            </div>
+          </div>
+
+          <div class="store-card" style="border:1px solid var(--amber);box-shadow:0 0 12px rgba(255,184,0,0.05)" onclick="openModal('policy-store')">
+            <div class="store-header" style="background:#FFB80015">
+              <span class="store-name" style="color:var(--amber)">PolicyStore</span>
+              <span class="badge" style="background:#FFB80020;color:var(--amber);font-size:8px;padding:2px 7px">7 tests</span>
+            </div>
+            <div class="store-fname">api/src/store/policy-store.ts · NEW</div>
+            <div class="store-body">
+              <div class="store-item" style="color:var(--sub)">Default ENTERPRISE_STRICT</div>
+              <div class="store-item" style="color:var(--sub)">Zod + consistency validation</div>
+              <div class="store-item" style="color:var(--sub)">Per-tenant active policy</div>
+              <div class="store-item" style="color:var(--sub)">Change history (last 10)</div>
+              <div class="store-item" style="color:var(--sub)">policy:changed event</div>
+              <div class="store-item" style="color:var(--sub)">Isolated per tenant</div>
+            </div>
+          </div>
+
+          <div class="store-card" style="border:1px solid var(--purple);box-shadow:0 0 12px rgba(155,111,255,0.05)" onclick="openModal('tenant-registry')">
+            <div class="store-header" style="background:#9B6FFF15">
+              <span class="store-name" style="color:var(--purple)">TenantDetectorRegistry</span>
+              <span class="badge" style="background:#9B6FFF20;color:var(--purple);font-size:8px;padding:2px 7px">8 tests</span>
+            </div>
+            <div class="store-fname">api/src/detectors/tenant-registry.ts · NEW · ADR-005</div>
+            <div class="store-body">
+              <div class="store-item" style="color:var(--sub)">One GateDetector per PARTNER_ID</div>
+              <div class="store-item" style="color:var(--sub)">PremiseDetector per tenant</div>
+              <div class="store-item" style="color:var(--sub)">AuthorityDetector per tenant</div>
+              <div class="store-item" style="color:var(--sub)">ContinuityDetector per tenant</div>
+              <div class="store-item" style="color:var(--sub)">MTTD stats per layer</div>
+              <div class="store-item" style="color:var(--sub)">Tracks active tenant count</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Routes -->
+        <div class="server-block">
+          <h3>Fastify Server — server.ts (REPLACED)</h3>
+          <div class="srv-sub">All routes require X-Partner-ID header for per-tenant isolation</div>
+          <div class="routes-grid">
+            <div class="route-row" onclick="openModal('route-health')"><span class="method GET">GET</span><span class="route-path">/v1/health</span><span class="route-phase ph-up">UPGRADED</span></div>
+            <div class="route-row" onclick="openModal('route-process')"><span class="method POST">POST</span><span class="route-path">/v1/process</span><span class="route-phase ph-up">UPGRADED</span></div>
+            <div class="route-row"><span class="method GET">GET</span><span class="route-path">/v1/state</span><span class="route-phase ph-old">Phase 02</span></div>
+            <div class="route-row"><span class="method WS">WS</span><span class="route-path">/v1/state/stream</span><span class="route-phase ph-old">Phase 02</span></div>
+            <div class="route-row" onclick="openModal('route-audit')"><span class="method GET">GET</span><span class="route-path">/v1/audit/:handle</span><span class="route-phase ph-up">UPGRADED</span></div>
+            <div class="route-row" onclick="openModal('route-events')"><span class="method GET">GET</span><span class="route-path">/v1/events</span><span class="route-phase ph-new">NEW</span></div>
+            <div class="route-row" onclick="openModal('route-events')"><span class="method GET">GET</span><span class="route-path">/v1/events/stats</span><span class="route-phase ph-new">NEW</span></div>
+            <div class="route-row" onclick="openModal('route-sequence')"><span class="method GET">GET</span><span class="route-path">/v1/events/sequence/:id</span><span class="route-phase ph-new">NEW</span></div>
+            <div class="route-row" onclick="openModal('route-sequence')"><span class="method GET">GET</span><span class="route-path">/v1/events/sequence/:id/summary</span><span class="route-phase ph-new">NEW</span></div>
+            <div class="route-row" onclick="openModal('route-mttd')"><span class="method GET">GET</span><span class="route-path">/v1/mttd</span><span class="route-phase ph-new">NEW</span></div>
+            <div class="route-row" onclick="openModal('route-policy')"><span class="method GET">GET</span><span class="route-path">/v1/policy</span><span class="route-phase ph-new">NEW</span></div>
+            <div class="route-row" onclick="openModal('route-policy')"><span class="method POST">POST</span><span class="route-path">/v1/policy</span><span class="route-phase ph-new">NEW</span></div>
+            <div class="route-row" onclick="openModal('route-policy')"><span class="method GET">GET</span><span class="route-path">/v1/policy/history</span><span class="route-phase ph-new">NEW</span></div>
+            <div class="route-row" onclick="openModal('route-detectors')"><span class="method GET">GET</span><span class="route-path">/v1/detectors</span><span class="route-phase ph-new">NEW</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- flow arrow -->
+  <div class="flow-arrows">
+    <div class="arrow-block">
+      <span class="arrow-line" style="color:var(--accent)">↑</span>
+      <span>detect*() / verdict enforcement</span>
+      <span class="arrow-line" style="color:var(--accent)">↑</span>
+    </div>
+    <div class="arrow-block">
+      <span class="arrow-line" style="color:var(--teal)">↑</span>
+      <span>sequenceId linkage (Toru-William)</span>
+      <span class="arrow-line" style="color:var(--teal)">↑</span>
+    </div>
+  </div>
+
+  <!-- ── BAND 2: DETECTION ────────────────────────────────────────── -->
+  <div class="band band-detection">
+    <div class="band-label">
+      <div class="dot" style="background:var(--purple)"></div>
+      <span style="color:var(--purple)">@ncaos/detection</span>
+      <span style="color:var(--sub)">Phase 03 · 54 tests</span>
+    </div>
+    <div class="detection-grid">
+
+      <div class="detector-card" style="background:#0F0B20;border-color:var(--red)" onclick="openModal('gate-detector')">
+        <div class="detector-header" style="background:#FF4D6A18">
+          <span class="detector-name" style="color:var(--red)">GateDetector</span>
+          <span class="badge" style="background:#FF4D6A20;color:var(--red);font-size:8px;padding:2px 6px">18 tests</span>
+        </div>
+        <div class="detector-body">
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>INJECTION_PATTERN → HIGH/sys</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>SIGNATURE_INVALID → HIGH</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>KNOWN_BAD_SOURCE → HIGH</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>REPLAY_ATTACK → HIGH</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>TAMPERED_PAYLOAD → HIGH</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--amber)"></div>RATE_EXCEEDED → MED/req</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--amber)"></div>GEO_MISMATCH → MED</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--amber)"></div>SCHEMA_VIOLATION → MED/flow</div>
+          <div class="mttd-bar" style="background:#FF4D6A18;color:var(--red)">MTTD layer=gate</div>
+        </div>
+      </div>
+
+      <div class="detector-card" style="background:#18130A;border-color:var(--amber)" onclick="openModal('premise-detector')">
+        <div class="detector-header" style="background:#FFB80018">
+          <span class="detector-name" style="color:var(--amber)">PremiseDetector</span>
+          <span class="badge" style="background:#FFB80020;color:var(--amber);font-size:8px;padding:2px 6px">7 tests</span>
+        </div>
+        <div class="detector-body">
+          <div class="flag-item"><div class="flag-dot" style="background:var(--green)"></div>PREMISE_VALIDATED (clean)</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>≥1 critical → HIGH/flow</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--amber)"></div>≥70% mismatch → MED</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--amber)"></div>unknown_claim flagged</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--amber)"></div>contract version mismatch</div>
+          <div class="mttd-bar" style="background:#FFB80018;color:var(--amber)">MTTD layer=premise</div>
+        </div>
+      </div>
+
+      <div class="detector-card" style="background:#080E18;border-color:var(--accent)" onclick="openModal('authority-detector')">
+        <div class="detector-header" style="background:#00D4FF18">
+          <span class="detector-name" style="color:var(--accent)">AuthorityDetector</span>
+          <span class="badge" style="background:#00D4FF20;color:var(--accent);font-size:8px;padding:2px 6px">5 tests</span>
+        </div>
+        <div class="detector-body">
+          <div class="flag-item"><div class="flag-dot" style="background:var(--green)"></div>decision-ready → GRANT</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--accent)"></div>reference-only no trigger</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>override attempt → HIGH</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--amber)"></div>downgrade to ref-only</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>policy=invalid → DENY</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>chain: cannot upgrade</div>
+          <div class="mttd-bar" style="background:#00D4FF18;color:var(--accent)">MTTD layer=authority</div>
+        </div>
+      </div>
+
+      <div class="detector-card" style="background:#061412;border-color:var(--teal)" onclick="openModal('continuity-detector')">
+        <div class="detector-header" style="background:#00CEB818">
+          <span class="detector-name" style="color:var(--teal)">ContinuityDetector</span>
+          <span class="badge" style="background:#00CEB820;color:var(--teal);font-size:8px;padding:2px 6px">24 tests</span>
+        </div>
+        <div class="detector-body">
+          <div class="flag-item"><div class="flag-dot" style="background:var(--green)"></div>STABLE state (score ≥ threshold)</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--amber)"></div>PROVISIONAL intermediate</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--red)"></div>UNSTABLE → HIGH/sys</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--teal)"></div>always scope=sys (invariant)</div>
+          <div class="flag-item"><div class="flag-dot" style="background:var(--teal)"></div>PILOT_PROFILE thresholds</div>
+          <div class="mttd-bar" style="background:#00CEB818;color:var(--teal)">MTTD layer=continuity</div>
+        </div>
+      </div>
+
+      <div class="mttd-card" onclick="openModal('mttd-tracker')">
+        <h4>MttdTracker<br>+ DetectionRegistry</h4>
+        <div class="mttd-stat">12 tests (mttd.test.ts)</div>
+        <div class="mttd-stat">p50 / p95 / p99 stats</div>
+        <div class="mttd-stat">SLA breach logging</div>
+        <div class="mttd-stat">Policy SLA values</div>
+        <div class="mttd-stat">Per-layer tracking</div>
+        <div class="mttd-stat">startTimer() helper</div>
+        <div class="mttd-stat">Reset breach count</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- flow arrow -->
+  <div class="flow-arrows">
+    <div class="arrow-block">
+      <span class="arrow-line" style="color:var(--green)">↑</span>
+      <span>scoring / verdict / policy validation</span>
+      <span class="arrow-line" style="color:var(--green)">↑</span>
+    </div>
+  </div>
+
+  <!-- ── BAND 3: CORE ─────────────────────────────────────────────── -->
+  <div class="band band-core">
+    <div class="band-label">
+      <div class="dot" style="background:var(--green)"></div>
+      <span style="color:var(--green)">@ncaos/core</span>
+      <span style="color:var(--sub)">Phase 01 · Foundation · 47 tests</span>
+    </div>
+    <div class="core-grid">
+      <div class="core-fn" onclick="openModal('detect-gate')">
+        <div class="fn-name">detectGate()</div>
+        <div class="fn-desc">Anomaly detection · 16 tests</div>
+      </div>
+      <div class="core-fn" onclick="openModal('detect-premise')">
+        <div class="fn-name">detectPremise()</div>
+        <div class="fn-desc">Premise validation</div>
+      </div>
+      <div class="core-fn" onclick="openModal('detect-authority')">
+        <div class="fn-name">detectAuthority()</div>
+        <div class="fn-desc">Authority scope</div>
+      </div>
+      <div class="core-fn" onclick="openModal('detect-continuity')">
+        <div class="fn-name">detectContinuity()</div>
+        <div class="fn-desc">Continuity state</div>
+      </div>
+      <div class="core-fn" onclick="openModal('compute-integrity')">
+        <div class="fn-name">computeIntegrity()</div>
+        <div class="fn-desc">Integrity scoring · 16 tests</div>
+      </div>
+      <div class="core-fn" onclick="openModal('compute-authority')">
+        <div class="fn-name">computeAuthority()</div>
+        <div class="fn-desc">Authority level</div>
+      </div>
+      <div class="core-fn" onclick="openModal('compute-containment')">
+        <div class="fn-name">computeContainment()</div>
+        <div class="fn-desc">Exposure metrics · clamps 0-100</div>
+      </div>
+      <div class="core-fn" onclick="openModal('score-continuity')">
+        <div class="fn-name">scoreToContinuity()</div>
+        <div class="fn-desc">State mapping</div>
+      </div>
+      <div class="core-fn" onclick="openModal('enforce')">
+        <div class="fn-name">enforce(policy)</div>
+        <div class="fn-desc">Verdict enforcement · 15 tests</div>
+      </div>
+      <div class="core-fn" onclick="openModal('fail-safe')">
+        <div class="fn-name">failSafeVerdict()</div>
+        <div class="fn-desc">ADR-002 fail-safe</div>
+      </div>
+      <div class="core-fn" onclick="openModal('load-policy')">
+        <div class="fn-name">loadPolicy()</div>
+        <div class="fn-desc">Policy parsing + validation</div>
+      </div>
+      <div class="core-fn" onclick="openModal('validate-policy')">
+        <div class="fn-name">validatePolicy()</div>
+        <div class="fn-desc">Consistency check</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FIXES PANEL ─────────────────────────────────────────────── -->
+  <div class="fixes-panel">
+    <h3>FIXES APPLIED DURING PHASE 04 TESTING (7)</h3>
+    <div class="fixes-grid">
+      <div class="fix-row" onclick="openModal('fix-f01')">
+        <div class="fix-id">F-01</div>
+        <div class="fix-detail">
+          <div class="fix-file">api/vitest.config.ts</div>
+          <div class="fix-desc">Missing @ncaos/detection alias → 14 tests failing. Added alias pointing to detection/src/index.ts</div>
+        </div>
+      </div>
+      <div class="fix-row" onclick="openModal('fix-f02')">
+        <div class="fix-id">F-02</div>
+        <div class="fix-detail">
+          <div class="fix-file">shell/src/judge/judge.ts</div>
+          <div class="fix-desc">workflowId not declared in JudgmentResult. Added to interface + return object</div>
+        </div>
+      </div>
+      <div class="fix-row" onclick="openModal('fix-f03')">
+        <div class="fix-id">F-03</div>
+        <div class="fix-detail">
+          <div class="fix-file">shell/src/enforcer/enforcer.ts</div>
+          <div class="fix-desc">sequenceId never populated. Added workflowId to _buildGovEvent() return</div>
+        </div>
+      </div>
+      <div class="fix-row" onclick="openModal('fix-f04')">
+        <div class="fix-id">F-04</div>
+        <div class="fix-detail">
+          <div class="fix-file">egs/package.json</div>
+          <div class="fix-desc">JSONParseError at position 220. Missing comma after 'ui' in workspaces array</div>
+        </div>
+      </div>
+      <div class="fix-row" onclick="openModal('fix-f05')">
+        <div class="fix-id">F-05</div>
+        <div class="fix-detail">
+          <div class="fix-file">api/src/server.ts (build)</div>
+          <div class="fix-desc">@types/ws missing (transitive dep of @fastify/websocket). npm install --save-dev @types/ws</div>
+        </div>
+      </div>
+      <div class="fix-row" onclick="openModal('fix-f06')">
+        <div class="fix-id">F-06</div>
+        <div class="fix-detail">
+          <div class="fix-file">api/src/server.ts</div>
+          <div class="fix-desc">TS2379 exactOptionalPropertyTypes. Changed 4 fields from .optional() to .default()</div>
+        </div>
+      </div>
+      <div class="fix-row" onclick="openModal('fix-f07')">
+        <div class="fix-id">F-07</div>
+        <div class="fix-detail">
+          <div class="fix-file">api/package.json</div>
+          <div class="fix-desc">npm start: Cannot find dist/index.js. Changed start script to dist/server.js</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── LEGEND ────────────────────────────────────────────────────── -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>NEW in Phase 04</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>UPGRADED from Phase 02/03</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>API Surface / Data Flow</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Detection / Measurement</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Toru-William Sequence Interface</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Fix Applied</div>
+  <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--sub)">
+    NCAOS/EGS Phase 04 · Non-Public Concept Demonstration Artifact · 2026-05-07
+  </div>
+</div>
+
+<!-- ══ MODAL ═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModalDirect()">✕ close</span>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-content" id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const MODALS = {
+  'shell-loop': {
+    title: 'ShellLoop',
+    sub: '@ncaos/shell · Phase 02 · 3 lifecycle + 6 PILOT + 5 ENTERPRISE_STRICT + 1 event = 15 tests',
+    content: `<ul>
+      <li><span>starts and stops cleanly</span> — lifecycle management</li>
+      <li><span>FAIL_SAFE when not running</span> — ADR-002: shell not running returns failSafe verdict</li>
+      <li><span>throws on invalid policy consistency</span> — policy guard at start</li>
+      <li><span>PASS for clean input (PILOT)</span> — normal flow</li>
+      <li><span>operationalMode = NORMAL</span> on PASS</li>
+      <li><span>shellIntegrity=true, failSafeEnabled=true</span></li>
+      <li><span>No containment event</span> on PASS</li>
+      <li><span>Valid requestId</span> — REQ-XXXXXX format</li>
+      <li><span>governed output &lt; raw exposure</span> — containment math</li>
+      <li><span>BLOCK for high-severity threat</span> (ENTERPRISE_STRICT)</li>
+      <li><span>operationalMode = CONTAINMENT</span> on BLOCK</li>
+      <li><span>Emits containment event</span></li>
+      <li><span>integrity = Critical</span> on high severity</li>
+      <li><span>Routing hint on BLOCK</span> — SOC / Security Queue</li>
+      <li><span>shell:output event</span> on each process() call</li>
+    </ul>`
+  },
+  'watchdog': { title: 'Watchdog', sub: 'Health monitor inside ShellLoop', content: '<ul><li><span>Monitors shell lifecycle</span></li><li><span>Reports MTTD SLA status</span> via /v1/health upgraded</li><li><span>slaHealthy flag</span> — derived from detection layer stats</li><li><span>activeTenants count</span> — from TenantDetectorRegistry</li></ul>' },
+  'judge': { title: 'Judge', sub: 'shell/src/judge/judge.ts · F-02 fix', content: '<ul><li><span>Orchestrates scoring</span> — calls detectGate, detectPremise, detectAuthority, detectContinuity</li><li><span>F-02:</span> workflowId added to JudgmentResult interface and return object</li><li><span>workflowId</span> flows from request → JudgmentResult → GovEvent → EventStore → sequenceId</li></ul>' },
+  'enforcer': { title: 'Enforcer', sub: 'shell/src/enforcer/enforcer.ts · F-03 fix', content: '<ul><li><span>_buildGovEvent()</span> — constructs GovEvent from JudgmentResult</li><li><span>F-03:</span> workflowId added to _buildGovEvent() return — this was the root cause of empty sequenceId in EventStore</li><li><span>EventStore derives sequenceId</span> from GovEvent.workflowId</li></ul>' },
+  'events': { title: 'EventEmitter', sub: 'shell:output · containment events', content: '<ul><li><span>shell:output</span> emitted on each process() call</li><li><span>containment event</span> emitted on BLOCK verdict</li><li><span>policy:changed</span> emitted by PolicyStore on update</li></ul>' },
+  'event-store': {
+    title: 'EventStore',
+    sub: 'api/src/store/event-store.ts · NEW · 23 tests',
+    content: `<ul>
+      <li><span>Append-only log</span> — append() returns EventRecord with sequenceNumber</li>
+      <li><span>Monotonically increasing seq numbers</span> — independent per tenant</li>
+      <li><span>Tenant isolation (ADR-005)</span> — getByHandle() returns 404 for different tenant</li>
+      <li><span>Cursor-based pagination</span> — limit + cursor, no overlap</li>
+      <li><span>Filters:</span> layer, severity, action</li>
+      <li><span>Stats:</span> byLayer / bySeverity / byAction aggregate counts</li>
+      <li><span>sequenceId linking (Toru-William):</span> derived from GovEvent.workflowId</li>
+      <li><span>getBySequenceId()</span> — groups events by sequenceId, tenant-isolated</li>
+      <li><span>summarizeSequence()</span> — behavioral pattern analysis: STABLE / CONTAINED, consistencyScore, escalationDetected</li>
+      <li><span>activeSequences count</span> in stats</li>
+    </ul>`
+  },
+  'policy-store': {
+    title: 'PolicyStore',
+    sub: 'api/src/store/policy-store.ts · NEW · 7 tests',
+    content: `<ul>
+      <li><span>Default ENTERPRISE_STRICT</span> for unknown tenant</li>
+      <li><span>Accepts valid policy update</span> — Zod schema + consistency validation</li>
+      <li><span>Rejects invalid schema</span> — 400 INVALID_POLICY</li>
+      <li><span>Rejects inconsistent thresholds</span> — available ≤ limited fails</li>
+      <li><span>Records policy history</span> — last 10 versions</li>
+      <li><span>Emits policy:changed event</span></li>
+      <li><span>Isolated per tenant</span> — ADR-005</li>
+      <li><span>Resets to default</span></li>
+    </ul>`
+  },
+  'tenant-registry': {
+    title: 'TenantDetectorRegistry',
+    sub: 'api/src/detectors/tenant-registry.ts · NEW · ADR-005 · 8 tests',
+    content: `<ul>
+      <li><span>Creates detector set for new PARTNER_ID</span> — one each: Gate, Premise, Authority, Continuity, DetectionRegistry</li>
+      <li><span>Returns same instance</span> on subsequent calls for same tenant</li>
+      <li><span>Independent instances per tenant</span> — strict isolation</li>
+      <li><span>Resets tenant detector set</span></li>
+      <li><span>MTTD stats for all four layers</span></li>
+      <li><span>SLA healthy when no samples</span></li>
+      <li><span>Tracks active tenant count</span></li>
+      <li><span>Uses policy SLA values</span> — per-tenant policy feeds SLA thresholds</li>
+    </ul>`
+  },
+  'route-health': { title: 'GET /v1/health (UPGRADED)', sub: 'api-v4.test.ts · 2 tests', content: '<ul><li><span>slaHealthy field</span> — derived from MTTD tracker</li><li><span>activeTenants field</span> — from TenantDetectorRegistry</li><li><span>401 without X-Partner-ID</span></li></ul>' },
+  'route-process': { title: 'POST /v1/process (UPGRADED)', sub: 'api-v4.test.ts · 2 tests', content: '<ul><li><span>Uses per-tenant detector instances</span> — TenantDetectorRegistry.get(partnerId)</li><li><span>200 for clean request</span></li><li><span>BLOCK + evidenceHandle for threat</span></li><li><span>401 without X-Partner-ID</span></li></ul>' },
+  'route-audit': { title: 'GET /v1/audit/:handle (UPGRADED)', sub: 'api-v4.test.ts · 3 tests', content: '<ul><li><span>Full EventRecord</span> with sequenceNumber + storedAt + sequenceId</li><li><span>404 for unknown handle</span></li><li><span>404 for different tenant</span> — ADR-005 isolation</li></ul>' },
+  'route-events': { title: 'GET /v1/events + /v1/events/stats (NEW)', sub: 'api-v4.test.ts · 6 tests', content: '<ul><li><span>Paginated event list</span></li><li><span>Filter by layer</span> — ?layer=gate</li><li><span>Filter by severity</span> — ?severity=high</li><li><span>400 for invalid limit</span> — max enforced</li><li><span>Tenant isolation</span> — ISOLATED_TENANT sees 0 events</li><li><span>Stats:</span> byLayer + bySeverity + byAction aggregate</li></ul>' },
+  'route-sequence': { title: 'GET /v1/events/sequence/:id (NEW)', sub: 'Toru-William alignment route', content: '<ul><li><span>All events in a workflow sequence</span></li><li><span>/summary:</span> behavioral pattern analysis — STABLE / CONTAINED, escalationDetected, consistencyScore</li><li><span>Tenant-isolated</span> — sequenceId scoped to PARTNER_ID</li></ul>' },
+  'route-mttd': { title: 'GET /v1/mttd (NEW)', sub: 'api-v4.test.ts · 1 test', content: '<ul><li><span>MTTD stats for all four layers</span> — gate / premise / authority / continuity</li><li><span>slaMs values</span> per layer</li><li><span>p50/p95/p99</span> latency percentiles</li></ul>' },
+  'route-policy': { title: 'GET|POST /v1/policy + /v1/policy/history (NEW)', sub: 'api-v4.test.ts · 3 tests', content: '<ul><li><span>GET /v1/policy</span> — returns active policy profileId for tenant</li><li><span>POST /v1/policy</span> — validated update; 400 INVALID_POLICY on bad schema</li><li><span>GET /v1/policy/history</span> — last 10 policy versions</li></ul>' },
+  'route-detectors': { title: 'GET /v1/detectors (NEW)', sub: 'api-v4.test.ts · 1 test', content: '<ul><li><span>Per-tenant detector status</span></li><li><span>gateRules count</span></li><li><span>mttdStats</span> per layer</li></ul>' },
+  'gate-detector': { title: 'GateDetector', sub: '@ncaos/detection · gate.test.ts · 18 tests', content: '<ul><li><span>Critical flags → HIGH/sys:</span> INJECTION_PATTERN, SIGNATURE_INVALID, KNOWN_BAD_SOURCE, REPLAY_ATTACK, TAMPERED_PAYLOAD</li><li><span>Warning flags → MED:</span> RATE_EXCEEDED (scope=req), GEO_MISMATCH, SCHEMA_VIOLATION (scope=flow)</li><li><span>Priority order:</span> critical wins over warning</li><li><span>Allowlist:</span> UNRECOGNIZED_SOURCE auto-added; no trigger for known source</li><li><span>Custom rules:</span> CUSTOM-001 applied; getRules() returns all</li></ul>' },
+  'premise-detector': { title: 'PremiseDetector', sub: '@ncaos/detection · detection.test.ts · 7 tests', content: '<ul><li><span>PREMISE_VALIDATED</span> when all validated (clean)</li><li><span>HIGH/flow</span> for ≥1 critical unvalidated premise</li><li><span>MED</span> for 67% mismatch (partial standard violations)</li><li><span>unknown_claim flagged</span></li><li><span>contract version mismatch</span> — 1.0 vs 2.0</li><li><span>MTTD ≥ 0</span></li></ul>' },
+  'authority-detector': { title: 'AuthorityDetector', sub: '@ncaos/detection · detection.test.ts · 5 tests', content: '<ul><li><span>decision-ready GRANT</span> when policy allows</li><li><span>reference-only no trigger</span> when granted+requested match</li><li><span>Downgrades to reference-only</span> (severity=high, F-01 fix)</li><li><span>DENY when policy grants invalid</span></li><li><span>Chain constraint</span> — cannot upgrade from previous=ref-only</li></ul>' },
+  'continuity-detector': { title: 'ContinuityDetector', sub: '@ncaos/detection · detection.test.ts · 24 tests (combined)', content: '<ul><li><span>STABLE</span> when score ≥ stable threshold</li><li><span>PROVISIONAL</span> intermediate state</li><li><span>UNSTABLE</span> when score &lt; provisional — HIGH/sys</li><li><span>scope=sys invariant</span> — always system scope</li><li><span>PILOT_PROFILE thresholds</span></li></ul>' },
+  'mttd-tracker': { title: 'MttdTracker + DetectionRegistry', sub: '@ncaos/detection · mttd.test.ts · 12 tests', content: '<ul><li><span>Records sample + SLA result</span></li><li><span>Flags SLA breach</span> — 80ms &gt; 50ms SLA</li><li><span>Computes stats</span> — min/max/mean/p50 after samples</li><li><span>Tracks breach count</span></li><li><span>Zero stats when no samples</span></li><li><span>Resets breach count on reset()</span></li><li><span>DetectionRegistry initializes all four layers</span></li><li><span>Uses policy SLA values</span></li><li><span>Healthy when no breaches</span></li><li><span>Throws on unknown layer</span></li><li><span>startTimer()</span> — positive elapsed, measures waited duration</li></ul>' },
+  'detect-gate': { title: 'detectGate()', sub: '@ncaos/core · detection.test.ts · 5 tests', content: '<ul><li><span>HIGH for critical flags</span> — INJECTION_PATTERN → high/sys</li><li><span>MED for warning flags</span> — RATE_EXCEEDED → med/req</li><li><span>No trigger for clean input</span></li><li><span>Prefers critical over warning</span> — flag priority ordering</li><li><span>MTTD measurement present</span> — SLA baseline</li></ul>' },
+  'detect-premise': { title: 'detectPremise()', sub: '@ncaos/core · detection.test.ts · 4 tests', content: '<ul><li><span>HIGH for most unvalidated</span> — ≥70% → HIGH/flow</li><li><span>MED for partial mismatch</span></li><li><span>No trigger when all validated</span></li><li><span>No trigger when no premises</span> — zero-claim guard</li></ul>' },
+  'detect-authority': { title: 'detectAuthority()', sub: '@ncaos/core · detection.test.ts · 3 tests', content: '<ul><li><span>HIGH for override attempt</span> — scope=sys</li><li><span>MED for legitimate downgrade</span></li><li><span>No trigger when policy grants decision-ready</span></li></ul>' },
+  'detect-continuity': { title: 'detectContinuity()', sub: '@ncaos/core · detection.test.ts · 4 tests', content: '<ul><li><span>HIGH when many tests fail</span></li><li><span>MED for moderate degradation</span></li><li><span>No trigger when stable</span></li><li><span>Always scope=sys</span> — design invariant</li></ul>' },
+  'compute-integrity': { title: 'computeIntegrity()', sub: '@ncaos/core · scoring.test.ts · 5 tests', content: '<ul><li><span>Available/88</span> for nominal</li><li><span>Limited for low severity</span></li><li><span>Limited for med severity</span> — boundary condition</li><li><span>Critical for high severity</span></li><li><span>CRITICAL_STRICT thresholds</span> respected</li></ul>' },
+  'compute-authority': { title: 'computeAuthority()', sub: '@ncaos/core · scoring.test.ts · 4 tests', content: '<ul><li><span>decision-ready</span> for nominal</li><li><span>reference-only</span> for low severity</li><li><span>invalid</span> for med severity</li><li><span>invalid</span> for high severity</li></ul>' },
+  'compute-containment': { title: 'computeContainmentMetrics()', sub: '@ncaos/core · scoring.test.ts · 3 tests', content: '<ul><li><span>governedOutput &lt; rawExposure</span></li><li><span>Lower raw when integrity Available</span></li><li><span>Clamps 0–100</span></li></ul>' },
+  'score-continuity': { title: 'scoreToContinuityState()', sub: '@ncaos/core · scoring.test.ts · 4 tests', content: '<ul><li><span>STABLE</span> when score ≥ stable threshold</li><li><span>PROVISIONAL</span> when score ≥ provisional threshold</li><li><span>UNSTABLE</span> when score &lt; provisional</li><li><span>Uses PILOT_PROFILE thresholds</span></li></ul>' },
+  'enforce': { title: 'enforce(policy)', sub: '@ncaos/core · verdict.test.ts · ENTERPRISE_STRICT + CRITICAL_STRICT + PILOT tests', content: '<ul><li><span>ENTERPRISE_STRICT:</span> PASS low (blockOnContainment=false), DOWNGRADE low severity, BLOCK med/high, routing on non-PASS</li><li><span>CRITICAL_STRICT:</span> BLOCK for all severities — max enforcement</li><li><span>PILOT:</span> PASS for low and med, DOWNGRADE for high</li></ul>' },
+  'fail-safe': { title: 'failSafeVerdict()', sub: '@ncaos/core · verdict.test.ts · ADR-002', content: '<ul><li><span>Returns FAIL_SAFE verdict</span></li><li><span>authority=invalid</span></li><li><span>continuityScore=0</span></li><li><span>ADR-002 compliance</span></li></ul>' },
+  'load-policy': { title: 'loadPolicy()', sub: '@ncaos/core · verdict.test.ts · 2 tests', content: '<ul><li><span>Parses valid raw policy</span></li><li><span>Throws on invalid raw input</span></li></ul>' },
+  'validate-policy': { title: 'validatePolicyConsistency()', sub: '@ncaos/core · verdict.test.ts · 3 tests', content: '<ul><li><span>Passes for valid policy</span></li><li><span>Fails when available ≤ limited</span></li><li><span>Fails when stable ≤ provisional</span></li></ul>' },
+  'fix-f01': { title: 'F-01 — vitest config missing alias', sub: 'api/vitest.config.ts', content: '<ul><li><span>Root cause:</span> vitest config missing @ncaos/detection alias. TenantDetectorRegistry imports from detection package which Vite could not resolve.</li><li><span>Fix:</span> Added @ncaos/detection alias pointing to detection/src/index.ts</li><li><span>Impact:</span> 14 api-v4.test.ts tests were failing (routes not found)</li></ul>' },
+  'fix-f02': { title: 'F-02 — workflowId not in JudgmentResult', sub: 'shell/src/judge/judge.ts', content: '<ul><li><span>Root cause:</span> workflowId carried into detectPremise() but not declared in JudgmentResult interface and not included in return object</li><li><span>Fix:</span> Added workflowId?: string to JudgmentResult. Added workflowId: req.workflowId || undefined to judge() return</li><li><span>Impact:</span> Sequence endpoints returned empty — activeSequences: 0</li></ul>' },
+  'fix-f03': { title: 'F-03 — workflowId not passed to GovEvent', sub: 'shell/src/enforcer/enforcer.ts', content: '<ul><li><span>Root cause:</span> Even with F-02 fix, workflowId was not passed to GovEvent. EventStore derives sequenceId from GovEvent.workflowId</li><li><span>Fix:</span> Added workflowId: j.workflowId to _buildGovEvent() return object</li><li><span>Impact:</span> sequenceId never populated in EventStore</li></ul>' },
+  'fix-f04': { title: 'F-04 — Missing comma in package.json', sub: 'egs/package.json', content: '<ul><li><span>Root cause:</span> Missing comma after "ui" when adding "detection" to workspaces array</li><li><span>Fix:</span> Added missing comma: "ui", before "detection"</li><li><span>Impact:</span> npm install failed — JSONParseError at position 220</li></ul>' },
+  'fix-f05': { title: 'F-05 — @types/ws missing', sub: 'api/src/server.ts (build)', content: '<ul><li><span>Root cause:</span> ws is a transitive dep of @fastify/websocket but @types/ws was not installed</li><li><span>Fix:</span> npm install --save-dev @types/ws</li><li><span>Impact:</span> npm run build failed</li></ul>' },
+  'fix-f06': { title: 'F-06 — exactOptionalPropertyTypes TS2379', sub: 'api/src/server.ts', content: '<ul><li><span>Root cause:</span> 4 Zod .optional() fields incompatible with ObservedRequest interface strict types</li><li><span>Fix:</span> Changed workflowId, updateId, equivalenceTestResults, continuityScore from .optional() to .default()</li><li><span>Impact:</span> TypeScript build errors TS2379</li></ul>' },
+  'fix-f07': { title: 'F-07 — wrong entry point in start script', sub: 'api/package.json', content: '<ul><li><span>Root cause:</span> start script pointed to dist/index.js but entry point compiles to dist/server.js</li><li><span>Fix:</span> Changed start script: node dist/index.js → node dist/server.js</li><li><span>Impact:</span> npm start: Cannot find dist/index.js</li></ul>' },
+};
+
+function openModal(key) {
+  const data = MODALS[key];
+  if (!data) return;
+  document.getElementById('modal-title').textContent = data.title;
+  document.getElementById('modal-sub').textContent = data.sub;
+  document.getElementById('modal-content').innerHTML = data.content;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modal').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+Hi William,
+
+This is a very strong direction — I think we are fully aligned.
+
+Your point about moving from event-level mapping to sequence-level interpretation is particularly important. That shift from isolated signals to behavioral patterns is where the audit layer becomes significantly more powerful.
+
+What you described around:
+- consistency of enforcement
+- repeated containment or escalation patterns
+- stability vs deviation over time
+
+— is exactly the kind of signal-derived evidence that makes this model work without requiring internal visibility.
+
+From my side, I agree with structuring the next phase as an interface definition exercise.
+
+The approach you outlined makes sense:
+- starting from a minimal core schema
+- introducing optional enrichment layers
+- and testing how different levels of structure impact audit outcomes
+
+One thing I would add is that we should be deliberate in how we define the “minimum viable signal layer.”
+
+If we get that layer right, everything else — sequences, patterns, and audit depth — can scale naturally on top of it without increasing coupling.
+
+So I see this phase as:
+“Defining the smallest possible interface that still supports meaningful governance evidence.”
+
+If we can establish that baseline, it will give us a very strong foundation to build on.
+
+Happy to proceed in that direction.
+
+Best regards,
+Toru

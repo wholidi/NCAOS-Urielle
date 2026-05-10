@@ -1,0 +1,37 @@
+Hi Toru,
+
+Fully agree, this is our next phase 
+
+The idea that audit depth is a function of signal structure rather than internal visibility is particularly important. It reframes the role of the audit layer — not as something that needs deeper access, but as something that depends on well-defined, consistent boundary signals.
+
+The point on event sequences is also very interesting. In the PoC, the mapping was largely event-by-event, but I can see that once we move into sequences, we start to get closer to behavioral evidence rather than isolated signals.
+
+That opens up a different dimension:
+- consistency of enforcement across events
+- patterns of repeated containment or escalation
+- stability vs deviation over time
+
+From the audit perspective, those patterns could serve as indirect but meaningful evidence of control effectiveness, even without internal state visibility.
+
+On the interface side, I agree the focus should be on:
+- defining a minimal but stable event schema
+- ensuring consistency across event types and sequences
+- introducing optional context fields (identity, asset, session) in a way that enhances interpretation without breaking the boundary
+
+What I find particularly strong in this direction is that it keeps the separation clean:
+- NCAOS defines and enforces the boundary
+- Urielle audit layer interprets structured signals into governance evidence
+
+And the more structured and consistent the signal layer becomes, the stronger the audit conclusions can be — without needing to expand inward.
+
+I’d be very interested to explore this next phase as an interface definition exercise, potentially starting from:
+- a minimal core schema
+- followed by optional enrichment layers
+- and then testing how different levels of structure affect audit outcomes
+
+Curious if that aligns with how you’re thinking about structuring the next step.
+
+Sincerely
+
+
+William

@@ -1,0 +1,306 @@
+PowerShell 7.4.0-preview.2
+
+   A new PowerShell preview release is available: v7.7.0-preview.1
+   Upgrade now, or check out the release page at:
+     https://aka.ms/PowerShell-Release?tag=v7.7.0-preview.1
+
+PS C:\Users\930140> cd Downloads
+PS C:\Users\930140\Downloads> git clone https://github.com/wholidi/NCAOS-Urielle.git
+Cloning into 'NCAOS-Urielle'...
+remote: Enumerating objects: 183, done.
+remote: Counting objects: 100% (183/183), done.
+remote: Compressing objects: 100% (117/117), done.
+remote: Total 183 (delta 47), reused 166 (delta 38), pack-reused 0 (from 0)
+Receiving objects: 100% (183/183), 589.21 KiB | 10.91 MiB/s, done.
+Resolving deltas: 100% (47/47), done.
+PS C:\Users\930140\Downloads> cd NCAOS-Urielle
+PS C:\Users\930140\Downloads\NCAOS-Urielle> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+PS C:\Users\930140\Downloads\NCAOS-Urielle> tar -xzf ncaos-phase04.tar.gz
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Copy-Item -Recurse phase04\api\src\detectors egs\api\src\detectors
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Copy-Item -Recurse phase04\api\src\store egs\api\src\store
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Copy-Item phase04\api\tests\api-v4.test.ts egs\api\tests\
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Copy-Item phase04\api\tests\event-store.test.ts egs\api\tests\
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Copy-Item phase04\api\tests\stores.test.ts egs\api\tests\
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Copy-Item phase04\api\vitest.config.ts egs\api\vitest.config.ts -Force
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Copy-Item phase04\docs\ADR-005-per-tenant-detector-isolation.md egs\docs\adr\
+Copy-Item: Cannot find path 'C:\Users\930140\Downloads\NCAOS-Urielle\phase04\docs\ADR-005-per-tenant-detector-isolation.md' because it does not exist.
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Copy-Item phase04\docs\adr\ADR-005-per-tenant-detector-isolation.md egs\docs\adr\
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Remove-Item -Recurse phase04
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Remove-Item ncaos-phase04.tar.gz
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\api\src
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\api\src
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----            5/7/2026 12:53 PM                detectors
+d----            5/7/2026 12:56 PM                store
+-a---            5/7/2026 12:49 PM          11809 server.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\api\src\detectors
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\api\src\detectors
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            5/3/2026  4:42 PM           3981 tenant-registry.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\api\src\store
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\api\src\store
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            5/6/2026 10:46 PM          12730 event-store.ts
+-a---            5/3/2026  4:43 PM           4027 policy-store.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\api\tests
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\api\tests
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            5/3/2026  4:44 PM          11482 api-v4.test.ts
+-a---            5/7/2026 12:49 PM           5420 api.test.ts
+-a---            5/6/2026 10:46 PM          11003 event-store.test.ts
+-a---            5/3/2026  4:45 PM           5539 stores.test.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\docs\adr
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\docs\adr
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            5/7/2026 12:49 PM           2689 ADR-001-type-contracts.md
+-a---            5/7/2026 12:49 PM           2133 ADR-002-fail-safe-invariant.md
+-a---            5/7/2026 12:49 PM           3103 ADR-003-process-isolation.md
+-a---            5/7/2026 12:49 PM           2908 ADR-004-detection-layer-independence.md
+-a---            5/3/2026  4:45 PM           2561 ADR-005-per-tenant-detector-isolation.md
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> node --version
+v24.13.0
+PS C:\Users\930140\Downloads\NCAOS-Urielle> npm --version
+npm: File C:\Users\930140\Tools\node\node-v24.13.0-win-x64\npm.ps1 cannot be loaded. The file C:\Users\930140\Tools\node\node-v24.13.0-win-x64\npm.ps1 is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170.
+PS C:\Users\930140\Downloads\NCAOS-Urielle> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+PS C:\Users\930140\Downloads\NCAOS-Urielle> npm --version
+11.6.2
+PS C:\Users\930140\Downloads\NCAOS-Urielle> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   egs/api/vitest.config.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        egs/api/src/detectors/
+        egs/api/src/store/
+        egs/api/tests/api-v4.test.ts
+        egs/api/tests/event-store.test.ts
+        egs/api/tests/stores.test.ts
+        egs/docs/adr/ADR-005-per-tenant-detector-isolation.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+PS C:\Users\930140\Downloads\NCAOS-Urielle> egs/core/ present
+egs/core/: The term 'egs/core/' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs/core/present
+Get-ChildItem: Cannot find path 'C:\Users\930140\Downloads\NCAOS-Urielle\egs\core\present' because it does not exist.
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs/core/ present
+PS C:\Users\930140\Downloads\NCAOS-Urielle> cd egs
+PS C:\Users\930140\Downloads\NCAOS-Urielle\egs> cd core
+PS C:\Users\930140\Downloads\NCAOS-Urielle\egs\core> cd present
+Set-Location: Cannot find path 'C:\Users\930140\Downloads\NCAOS-Urielle\egs\core\present' because it does not exist.
+PS C:\Users\930140\Downloads\NCAOS-Urielle\egs\core> ls
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\core
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----            5/7/2026 12:49 PM                src
+d----            5/7/2026 12:49 PM                tests
+-a---            5/7/2026 12:49 PM            405 package.json
+-a---            5/7/2026 12:49 PM            203 tsconfig.json
+-a---            5/7/2026 12:49 PM            313 vitest.config.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle\egs\core> ls
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\core
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----            5/7/2026 12:49 PM                src
+d----            5/7/2026 12:49 PM                tests
+-a---            5/7/2026 12:49 PM            405 package.json
+-a---            5/7/2026 12:49 PM            203 tsconfig.json
+-a---            5/7/2026 12:49 PM            313 vitest.config.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle\egs\core> cd..
+PS C:\Users\930140\Downloads\NCAOS-Urielle\egs> cd..
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\api\src\detectors
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\api\src\detectors
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            5/3/2026  4:42 PM           3981 tenant-registry.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\api\src\store
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\api\src\store
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            5/6/2026 10:46 PM          12730 event-store.ts
+-a---            5/3/2026  4:43 PM           4027 policy-store.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\api\tests
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\api\tests
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            5/3/2026  4:44 PM          11482 api-v4.test.ts
+-a---            5/7/2026 12:49 PM           5420 api.test.ts
+-a---            5/6/2026 10:46 PM          11003 event-store.test.ts
+-a---            5/3/2026  4:45 PM           5539 stores.test.ts
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> ls egs\docs\adr
+
+    Directory: C:\Users\930140\Downloads\NCAOS-Urielle\egs\docs\adr
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---            5/7/2026 12:49 PM           2689 ADR-001-type-contracts.md
+-a---            5/7/2026 12:49 PM           2133 ADR-002-fail-safe-invariant.md
+-a---            5/7/2026 12:49 PM           3103 ADR-003-process-isolation.md
+-a---            5/7/2026 12:49 PM           2908 ADR-004-detection-layer-independence.md
+-a---            5/3/2026  4:45 PM           2561 ADR-005-per-tenant-detector-isolation.md
+
+PS C:\Users\930140\Downloads\NCAOS-Urielle> cd egs
+PS C:\Users\930140\Downloads\NCAOS-Urielle\egs> npm install
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+npm warn cleanup Failed to remove some directories [
+npm warn cleanup   [
+npm warn cleanup     '\\\\?\\C:\\Users\\930140\\Downloads\\NCAOS-Urielle\\egs\\node_modules',
+npm warn cleanup     [Error: EPERM: operation not permitted, rmdir 'C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\mlly\node_modules\pathe\dist'] {
+npm warn cleanup       errno: -4048,
+npm warn cleanup       code: 'EPERM',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: 'C:\\Users\\930140\\Downloads\\NCAOS-Urielle\\egs\\node_modules\\mlly\\node_modules\\pathe\\dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '\\\\?\\C:\\Users\\930140\\Downloads\\NCAOS-Urielle\\egs\\node_modules\\@fastify\\ajv-compiler\\node_modules',
+npm warn cleanup     [Error: EPERM: operation not permitted, rmdir 'C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\@fastify\ajv-compiler\node_modules\ajv\lib\refs'] {
+npm warn cleanup       errno: -4048,
+npm warn cleanup       code: 'EPERM',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: 'C:\\Users\\930140\\Downloads\\NCAOS-Urielle\\egs\\node_modules\\@fastify\\ajv-compiler\\node_modules\\ajv\\lib\\refs'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '\\\\?\\C:\\Users\\930140\\Downloads\\NCAOS-Urielle\\egs\\node_modules\\@fastify',
+npm warn cleanup     [Error: EPERM: operation not permitted, rmdir 'C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\@fastify'] {
+npm warn cleanup       errno: -4048,
+npm warn cleanup       code: 'EPERM',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: 'C:\\Users\\930140\\Downloads\\NCAOS-Urielle\\egs\\node_modules\\@fastify'
+npm warn cleanup     }
+npm warn cleanup   ]
+npm warn cleanup ]
+npm error code 1
+npm error path C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\esbuild
+npm error command failed
+npm error command C:\windows\system32\cmd.exe /d /s /c node install.js
+npm error node:internal/errors:985
+npm error   const err = new Error(message);
+npm error               ^
+npm error
+npm error Error: Command failed: C:\Users\930140\Tools\node\node-v24.13.0-win-x64\node.exe C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\esbuild\bin\esbuild --version
+npm error node:child_process:964
+npm error     throw err;
+npm error     ^
+npm error
+npm error <ref *1> Error: spawnSync C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\@esbuild\win32-x64\esbuild.exe EPERM
+npm error     at Object.spawnSync (node:internal/child_process:1120:20)
+npm error     at spawnSync (node:child_process:911:24)
+npm error     at Object.execFileSync (node:child_process:954:15)
+npm error     at Object.<anonymous> (C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\esbuild\bin\esbuild:219:28)
+npm error     at Module._compile (node:internal/modules/cjs/loader:1761:14)
+npm error     at Object..js (node:internal/modules/cjs/loader:1893:10)
+npm error     at Module.load (node:internal/modules/cjs/loader:1481:32)
+npm error     at Module._load (node:internal/modules/cjs/loader:1300:12)
+npm error     at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+npm error     at wrapModuleLoad (node:internal/modules/cjs/loader:245:24) {
+npm error   errno: -4048,
+npm error   code: 'EPERM',
+npm error   syscall: 'spawnSync C:\\Users\\930140\\Downloads\\NCAOS-Urielle\\egs\\node_modules\\@esbuild\\win32-x64\\esbuild.exe',
+npm error   path: 'C:\\Users\\930140\\Downloads\\NCAOS-Urielle\\egs\\node_modules\\@esbuild\\win32-x64\\esbuild.exe',
+npm error   spawnargs: [ '--version' ],
+npm error   error: [Circular *1],
+npm error   status: null,
+npm error   signal: null,
+npm error   output: null,
+npm error   pid: 0,
+npm error   stdout: undefined,
+npm error   stderr: undefined
+npm error }
+npm error
+npm error Node.js v24.13.0
+npm error
+npm error     at genericNodeError (node:internal/errors:985:15)
+npm error     at wrappedFn (node:internal/errors:539:14)
+npm error     at checkExecSyncError (node:child_process:925:11)
+npm error     at Object.execFileSync (node:child_process:961:15)
+npm error     at validateBinaryVersion (C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\esbuild\install.js:99:28)
+npm error     at C:\Users\930140\Downloads\NCAOS-Urielle\egs\node_modules\esbuild\install.js:281:5 {
+npm error   status: 1,
+npm error   signal: null,
+npm error   output: [
+npm error     null,
+npm error     Buffer(0) [Uint8Array] [],
+npm error     Buffer(1288) [Uint8Array] [
+npm error       110, 111, 100, 101,  58,  99, 104, 105, 108, 100,  95, 112,
+npm error       114, 111,  99, 101, 115, 115,  58,  57,  54,  52,  13,  10,
+npm error        32,  32,  32,  32, 116, 104, 114, 111, 119,  32, 101, 114,
+npm error       114,  59,  13,  10,  32,  32,  32,  32,  94,  13,  10,  13,
+npm error        10,  60, 114, 101, 102,  32,  42,  49,  62,  32,  69, 114,
+npm error       114, 111, 114,  58,  32, 115, 112,  97, 119, 110,  83, 121,
+npm error       110,  99,  32,  67,  58,  92,  85, 115, 101, 114, 115,  92,
+npm error        57,  51,  48,  49,  52,  48,  92,  68, 111, 119, 110, 108,
+npm error       111,  97, 100, 115,
+npm error       ... 1188 more items
+npm error     ]
+npm error   ],
+npm error   pid: 11336,
+npm error   stdout: Buffer(0) [Uint8Array] [],
+npm error   stderr: Buffer(1288) [Uint8Array] [
+npm error     110, 111, 100, 101,  58,  99, 104, 105, 108, 100,  95, 112,
+npm error     114, 111,  99, 101, 115, 115,  58,  57,  54,  52,  13,  10,
+npm error      32,  32,  32,  32, 116, 104, 114, 111, 119,  32, 101, 114,
+npm error     114,  59,  13,  10,  32,  32,  32,  32,  94,  13,  10,  13,
+npm error      10,  60, 114, 101, 102,  32,  42,  49,  62,  32,  69, 114,
+npm error     114, 111, 114,  58,  32, 115, 112,  97, 119, 110,  83, 121,
+npm error     110,  99,  32,  67,  58,  92,  85, 115, 101, 114, 115,  92,
+npm error      57,  51,  48,  49,  52,  48,  92,  68, 111, 119, 110, 108,
+npm error     111,  97, 100, 115,
+npm error     ... 1188 more items
+npm error   ]
+npm error }
+npm error
+npm error Node.js v24.13.0
+npm error A complete log of this run can be found in: C:\Users\930140\AppData\Local\npm-cache\_logs\2026-05-07T05_18_01_369Z-debug-0.log
+NativeCommandExitException: Program "node.exe" ended with non-zero exit code: 1.
+PS C:\Users\930140\Downloads\NCAOS-Urielle\egs>

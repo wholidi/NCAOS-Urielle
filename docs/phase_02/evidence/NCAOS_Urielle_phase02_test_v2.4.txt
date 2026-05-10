@@ -1,0 +1,178 @@
+PS C:\Users\conve\downloads\NCAOS-Urielle\egs> npm test
+
+> ncaos@0.1.0 test
+> npm run test --workspaces
+
+
+> @ncaos/core@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/core
+
+ ✓ tests/detection.test.ts (16)
+ ✓ tests/scoring.test.ts (16)
+ ✓ tests/verdict.test.ts (15)
+
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  23:38:16
+   Duration  985ms (transform 266ms, setup 2ms, collect 430ms, tests 40ms, environment 1ms, prepare 888ms)
+
+
+> @ncaos/shell@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/shell
+
+stdout | tests/shell-loop.test.ts > ShellLoop — lifecycle > starts and stops cleanly
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stderr | tests/shell-loop.test.ts > ShellLoop — lifecycle > returns FAIL_SAFE when not running
+[ShellLoop] FAIL_SAFE: Shell not running
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > returns PASS for clean input
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets operationalMode to NORMAL on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets shellIntegrity=true and failSafeEnabled=true
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > no containment event emitted on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > produces a valid requestId
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > governed output < raw exposure
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > returns BLOCK for high-severity threat
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets operationalMode to CONTAINMENT on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > emits containment event on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets integrity to Critical on high severity
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > includes routing hint on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — event emission > emits shell:output event on each process() call
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+ ✓ tests/shell-loop.test.ts (15)
+   ✓ ShellLoop — lifecycle (3)
+     ✓ starts and stops cleanly
+     ✓ returns FAIL_SAFE when not running
+     ✓ throws on invalid policy consistency
+   ✓ ShellLoop — clean request (PILOT) (6)
+     ✓ returns PASS for clean input
+     ✓ sets operationalMode to NORMAL on PASS
+     ✓ sets shellIntegrity=true and failSafeEnabled=true
+     ✓ no containment event emitted on PASS
+     ✓ produces a valid requestId
+     ✓ governed output < raw exposure
+   ✓ ShellLoop — threat request (ENTERPRISE_STRICT) (5)
+     ✓ returns BLOCK for high-severity threat
+     ✓ sets operationalMode to CONTAINMENT on BLOCK
+     ✓ emits containment event on BLOCK
+     ✓ sets integrity to Critical on high severity
+     ✓ includes routing hint on BLOCK
+   ✓ ShellLoop — event emission (1)
+     ✓ emits shell:output event on each process() call
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  23:38:19
+   Duration  863ms (transform 189ms, setup 0ms, collect 255ms, tests 20ms, environment 0ms, prepare 217ms)
+
+
+> @ncaos/api@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/Users/conve/Downloads/NCAOS-Urielle/egs/api
+
+ · tests/api.test.ts (8)
+   · GET /v1/health (1)
+     · returns 200 when shell is running
+   · POST /v1/process (4)
+     · returns 401 without X-Partner-ID
+stdout | ShellLoop.start (C:\Users\conve\Downloads\NCAOS-Urielle\egs\shell\src\shell-loop.ts:86:13)
+[ShellLoop] Started — policy: STRICT-PROD
+
+stdout | Watchdog._spawnShell (C:\Users\conve\Downloads\NCAOS-Urielle\egs\shell\src\watchdog\watchdog.ts:106:15)
+[Watchdog] Shell started
+
+stdout | main (C:\Users\conve\Downloads\NCAOS-Urielle\egs\api\src\server.ts:271:11)
+[API] EGS API running on http://0.0.0.0:3000
+
+stdout | tests/api.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+{"level":30,"time":1777477102838,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":8.400599956512451,"msg":"request completed"}
+{"level":30,"time":1777477102841,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477102845,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":4.522199988365173,"msg":"request completed"}
+{"level":30,"time":1777477102846,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477102880,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":400},"responseTime":33.18760001659393,"msg":"request completed"}
+{"level":30,"time":1777477102882,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477102887,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":4.887100040912628,"msg":"request completed"}
+{"level":30,"time":1777477102892,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+ · tests/api.test.ts (8)
+   · GET /v1/health (1)
+     · returns 200 when shell is running
+   · POST /v1/process (4)
+     · returns 401 without X-Partner-ID
+     · returns 400 for invalid payload
+     · returns 200 with verdict for clean request
+     · returns evidenceHandle when containment triggered
+   · GET /v1/state (1)
+     · returns current GovState after processing
+   · GET /v1/audit/:handle (2)
+     · returns 404 for unknown evidence handle
+     · returns event for known evidence handle
+{"level":30,"time":1777477102895,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":3.027999997138977,"msg":"request completed"}
+{"level":30,"time":1777477102896,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477102897,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":1.2139000296592712,"msg":"request completed"}
+{"level":30,"time":1777477102898,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/state","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1777477102898,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":200},"responseTime":0.6143999695777893,"msg":"request completed"}
+{"level":30,"time":1777477102899,"pid":19064,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0. ✓ tests/api.test.ts (8)
+   ✓ GET /v1/health (1)
+     ✓ returns 200 when shell is running
+   ✓ POST /v1/process (4)
+     ✓ returns 401 without X-Partner-ID
+     ✓ returns 400 for invalid payload
+     ✓ returns 200 with verdict for clean request
+     ✓ returns evidenceHandle when containment triggered
+   ✓ GET /v1/state (1)
+     ✓ returns current GovState after processing
+   ✓ GET /v1/audit/:handle (2)
+     ✓ returns 404 for unknown evidence handle
+     ✓ returns event for known evidence handle
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:38:21
+   Duration  1.54s (transform 193ms, setup 0ms, collect 760ms, tests 130ms, environment 0ms, prepare 175ms)

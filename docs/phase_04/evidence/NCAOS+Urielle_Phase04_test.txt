@@ -1,0 +1,231 @@
+PS C:\AI Project\NCAOS-Urielle\egs> npm test
+
+> ncaos@0.1.0 test
+> npm run test --workspaces
+
+
+> @ncaos/core@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/AI Project/NCAOS-Urielle/egs/core
+
+ ✓ tests/detection.test.ts (16)
+ ✓ tests/scoring.test.ts (16)
+ ✓ tests/verdict.test.ts (15)
+
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  22:50:50
+   Duration  1.58s (transform 647ms, setup 0ms, collect 1.27s, tests 50ms, environment 1ms, prepare 1.77s)
+
+
+> @ncaos/shell@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/AI Project/NCAOS-Urielle/egs/shell
+
+stdout | tests/shell-loop.test.ts > ShellLoop — lifecycle > starts and stops cleanly
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stderr | tests/shell-loop.test.ts > ShellLoop — lifecycle > returns FAIL_SAFE when not running
+[ShellLoop] FAIL_SAFE: Shell not running
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > returns PASS for clean input
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets operationalMode to NORMAL on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets shellIntegrity=true and failSafeEnabled=true
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > no containment event emitted on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > produces a valid requestId
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > governed output < raw exposure
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > returns BLOCK for high-severity threat
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets operationalMode to CONTAINMENT on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > emits containment event on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets integrity to Critical on high severity
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > includes routing hint on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — event emission > emits shell:output event on each process() call
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+ ✓ tests/shell-loop.test.ts (15)
+   ✓ ShellLoop — lifecycle (3)
+     ✓ starts and stops cleanly
+     ✓ returns FAIL_SAFE when not running
+     ✓ throws on invalid policy consistency
+   ✓ ShellLoop — clean request (PILOT) (6)
+     ✓ returns PASS for clean input
+     ✓ sets operationalMode to NORMAL on PASS
+     ✓ sets shellIntegrity=true and failSafeEnabled=true
+     ✓ no containment event emitted on PASS
+     ✓ produces a valid requestId
+     ✓ governed output < raw exposure
+   ✓ ShellLoop — threat request (ENTERPRISE_STRICT) (5)
+     ✓ returns BLOCK for high-severity threat
+     ✓ sets operationalMode to CONTAINMENT on BLOCK
+     ✓ emits containment event on BLOCK
+     ✓ sets integrity to Critical on high severity
+     ✓ includes routing hint on BLOCK
+   ✓ ShellLoop — event emission (1)
+     ✓ emits shell:output event on each process() call
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  22:50:54
+   Duration  1.45s (transform 272ms, setup 0ms, collect 487ms, tests 33ms, environment 0ms, prepare 364ms)
+
+
+> @ncaos/api@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/AI Project/NCAOS-Urielle/egs/api
+
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778165462827,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-1","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming requestdout | tests/api.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778165462841,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-1","res":{"statusCode":200},"responseTime":11.474799999967217,"msg":"request completed"}
+{"level":30,"time":1778165462846,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462852,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-2","res":{"statusCstdout | tests/api-v4.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+{"level":30,"time":1778165462866,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-3","res":{"statusCode":400},"responseTime":12.182099999859929,"msg":"request completed"}
+{"level":30,"time":1778165462868,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462839,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-1","res":{"statusCode":200},"responseTime":9.74800000153482,"msg":"request completed"}
+{"level":30,"time":1778165462843,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-2","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462845,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-2","res":{"statusCode":401},"responseTime":1.0264999996870756,"msg":"request completed"}
+{"level":30,"time":1778165462847,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462861,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-3","res":{"statusCode":200},"responseTime":13.962400000542402,"msg":"request completed"}
+{"level":30,"time":1778165462864,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778165462873,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-4","res":{"statusCode":200},"responseTime":8.554199999198318,"msg":"request completed"}
+{"level":30,"time":1778165462875,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462874,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-4","res":{"statusCode":200},"responseTime":6.10249999910593,"msg":"request completed"}
+{"level":30,"time":1778165462879,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462878,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-5","res":{"statusCode":200},"responseTime":2.41330000013113,"msg":"request completed"}
+{"level":30,"time":1778165462879,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-6","req":{"method":"GET","url":"/v1/audit/EVD-1778165462877-D5AE2518","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462879,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-6","res":{"statusCode":200},"responseTime":0.6528000012040138,"msg":"request completed"}
+{"level":30,"time":1778165462881,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-7","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462881,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-7","res":{"statusCode":404},"responseTime":0.3780000004917383,"msg":"request completed"}
+{"level":30,"time":1778165462882,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-8","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462881,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-5","res":{"statusCode":200},"responseTime":2.210699999704957,"msg":"request completed"}
+{"level":30,"time":1778165462883,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462884,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-8","res":{"statusCode":200},"responseTime":1.7033999990671873,"msg":"request completed"}
+{"level":30,"time":1778165462885,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-9","req":{"method":"GET","url":"/v1/audit/EVD-1778165462883-3B6F9825","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462885,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-9","res":{"statusCode":404},"responseTime":0.5921000000089407,"msg":"request completed"}
+{"level":30,"time":1778165462887,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-a","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462884,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-6","res":{"statusCode":200},"responseTime":1.638399999588728,"msg":"request completed"}
+{"level":30,"time":1778165462885,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-7","req":{"method":"GET","url":"/v1/state","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462885,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-7","res":{"statusCode":200},"responseTime":0.5975000001490116,"msg":"request completed"}
+{"level":30,"time":1778165462887,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-8","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462888,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-8","res":{"statusCode":404},"responseTime":0.8973000012338161,"msg":"request completed"}
+{"level":30,"time":1778165462890,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-9","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462893,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-9","res":{"statusCode":200},"responseTime":2.3634999990463257,"msg":"request completed"}
+{"level":30,"time":1778165462893,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-a","req":{"method":"GET","url":"/v1/audit/EVD-1778165462891-4071DE9B","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462894,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-a","res":{"statusCode":200},"responseTime":0.75,"msg":"request completed"}
+{"level":30,"time":1778165462889,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-a","res":{"statusCode":200},"responseTime":1.7117999996989965,"msg":"request completed"}
+{"level":30,"time":1778165462890,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-b","req":{"method":"GET","url":"/v1/events?limit=10","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462891,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-b","res":{"statusCode":200},"responseTime":1.1363999992609024,"msg":"request completed"}
+{"level":30,"time":1778165462892,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-c","req":{"method":"GET","url":"/v1/events?layer=gate","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462893,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-c","res":{"statusCode":200},"responseTime":0.7780000008642673,"msg":"request completed"}
+{"level":30,"time":1778165462894,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-d","req":{"method":"GET","url":"/v1/events?severity=high","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462895,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-d","res":{"statusCode":200},"responseTime":0.8211000002920628,"msg":"request completed"}
+{"level":30,"time":1778165462896,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-e","req":{"method":"GET","url":"/v1/events?limit=9999","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462898,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-e","res":{"statusCode":400},"responseTime":1.7578999996185303,"msg":"request completed"}
+{"level":30,"time":1778165462899,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-f","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462900,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-f","res":{"statusCode":200},"responseTime":0.625500001013279,"msg":"request completed"}
+{"level":30,"time":1778165462900,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-g","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462901,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-g","res":{"statusCode":200},"responseTime":0.4415999986231327,"msg":"request completed"}
+{"level":30,"time":1778165462902,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-h","req":{"method":"GET","url":"/v1/events/stats","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462902,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-h","res":{"statusCode":200},"responseTime":0.4029999990016222,"msg":"request completed"}
+{"level":30,"time":1778165462903,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-i","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462904,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-i","res":{"statusCode":200},"responseTime":0.7745999991893768,"msg":"request completed"}
+{"level":30,"time":1778165462906,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-j","req":{"method":"GET","url":"/v1/policy","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462907,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-j","res":{"statusC ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778165462910,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-k","res":{"statusCode":400},"responseTime":2.5478999987244606,"msg":"request completed"}
+{"level":30,"time":1778165462911,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-l","req":{"method":"GET","url":"/v1/policy/history","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778165462912,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-l","res":{"statusCode":200},"responseTime":0.46389999985694885,"msg":"request completed"}
+{"level":30,"time":1778165462913,"pid":13572,"hostname":"SGWLWH000683","reqId":"req-m","req":{"method" ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ ✓ tests/api-v4.test.ts (18)
+
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Start at  22:50:58
+   Duration  4.38s (transform 959ms, setup 0ms, collect 7.39s, tests 560ms, environment 1ms, prepare 1.61s)
+
+
+> @ncaos/detection@0.3.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/AI Project/NCAOS-Urielle/egs/detection
+
+stderr | tests/mttd.test.ts > MttdTracker > flags SLA breach when mttd exceeds sla
+[MTTD] SLA BREACH layer=gate mttd=80.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > tracks breach count correctly
+[MTTD] SLA BREACH layer=gate mttd=60.00ms sla=50ms
+[MTTD] SLA BREACH layer=gate mttd=70.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > resets breach count on reset()
+[MTTD] SLA BREACH layer=gate mttd=100.00ms sla=50ms
+
+ ✓ tests/mttd.test.ts (12)
+ ✓ tests/gate.test.ts (18)
+ ✓ tests/detection.test.ts (24)
+
+ Test Files  3 passed (3)
+      Tests  54 passed (54)
+   Start at  22:51:05
+   Duration  1.51s (transform 401ms, setup 0ms, collect 1.26s, tests 90ms, environment 1ms, prepare 1.37s)

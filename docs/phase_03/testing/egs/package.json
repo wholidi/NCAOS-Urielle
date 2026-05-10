@@ -1,0 +1,29 @@
+{
+  "name": "ncaos",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NCAOS — External Governance Shell (EGS) for AI/OS boundary enforcement",
+  "workspaces": [
+    "core",
+    "shell",
+    "api",
+    "ui",
+    "detection"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "eslint '**/*.ts' '**/*.tsx' --ignore-path .eslintignore",
+    "typecheck": "npm run typecheck --workspaces",
+    "dev:api": "npm run dev --workspace=api",
+    "dev:ui": "npm run dev --workspace=ui"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  }
+}

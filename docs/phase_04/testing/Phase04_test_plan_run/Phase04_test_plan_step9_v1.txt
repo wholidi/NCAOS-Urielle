@@ -1,0 +1,267 @@
+PS C:\AI Project\NCAOS-Urielle\egs> npm run build
+
+> ncaos@0.1.0 build
+> npm run build --workspaces
+
+
+> @ncaos/core@0.1.0 build
+> tsc
+
+
+> @ncaos/shell@0.2.0 build
+> tsc
+
+
+> @ncaos/api@0.2.0 build
+> tsc
+
+
+> @ncaos/detection@0.3.0 build
+> tsc
+
+PowerShell 7.4.0-preview.2
+
+   A new PowerShell preview release is available: v7.7.0-preview.1
+   Upgrade now, or check out the release page at:
+     https://aka.ms/PowerShell-Release?tag=v7.7.0-preview.1
+
+PS C:\Users\930140> cd..
+PS C:\Users> cd ..
+PS C:\> cd "AI Project"
+PS C:\AI Project> cd NCAOS-Urielle
+PS C:\AI Project\NCAOS-Urielle> cd egs
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/health `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+status        : OK
+watchdog      : RUNNING
+shell         : True
+policy        : STRICT-PROD
+slaHealthy    : True
+activeTenants : 1
+totalEvents   : 0
+timestamp     : 5/7/2026 3:43:02 PM
+
+PS C:\AI Project\NCAOS-Urielle\egs> $body = @{
+>>   sourceId = "test-src-001"; inputHash = "abc123"; inputFlags = @()
+>>   claimedPremises = @("A","B"); validatedPremises = @("A","B")
+>>   contractVersion = "1.0"; requestedAuthority = "decision-ready"
+>>   policyGrantedAuthority = "decision-ready"; overrideAttempted = $false
+>>   workflowId = "WF-DEMO-001"
+>> } | ConvertTo-Json
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="TEST"} -Body $body
+
+requestId      : REQ-000002
+action         : DOWNGRADE
+authority      : reference-only
+integrity      : @{level=Available; score=88}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1778168609538-6A95ECB8
+processingMs   : 0
+
+PS C:\AI Project\NCAOS-Urielle\egs> $threat = @{
+>>   sourceId = "attacker-001"; inputHash = "bad-hash"
+>>   inputFlags = @("INJECTION_PATTERN")
+>>   claimedPremises = @("A","B","C"); validatedPremises = @("A")
+>>   contractVersion = "1.0"; requestedAuthority = "decision-ready"
+>>   policyGrantedAuthority = "reference-only"; overrideAttempted = $false
+>>   workflowId = "WF-DEMO-001"
+>> } | ConvertTo-Json
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> $result = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="TEST"} -Body $threat
+PS C:\AI Project\NCAOS-Urielle\egs> $result
+
+requestId      : REQ-000003
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1778168626181-5164BEB0
+processingMs   : 0
+
+PS C:\AI Project\NCAOS-Urielle\egs> # Save the evidenceHandle for M-04
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = $result.evidenceHandle
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri "http://localhost:3000/v1/events?limit=10" `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+records
+-------
+{@{evidenceHandle=EVD-1778168626181-5164BEB0; partnerId=TEST; event=; verdict=; storedAt=5/7/2026 3:…
+
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Expected: records array, pagination.total >= 1
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Filter by layer:
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri "http://localhost:3000/v1/events?layer=gate" `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+records
+-------
+{@{evidenceHandle=EVD-1778168626181-5164BEB0; partnerId=TEST; event=; verdict=; storedAt=5/7/2026 3:…
+
+PS C:\AI Project\NCAOS-Urielle\egs> # Get all events in workflow WF-DEMO-001
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-001" `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+sequenceId  records
+----------  -------
+WF-DEMO-001 {@{evidenceHandle=EVD-1778168609538-6A95ECB8; partnerId=TEST; event=; verdict=; storedAt…
+
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Expected: records array with all events sharing workflowId=WF-DEMO-001
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Get behavioral pattern summary
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-001/summary" `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+sequenceId         : WF-DEMO-001
+partnerId          : TEST
+eventCount         : 2
+firstDetectedAt    : 5/7/2026 3:43:29 PM
+lastDetectedAt     : 5/7/2026 3:43:46 PM
+layers             : {gate}
+severities         : {low, high}
+actions            : {DOWNGRADE, BLOCK}
+escalationDetected : True
+consistencyScore   : 94
+patternType        : CONTAINED
+
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Expected: patternType, consistencyScore, escalationDetected, eventCount
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/mttd `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+slaHealthy layers
+---------- ------
+      True {@{layer=gate; sampleCount=2; slaMs=50; slaBreach=0; slaBreachRate=0; min=0.5252999999793…
+
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Expected: slaHealthy=True, layers array with gate/premise/authority/continuity
+PS C:\AI Project\NCAOS-Urielle\egs> # Each layer: slaMs, sampleCount, p50, p95, p99
+PS C:\AI Project\NCAOS-Urielle\egs> # Get active policy
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/policy `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+profileId            : STRICT-PROD
+label                : Enterprise Strict (Production)
+govLevel             : ENTERPRISE_STRICT
+integrityThresholds  : @{available=80; limited=60; degraded=40}
+continuityThresholds : @{stable=75; provisional=55}
+mttdSlaMs            : @{gate=50; premise=200; authority=100; continuity=500}
+blockOnContainment   : True
+partnerId            : GLOBAL_ENT_2026
+createdAt            : 5/7/2026 3:27:49 PM
+updatedAt            : 5/7/2026 3:27:49 PM
+
+PS C:\AI Project\NCAOS-Urielle\egs> # Expected: profileId=STRICT-PROD
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Get policy history (empty initially)
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/policy/history `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+history
+-------
+{}
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/events/stats `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+total           : 2
+byLayer         : @{gate=2}
+bySeverity      : @{low=1; high=1}
+byAction        : @{DOWNGRADE=1; BLOCK=1}
+activeSequences : 1
+
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Expected: total, byLayer{gate:N}, bySeverity{high:N}, byAction{BLOCK:N}
+PS C:\AI Project\NCAOS-Urielle\egs> #           activeSequences: 1 (WF-DEMO-001)
+PS C:\AI Project\NCAOS-Urielle\egs> # Query events as a different tenant
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/events `
+>>   -Headers @{"X-Partner-ID"="OTHER_CORP"}
+
+records pagination
+------- ----------
+{}      @{total=0; hasMore=False; nextCursor=; limit=20}
+
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Expected: pagination.total = 0 (isolated from TEST tenant events)
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> # Try to access TEST tenant evidence handle as OTHER_CORP
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="OTHER_CORP"}
+Invoke-RestMethod:
+{
+  "error": "NOT_FOUND",
+  "message": "No event found for evidence handle: EVD-1778168626181-5164BEB0"
+}
+PS C:\AI Project\NCAOS-Urielle\egs> # Expected: 404 NOT_FOUND (isolation enforced)
+PS C:\AI Project\NCAOS-Urielle\egs> $body = @{ sourceId = "test-src-001"; inputHash = "abc123"; inputFlags = @() claimedPremises = @("A","B"); validatedPremises = @("A","B") contractVersion = "1.0"; requestedAuthority = "decision-ready" policyGrantedAuthority = "decision-ready"; overrideAttempted = $false workflowId = "WF-DEMO-001" } | ConvertTo-Json Invoke-RestMethod -Uri http://localhost:3000/v1/process -Method POST -ContentType "application/json" -Headers @{"X-Partner-ID"="TEST"} -Body $body
+ParserError:
+Line |
+   1 |  … -001"; inputHash = "abc123"; inputFlags = @() claimedPremises = @("A" …
+     |                                                  ~~~~~~~~~~~~~~~
+     | Unexpected token 'claimedPremises' in expression or statement.
+PS C:\AI Project\NCAOS-Urielle\egs> $body = @{ sourceId = "test-src-001"; inputHash = "abc123"; inputFlags = @() claimedPremises = @("A","B"); validatedPremises = @("A","B") contractVersion = "1.0"; requestedAuthority = "decision-ready" policyGrantedAuthority = "decision-ready"; overrideAttempted = $false workflowId = "WF-DEMO-001" } | ConvertTo-Json
+ParserError:
+Line |
+   1 |  … -001"; inputHash = "abc123"; inputFlags = @() claimedPremises = @("A" …
+     |                                                  ~~~~~~~~~~~~~~~
+     | Unexpected token 'claimedPremises' in expression or statement.
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/process -Method POST -ContentType "application/json" -Headers @{"X-Partner-ID"="TEST"} -Body $body
+
+requestId      : REQ-000004
+action         : DOWNGRADE
+authority      : reference-only
+integrity      : @{level=Available; score=88}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1778168932065-059FA3D0
+processingMs   : 0
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/process -Method POST -ContentType "application/json" -Headers @{"X-Partner-ID"="TEST"} -Body $threat
+
+requestId      : REQ-000005
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1778168945383-37F0DC81
+processingMs   : 0
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-001" -Headers @{"X-Partner-ID"="TEST"}
+
+sequenceId  records
+----------  -------
+WF-DEMO-001 {@{evidenceHandle=EVD-1778168609538-6A95ECB8; partnerId=TEST; event=; verdict=; storedAt…
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-001/summary" -Headers @{"X-Partner-ID"="TEST"}
+
+sequenceId         : WF-DEMO-001
+partnerId          : TEST
+eventCount         : 4
+firstDetectedAt    : 5/7/2026 3:43:29 PM
+lastDetectedAt     : 5/7/2026 3:49:05 PM
+layers             : {gate}
+severities         : {low, high, low, high}
+actions            : {DOWNGRADE, BLOCK, DOWNGRADE, BLOCK}
+escalationDetected : True
+consistencyScore   : 94
+patternType        : CONTAINED
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/events/stats -Headers @{"X-Partner-ID"="TEST"}
+
+total           : 4
+byLayer         : @{gate=4}
+bySeverity      : @{low=2; high=2}
+byAction        : @{DOWNGRADE=2; BLOCK=2}
+activeSequences : 1
+
+PS C:\AI Project\NCAOS-Urielle\egs>
