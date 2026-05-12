@@ -1,0 +1,100 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> $body = @{
+>>   sourceId="src-001"
+>>   inputHash="abc123"
+>>   inputFlags=@()
+>>   claimedPremises=@("A","B")
+>>   validatedPremises=@("A","B")
+>>   contractVersion="1.0"
+>>   requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="decision-ready"
+>>   overrideAttempted=$false
+>>   workflowId="WF-UI-TEST-001"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="GLOBAL_ENT_2026"} -Body $body
+
+
+requestId      : REQ-000002
+action         : DOWNGRADE
+authority      : reference-only
+integrity      : @{level=Available; score=88}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1778584438139-732E09AC
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs> $threat = @{
+>>   sourceId="attacker"; inputHash="bad"; inputFlags=@("INJECTION_PATTERN")
+>>   claimedPremises=@("A","B","C"); validatedPremises=@("A")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="reference-only"; overrideAttempted=$false
+>>   workflowId="WF-UI-TEST-001"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="GLOBAL_ENT_2026"} -Body $threat
+
+
+requestId      : REQ-000003
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1778584465310-3AC71CC1
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="GLOBAL_ENT_2026"} -Body $threat
+
+
+requestId      : REQ-000004
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1778585063847-B59349B0
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs> node
+Welcome to Node.js v24.15.0.
+Type ".help" for more information.
+> const signal = {
+|   signalId: "SIG-TEST-001",
+|   evidenceHandle: "EVD-TEST-001",
+|   partnerId: "GLOBAL_ENT_2026",
+|   workflowId: "WF-UI-TEST-001",
+|   layer: "gate",
+|   severity: "high",
+|   action: "BLOCK",
+|   policyProfile: "STRICT-PROD",
+|   detectedAt: new Date().toISOString()
+| };
+undefined
+>
+> const required = ["signalId","evidenceHandle","partnerId","workflowId","layer","severity","action","policyProfile","detectedAt"];
+undefined
+> required.every(k => k in signal);["gate", "premise", "authority", "continuity"].includes(signal.layer);
+true
+> ["low", "med", "high"].includes(signal.severity);
+true
+> ["PASS", "DOWNGRADE", "BLOCK", "FAIL_SAFE"].includes(signal.action);
+true

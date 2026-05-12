@@ -132,6 +132,7 @@ export async function buildServer(): Promise<FastifyInstance> {
 
   watchdog.start();
 
+  /*
   // ── Tenant middleware ──────────────────────────────────────────────────────
   app.addHook('preHandler', async (req: FastifyRequest, reply: FastifyReply) => {
     const partnerId = req.headers['x-partner-id'];
@@ -142,6 +143,24 @@ export async function buildServer(): Promise<FastifyInstance> {
       });
     }
   });
+*/
+
+// ── Tenant middleware ──────────────────────────────────────────────────────
+app.addHook('preHandler', async (req: FastifyRequest, reply: FastifyReply) => {
+  const query = req.query as any;
+
+  const partnerId =
+    req.headers['x-partner-id'] ??
+    query?.partnerId ??
+    query?.['x-partner-id'];
+
+  if (!partnerId) {
+    return reply.status(401).send({
+      error: 'UNAUTHORIZED',
+      message: 'X-Partner-ID header required',
+    });
+  }
+});
 
   // ─────────────────────────────────────────────────────
   // POST /v1/process — upgraded with per-tenant detectors
@@ -376,15 +395,50 @@ const page = eventStore.query(query);
     return reply.status(200).send(summary);
   });
 
+/*
   // ─────────────────────────────────────────────────────
   // WS /v1/state/stream
   // ─────────────────────────────────────────────────────
+
   app.get('/v1/state/stream', { websocket: true }, (socket) => {
     wsClients.add(socket as any);
     const state = watchdog.shellLoop?.currentState;
     if (state) (socket as any).send(JSON.stringify({ type: 'state:snapshot', data: state }));
     (socket as any).on('close', () => wsClients.delete(socket as any));
   });
+*/
+
+// ─────────────────────────────────────────────────────
+// WS /v1/state/stream
+// ─────────────────────────────────────────────────────
+app.get('/v1/state/stream', { websocket: true }, (socket, req) => {
+  const query = req.query as any;
+
+  const partnerId =
+    query?.partnerId ??
+    query?.['x-partner-id'] ??
+    PARTNER_ID;
+
+  console.log('[WS] Client connected:', partnerId);
+
+  wsClients.add(socket as any);
+
+  const state = watchdog.shellLoop?.currentState;
+  if (state) {
+    (socket as any).send(
+      JSON.stringify({
+        type: 'state:snapshot',
+        partnerId,
+        data: state,
+      })
+    );
+  }
+
+  (socket as any).on('close', () => {
+    console.log('[WS] Client disconnected:', partnerId);
+    wsClients.delete(socket as any);
+  });
+});
 
   // ── Graceful shutdown ──────────────────────────────────────────────────────
   const shutdown = async (): Promise<void> => {
@@ -399,6 +453,7 @@ const page = eventStore.query(query);
 
   return app;
 }
+
 
 // ─────────────────────────────────────────────────────────
 // ENTRY POINT

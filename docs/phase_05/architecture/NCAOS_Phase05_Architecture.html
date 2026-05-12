@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCAOS / EGS — Phase 05 Architecture</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;700;800&display=swap');
+
+:root {
+  --bg:      #040608;
+  --panel:   #080C14;
+  --panel2:  #0C1220;
+  --border:  #1A2438;
+  --accent:  #00D4FF;
+  --green:   #00CC78;
+  --amber:   #FFB800;
+  --red:     #FF4D6A;
+  --purple:  #9B6FFF;
+  --teal:    #00CEB8;
+  --text:    #E2E8F0;
+  --sub:     #6B7FA8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+
+/* ── HEADER ─────────────────────────────────────────────────────── */
+.header {
+  background: #030508;
+  border-bottom: 1px solid var(--teal);
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.hbar { width: 4px; height: 36px; background: var(--teal); border-radius: 2px; }
+.htitle { font-size: 17px; font-weight: 800; color: var(--text); margin-left: 12px; letter-spacing: -0.3px; }
+.hsub { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--sub); margin-top: 3px; margin-left: 12px; }
+.badges { display: flex; gap: 7px; }
+.badge {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+  padding: 4px 10px; border-radius: 4px; letter-spacing: 0.4px;
+}
+
+/* ── MAIN ────────────────────────────────────────────────────────── */
+.main { display: grid; grid-template-columns: 148px 1fr; gap: 14px; padding: 16px 18px 28px; }
+
+/* ── PRIOR STACK ──────────────────────────────────────────────────── */
+.prior-stack {
+  background: #06080F;
+  border: 1px solid #1A2238;
+  border-radius: 10px;
+  padding: 12px 10px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.prior-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--sub); font-weight: 700; text-align: center; margin-bottom: 4px; }
+.prior-card {
+  border-radius: 7px; overflow: hidden; cursor: pointer;
+  transition: transform 0.15s;
+}
+.prior-card:hover { transform: translateX(3px); }
+.prior-card-header { padding: 6px 8px; font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; text-align: center; }
+.prior-card-body { padding: 5px 8px; font-size: 7.5px; color: var(--sub); display: flex; justify-content: space-between; }
+.prior-total {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+  text-align: center; padding: 5px; border-radius: 4px;
+  background: #00CC7820; color: var(--green); margin-top: 4px;
+}
+
+/* ── PHASE 05 CONTENT ────────────────────────────────────────────── */
+.phase05-content { display: flex; flex-direction: column; gap: 14px; }
+
+/* ── BAND ────────────────────────────────────────────────────────── */
+.band { border-radius: 10px; padding: 14px; border: 1px solid; }
+.band-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.band-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── BAND A: UI ──────────────────────────────────────────────────── */
+.band-ui { background: #070E18; border-color: var(--accent); }
+.vite-bar {
+  background: #0A1420; border: 1px solid #224488; border-radius: 5px;
+  padding: 6px 12px; font-family: 'JetBrains Mono', monospace; font-size: 8px;
+  color: var(--sub); margin-bottom: 10px;
+}
+.vite-bar span { color: var(--accent); }
+.components-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+.comp-card {
+  background: #081018; border: 1px solid #1A3060; border-radius: 5px;
+  padding: 7px 9px; cursor: pointer; transition: all 0.14s;
+}
+.comp-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.comp-name { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; color: var(--accent); margin-bottom: 3px; }
+.comp-desc { font-size: 7px; color: var(--sub); }
+
+.views-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.view-card {
+  border-radius: 8px; overflow: hidden; cursor: pointer;
+  transition: transform 0.15s; border: 1px solid;
+}
+.view-card:hover { transform: translateY(-3px); }
+.view-header { padding: 8px 10px; display: flex; align-items: center; justify-content: space-between; }
+.view-role { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; font-weight: 700; }
+.view-title { font-size: 7.5px; color: rgba(255,255,255,0.5); padding: 4px 10px; border-bottom: 1px solid #1A2438; }
+.view-body { padding: 8px 10px; }
+.view-item { display: flex; align-items: flex-start; gap: 5px; margin-bottom: 5px; font-size: 7.5px; color: var(--text); }
+.view-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+
+/* ── BAND B: AUDIT SIGNAL ────────────────────────────────────────── */
+.band-signal { background: #060C0F; border-color: var(--teal); }
+.util-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+.util-card {
+  background: #060E0D; border: 1px solid #0D2828; border-radius: 5px;
+  padding: 7px 10px; cursor: pointer; transition: border-color 0.14s;
+}
+.util-card:hover { border-color: var(--teal); }
+.util-fn { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; color: var(--teal); margin-bottom: 3px; }
+.util-desc { font-size: 7px; color: var(--sub); }
+
+.schema-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.schema-card {
+  border-radius: 8px; overflow: hidden; cursor: pointer;
+  transition: transform 0.15s; border: 1px solid;
+}
+.schema-card:hover { transform: translateY(-2px); }
+.schema-header { padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; }
+.schema-name { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; font-weight: 700; }
+.schema-when { font-size: 7px; color: rgba(255,255,255,0.45); padding: 4px 10px; border-bottom: 1px solid #1A2438; }
+.schema-body { padding: 8px 10px; }
+.schema-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 6px; }
+.schema-field { font-family: 'JetBrains Mono', monospace; font-size: 7px; color: var(--text); display: flex; align-items: center; gap: 4px; }
+.schema-field::before { content: '·'; font-size: 10px; flex-shrink: 0; }
+
+.observed-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 10px; }
+.obs-card { background: #08100E; border: 1px solid #0D2020; border-radius: 4px; padding: 5px 8px; text-align: center; }
+.obs-label { font-family: 'JetBrains Mono', monospace; font-size: 6.5px; color: var(--sub); margin-bottom: 3px; }
+.obs-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; }
+
+/* ── BAND C: BOTTOM ──────────────────────────────────────────────── */
+.band-bottom { background: #060A0C; border-color: #1A2030; }
+.bottom-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.bottom-card { border-radius: 8px; padding: 12px; border: 1px solid; }
+
+.adr-card { background: #090D14; border-color: var(--purple); }
+.adr-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
+.adr-sub { font-size: 7.5px; color: var(--sub); margin-bottom: 8px; }
+.adr-item { display: flex; align-items: flex-start; gap: 5px; margin-bottom: 5px; font-size: 8px; color: var(--text); }
+.adr-item::before { content: '▸'; color: var(--purple); flex-shrink: 0; }
+
+.issues-card { background: #0E0808; border-color: var(--amber); }
+.issues-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: var(--amber); margin-bottom: 8px; }
+.issue-row {
+  background: #140B08; border: 1px solid #3A1C08; border-radius: 5px;
+  padding: 8px 10px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.14s;
+}
+.issue-row:hover { border-color: var(--amber); }
+.issue-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.issue-id { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; background: #FFB80025; color: var(--amber); padding: 2px 6px; border-radius: 3px; }
+.issue-sym { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--amber); font-weight: 600; }
+.issue-file { font-family: 'JetBrains Mono', monospace; font-size: 7px; color: var(--sub); margin-bottom: 2px; }
+.issue-disp { font-size: 7.5px; color: var(--text); }
+
+.tw-card { background: #060C0A; border-color: var(--teal); }
+.tw-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: var(--teal); margin-bottom: 8px; }
+.tw-item { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #0D2020; }
+.tw-item:last-child { border-bottom: none; }
+.tw-concept { font-size: 8px; color: var(--text); }
+.tw-result { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; }
+
+/* ── LEGEND ──────────────────────────────────────────────────────── */
+.legend {
+  display: flex; gap: 18px; flex-wrap: wrap; padding: 10px 18px;
+  border-top: 1px solid var(--border); font-size: 8px; color: var(--sub);
+}
+.leg-item { display: flex; align-items: center; gap: 5px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── MODAL ───────────────────────────────────────────────────────── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay.open { display: flex; }
+.modal { background: #0C1020; border: 1px solid var(--teal); border-radius: 12px; padding: 24px; max-width: 520px; width: 90%; animation: slideUp 0.18s ease; }
+@keyframes slideUp { from { opacity:0; transform: translateY(14px); } to { opacity:1; transform: translateY(0); } }
+.modal-title { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.modal-sub { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: var(--sub); margin-bottom: 14px; }
+.modal-content { font-size: 11.5px; color: var(--sub); line-height: 1.65; }
+.modal-content ul { padding-left: 14px; }
+.modal-content li { margin-bottom: 4px; }
+.modal-content li span { color: var(--text); }
+.modal-close { float: right; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--sub); cursor: pointer; padding: 3px 7px; border: 1px solid var(--border); border-radius: 3px; margin-bottom: 10px; }
+.modal-close:hover { color: var(--red); border-color: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div style="display:flex;align-items:center">
+    <div class="hbar"></div>
+    <div>
+      <div class="htitle">NCAOS / EGS — Phase 05 Architecture</div>
+      <div class="hsub">React Admin Terminal · AuditSignal Schema (Toru-William) · ADR-006 · v0.5.0</div>
+    </div>
+  </div>
+  <div class="badges">
+    <div class="badge" style="background:#00CC7820;color:var(--green)">181 AUTO</div>
+    <div class="badge" style="background:#00CEB820;color:var(--teal)">11 MANUAL</div>
+    <div class="badge" style="background:#00CC7820;color:var(--green)">ALL PASS</div>
+    <div class="badge" style="background:#9B6FFF20;color:var(--purple)">v0.5.0</div>
+    <div class="badge" style="background:#FFB80020;color:var(--amber)">ADR-006</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- PRIOR STACK -->
+  <div class="prior-stack">
+    <div class="prior-label">PRIOR PHASES</div>
+
+    <div class="prior-card" style="border:1px solid var(--green)" onclick="openModal('core')">
+      <div class="prior-card-header" style="background:#00CC7820;color:var(--green)">@ncaos/core</div>
+      <div class="prior-card-body"><span>Phase 01</span><span style="color:var(--green)">47 tests</span></div>
+    </div>
+    <div class="prior-card" style="border:1px solid var(--amber)" onclick="openModal('shell')">
+      <div class="prior-card-header" style="background:#FFB80020;color:var(--amber)">@ncaos/shell</div>
+      <div class="prior-card-body"><span>Phase 02</span><span style="color:var(--amber)">15 tests</span></div>
+    </div>
+    <div class="prior-card" style="border:1px solid var(--accent)" onclick="openModal('api')">
+      <div class="prior-card-header" style="background:#00D4FF20;color:var(--accent)">@ncaos/api</div>
+      <div class="prior-card-body"><span>Ph 02→04</span><span style="color:var(--accent)">65 tests</span></div>
+    </div>
+    <div class="prior-card" style="border:1px solid var(--purple)" onclick="openModal('detection')">
+      <div class="prior-card-header" style="background:#9B6FFF20;color:var(--purple)">@ncaos/detection</div>
+      <div class="prior-card-body"><span>Phase 03</span><span style="color:var(--purple)">54 tests</span></div>
+    </div>
+
+    <div style="height:4px"></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--sub);text-align:center;padding:3px 0;border-top:1px solid var(--border)">Phase 05 regression: all 181 passing — no changes</div>
+    <div class="prior-total">181 PASSING</div>
+  </div>
+
+  <!-- PHASE 05 CONTENT -->
+  <div class="phase05-content">
+
+    <!-- BAND A: @ncaos/ui -->
+    <div class="band band-ui">
+      <div class="band-label">
+        <div class="band-dot" style="background:var(--accent)"></div>
+        <span style="color:var(--accent)">@ncaos/ui</span>
+        <span style="color:var(--sub)">Phase 05 · React 18 + Vite + TanStack Query + Recharts · Manual Tests UI-01→08</span>
+      </div>
+
+      <div class="vite-bar">
+        <span>Vite Dev Server :5173</span> → proxy /v1/* → http://localhost:3000 (API)  |  ui/vite.config.ts  |  ui/tsconfig.json  |  ui/index.html
+      </div>
+
+      <div class="components-strip">
+        <div class="comp-card" onclick="openModal('app-tsx')">
+          <div class="comp-name">App.tsx</div>
+          <div class="comp-desc">Root Admin Terminal — topbar, role tabs, partner selector, WebSocket</div>
+        </div>
+        <div class="comp-card" onclick="openModal('dashboard-panel')">
+          <div class="comp-name">DashboardPanel.tsx</div>
+          <div class="comp-desc">Integrity · Authority · Active Event cards</div>
+        </div>
+        <div class="comp-card" onclick="openModal('event-log')">
+          <div class="comp-name">EventLog.tsx</div>
+          <div class="comp-desc">EventLog · MttdPanel · SequencePanel · PolicyPanel · ContainmentChart</div>
+        </div>
+        <div class="comp-card" onclick="openModal('api-ts')">
+          <div class="comp-name">api.ts (lib)</div>
+          <div class="comp-desc">14 typed fetch wrappers + WebSocket /v1/state/stream</div>
+        </div>
+      </div>
+
+      <div class="views-grid">
+        <!-- SOC -->
+        <div class="view-card" style="background:#0C1520;border-color:var(--red)" onclick="openModal('soc-view')">
+          <div class="view-header" style="background:#FF4D6A18">
+            <span class="view-role" style="color:var(--red)">SOC OPERATOR</span>
+            <span class="badge" style="background:#FF4D6A20;color:var(--red);font-size:7px;padding:2px 6px">UI-02</span>
+          </div>
+          <div class="view-title">Active Containment</div>
+          <div class="view-body">
+            <div class="view-item"><div class="view-dot" style="background:var(--red)"></div>Active event card</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--red)"></div>Integrity card (score bar)</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--red)"></div>Authority card</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--red)"></div>Event log + layer/sev filters</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--red)"></div>MTTD SLA panel (p50 bars)</div>
+          </div>
+        </div>
+        <!-- ARCHITECT -->
+        <div class="view-card" style="background:#141008;border-color:var(--amber)" onclick="openModal('arch-view')">
+          <div class="view-header" style="background:#FFB80018">
+            <span class="view-role" style="color:var(--amber)">ARCHITECT</span>
+            <span class="badge" style="background:#FFB80020;color:var(--amber);font-size:7px;padding:2px 6px">UI-04</span>
+          </div>
+          <div class="view-title">Shell Integrity</div>
+          <div class="view-body">
+            <div class="view-item"><div class="view-dot" style="background:var(--amber)"></div>Shell status + fail-safe</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--amber)"></div>Core isolation %</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--amber)"></div>Latency overhead ms</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--amber)"></div>Continuity state panel</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--amber)"></div>MTTD expanded (p95/p99/breach)</div>
+          </div>
+        </div>
+        <!-- AUDITOR -->
+        <div class="view-card" style="background:#060C0F;border-color:var(--teal)" onclick="openModal('auditor-view')">
+          <div class="view-header" style="background:#00CEB818">
+            <span class="view-role" style="color:var(--teal)">AUDITOR</span>
+            <span class="badge" style="background:#00CEB820;color:var(--teal);font-size:7px;padding:2px 6px">UI-05</span>
+          </div>
+          <div class="view-title">Evidence Trail</div>
+          <div class="view-body">
+            <div class="view-item"><div class="view-dot" style="background:var(--teal)"></div>Full event log + filters</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--teal)"></div>Evidence stats panel</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--teal)"></div>Policy panel (STRICT-PROD)</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--teal)"></div>Sequence panel (click EVD-...↗)</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--teal)"></div>DOWNGRADE→BLOCK chain viz</div>
+          </div>
+        </div>
+        <!-- EXECUTIVE -->
+        <div class="view-card" style="background:#0C0818;border-color:var(--purple)" onclick="openModal('exec-view')">
+          <div class="view-header" style="background:#9B6FFF18">
+            <span class="view-role" style="color:var(--purple)">EXECUTIVE</span>
+            <span class="badge" style="background:#9B6FFF20;color:var(--purple);font-size:7px;padding:2px 6px">UI-06</span>
+          </div>
+          <div class="view-title">Risk Overview</div>
+          <div class="view-body">
+            <div class="view-item"><div class="view-dot" style="background:var(--purple)"></div>System status card</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--purple)"></div>Integrity + score bar</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--purple)"></div>RAW vs GOVERNED bars</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--purple)"></div>Drift pressure bar</div>
+            <div class="view-item"><div class="view-dot" style="background:var(--purple)"></div>LineChart: last 20 events</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- flow indicator -->
+    <div style="display:flex;justify-content:center;gap:8px;margin:-4px 0">
+      <div style="display:flex;align-items:center;gap:6px;padding:4px 14px;background:#0A0E18;border-radius:20px;border:1px solid var(--border)">
+        <span style="color:var(--teal);font-size:12px">↑</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--sub)">AuditSignal.parse() — typed boundary signal from EGS → Urielle</span>
+        <span style="color:var(--teal);font-size:12px">↑</span>
+      </div>
+    </div>
+
+    <!-- BAND B: AuditSignal -->
+    <div class="band band-signal">
+      <div class="band-label">
+        <div class="band-dot" style="background:var(--teal)"></div>
+        <span style="color:var(--teal)">AuditSignal Schema</span>
+        <span style="color:var(--sub)">Toru-William Interface Contract · audit-signal/src/audit-signal.ts · Zod v3 · ADR-006</span>
+      </div>
+
+      <div class="util-strip">
+        <div class="util-card" onclick="openModal('evidence-level')">
+          <div class="util-fn">evidenceLevel(signal)</div>
+          <div class="util-desc">Returns WEAK / MODERATE / STRONG based on severity + sequence presence</div>
+        </div>
+        <div class="util-card" onclick="openModal('finding-summary')">
+          <div class="util-fn">auditFindingSummary(signal)</div>
+          <div class="util-desc">Human-readable audit finding string with layer, severity, action, mttdMs, policyProfile</div>
+        </div>
+        <div class="util-card" onclick="openModal('iso-map')">
+          <div class="util-fn">ISO42001_CONTROL_MAP[layer]</div>
+          <div class="util-desc">gate → ['ISO42001-6.1.2', 'ISO42001-8.4', 'ISO42001-9.1']</div>
+        </div>
+      </div>
+
+      <div class="schema-grid">
+        <!-- CORE -->
+        <div class="schema-card" style="background:#061210;border-color:var(--green)" onclick="openModal('schema-core')">
+          <div class="schema-header" style="background:#00CC7815">
+            <span class="schema-name" style="color:var(--green)">CORE LAYER</span>
+            <span class="badge" style="background:#00CC7820;color:var(--green);font-size:7px;padding:2px 6px">14 fields · AS-01</span>
+          </div>
+          <div class="schema-when">Always present — every event</div>
+          <div class="schema-body">
+            <div class="schema-fields" style="color:var(--green)">
+              <div class="schema-field">evidenceHandle</div>
+              <div class="schema-field">sequenceNumber</div>
+              <div class="schema-field">layer</div>
+              <div class="schema-field">severity</div>
+              <div class="schema-field">action</div>
+              <div class="schema-field">authority</div>
+              <div class="schema-field">integrityScore</div>
+              <div class="schema-field">detectionMode</div>
+              <div class="schema-field">routingHint</div>
+              <div class="schema-field">mttdMs</div>
+              <div class="schema-field">detectedAt</div>
+              <div class="schema-field">storedAt</div>
+              <div class="schema-field">policyProfileId</div>
+              <div class="schema-field">partnerId</div>
+            </div>
+          </div>
+        </div>
+        <!-- SEQUENCE -->
+        <div class="schema-card" style="background:#060C10;border-color:var(--teal)" onclick="openModal('schema-sequence')">
+          <div class="schema-header" style="background:#00CEB815">
+            <span class="schema-name" style="color:var(--teal)">SEQUENCE LAYER</span>
+            <span class="badge" style="background:#00CEB820;color:var(--teal);font-size:7px;padding:2px 6px">8 fields · AS-02</span>
+          </div>
+          <div class="schema-when">When workflowId provided</div>
+          <div class="schema-body">
+            <div class="schema-fields" style="color:var(--teal)">
+              <div class="schema-field">sequenceId</div>
+              <div class="schema-field">patternType</div>
+              <div class="schema-field">escalationDetected</div>
+              <div class="schema-field">consistencyScore</div>
+              <div class="schema-field">eventCount</div>
+              <div class="schema-field">firstDetectedAt</div>
+              <div class="schema-field">actionChain</div>
+              <div class="schema-field">layersInvolved</div>
+            </div>
+            <div style="margin-top:10px;padding:6px 8px;background:#0D2828;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--teal)">
+              Observed: patternType=CONTAINED · escalationDetected=true · consistencyScore=94 · actionChain=[DOWNGRADE,BLOCK]
+            </div>
+          </div>
+        </div>
+        <!-- ENRICHMENT -->
+        <div class="schema-card" style="background:#0F0C04;border-color:var(--amber)" onclick="openModal('schema-enrichment')">
+          <div class="schema-header" style="background:#FFB80015">
+            <span class="schema-name" style="color:var(--amber)">ENRICHMENT LAYER</span>
+            <span class="badge" style="background:#FFB80020;color:var(--amber);font-size:7px;padding:2px 6px">5 fields · AS-03</span>
+          </div>
+          <div class="schema-when">Optional — when caller provides context</div>
+          <div class="schema-body">
+            <div class="schema-fields" style="color:var(--amber)">
+              <div class="schema-field">identityRef</div>
+              <div class="schema-field">assetRef</div>
+              <div class="schema-field">sessionId</div>
+              <div class="schema-field">serviceComponent</div>
+              <div class="schema-field">tags</div>
+            </div>
+            <div style="margin-top:10px;padding:6px 8px;background:#1A1004;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--amber)">
+              All fields optional. Core-only signal valid. Enrichment added by caller context.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="observed-strip">
+        <div class="obs-card">
+          <div class="obs-label">evidenceLevel (core)</div>
+          <div class="obs-val" style="color:var(--amber)">MODERATE</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-label">evidenceLevel (+seq)</div>
+          <div class="obs-val" style="color:var(--green)">STRONG</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-label">patternType</div>
+          <div class="obs-val" style="color:var(--teal)">CONTAINED</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-label">escalationDetected</div>
+          <div class="obs-val" style="color:var(--red)">true</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-label">consistencyScore</div>
+          <div class="obs-val" style="color:var(--green)">94</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-label">schemaVersion</div>
+          <div class="obs-val" style="color:var(--purple)">'1.0'</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- flow indicator -->
+    <div style="display:flex;justify-content:center;gap:8px;margin:-4px 0">
+      <div style="display:flex;align-items:center;gap:6px;padding:4px 14px;background:#0A0E18;border-radius:20px;border:1px solid var(--border)">
+        <span style="color:var(--purple);font-size:12px">↑</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--sub)">interface contract → ADR-006 · Toru-William alignment</span>
+        <span style="color:var(--purple);font-size:12px">↑</span>
+      </div>
+    </div>
+
+    <!-- BAND C: ADR / Issues / TW -->
+    <div class="band band-bottom">
+      <div class="bottom-grid">
+
+        <!-- ADR-006 -->
+        <div class="bottom-card adr-card" onclick="openModal('adr006')">
+          <div class="adr-title">ADR-006</div>
+          <div class="adr-sub">AuditSignal as the Urielle Interface Contract</div>
+          <div class="adr-item">docs/adr/ADR-006-audit-signal-schema.md</div>
+          <div class="adr-item">Defines the consumption boundary for Urielle</div>
+          <div class="adr-item">schemaVersion: '1.0' — forward compatibility</div>
+          <div class="adr-item">Boundary signals only — no internal model state</div>
+          <div class="adr-item">ISO 42001 control mapping per detection layer</div>
+          <div class="adr-item">Separates EGS enforcement from Urielle audit logic</div>
+        </div>
+
+        <!-- Issues -->
+        <div class="bottom-card issues-card">
+          <div class="issues-title">ISSUES / DEFERRALS</div>
+          <div class="issue-row" onclick="openModal('issue-i01')">
+            <div class="issue-header">
+              <span class="issue-id">I-01</span>
+              <span class="issue-sym">WebSocket: socket.send TypeError</span>
+            </div>
+            <div class="issue-file">api/dist/server.ts (built) · @fastify/websocket</div>
+            <div class="issue-disp">Deferred → Phase 06. UI polls successfully; all 4 views functional.</div>
+          </div>
+          <div class="issue-row" onclick="openModal('issue-i02')">
+            <div class="issue-header">
+              <span class="issue-id">I-02</span>
+              <span class="issue-sym">MODULE_TYPELESS_PACKAGE_JSON</span>
+            </div>
+            <div class="issue-file">egs/package.json · audit-signal TS import</div>
+            <div class="issue-disp">Informational warning only. Add type:module or compile to JS in Phase 06.</div>
+          </div>
+        </div>
+
+        <!-- TW Alignment -->
+        <div class="bottom-card tw-card">
+          <div class="tw-title">TORU-WILLIAM ALIGNMENT</div>
+          <div class="tw-item" onclick="openModal('tw-detail')">
+            <span class="tw-concept">14-field core minimum</span>
+            <span class="tw-result" style="color:var(--green)">VERIFIED</span>
+          </div>
+          <div class="tw-item">
+            <span class="tw-concept">CONTAINED patternType</span>
+            <span class="tw-result" style="color:var(--green)">VERIFIED</span>
+          </div>
+          <div class="tw-item">
+            <span class="tw-concept">consistencyScore = 94</span>
+            <span class="tw-result" style="color:var(--green)">VERIFIED</span>
+          </div>
+          <div class="tw-item">
+            <span class="tw-concept">escalationDetected = true</span>
+            <span class="tw-result" style="color:var(--green)">VERIFIED</span>
+          </div>
+          <div class="tw-item">
+            <span class="tw-concept">Boundary signals only</span>
+            <span class="tw-result" style="color:var(--green)">VERIFIED</span>
+          </div>
+          <div class="tw-item">
+            <span class="tw-concept">schemaVersion = '1.0'</span>
+            <span class="tw-result" style="color:var(--green)">VERIFIED</span>
+          </div>
+          <div class="tw-item">
+            <span class="tw-concept">ISO 42001 mapped</span>
+            <span class="tw-result" style="color:var(--green)">VERIFIED</span>
+          </div>
+          <div class="tw-item">
+            <span class="tw-concept">ADR-006 written</span>
+            <span class="tw-result" style="color:var(--amber)">DONE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phase05-content -->
+</div><!-- /main -->
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:var(--accent)"></div>React Admin Terminal (@ncaos/ui)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div>AuditSignal / Toru-William Interface</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--purple)"></div>ADR-006 / Architecture Decision</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>Issue / Deferred to Phase 06</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>PASS / VERIFIED</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--sub)"></div>Phase 01–04 Regression (no change)</div>
+  <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--sub)">
+    NCAOS/EGS Phase 05 · Non-Public Concept Demonstration · ADR-006 · 2026-05-08
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModalDirect()">✕ close</span>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-content" id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const MODALS = {
+  'core': {
+    title: '@ncaos/core',
+    sub: 'Phase 01 · Foundation · 47 tests · No regressions in Phase 05',
+    content: '<ul><li><span>detectGate/Premise/Authority/Continuity()</span> — detection functions</li><li><span>computeIntegrity/Authority/Containment()</span> — scoring</li><li><span>enforce(policy)</span> — PILOT / ENTERPRISE_STRICT / CRITICAL_STRICT</li><li><span>failSafeVerdict()</span> — ADR-002 fail-safe</li><li><span>All 47 tests pass</span> — confirmed in Phase 05 regression check</li></ul>'
+  },
+  'shell': {
+    title: '@ncaos/shell',
+    sub: 'Phase 02 · 15 tests · No regressions in Phase 05',
+    content: '<ul><li><span>ShellLoop</span> — lifecycle: start/stop/fail-safe (ADR-002)</li><li><span>Judge</span> — workflowId in JudgmentResult (F-02 from Phase 04)</li><li><span>Enforcer</span> — workflowId→GovEvent→sequenceId (F-03 from Phase 04)</li><li><span>All 15 tests pass</span> — confirmed in Phase 05 regression check</li></ul>'
+  },
+  'api': {
+    title: '@ncaos/api',
+    sub: 'Phase 02→04 · 65 tests · 14 routes · No regressions in Phase 05',
+    content: '<ul><li><span>EventStore</span> — 23 tests: append, pagination, sequence linking</li><li><span>PolicyStore</span> — 7 tests: per-tenant, Zod validation, history</li><li><span>TenantDetectorRegistry</span> — 8 tests: ADR-005 isolation</li><li><span>Fastify Server</span> — 14 routes including 7 Phase 04 NEW routes</li><li><span>Note:</span> WebSocket /v1/state/stream has I-01 defect (socket.send TypeError) deferred to Phase 06</li></ul>'
+  },
+  'detection': {
+    title: '@ncaos/detection',
+    sub: 'Phase 03 · 54 tests · No regressions in Phase 05',
+    content: '<ul><li><span>GateDetector</span> — 18 tests: INJECTION_PATTERN, SIGNATURE_INVALID, etc.</li><li><span>PremiseDetector</span> — 7 tests: critical/standard violations</li><li><span>AuthorityDetector</span> — 5 tests: chain constraint, DENY</li><li><span>ContinuityDetector</span> — 24 tests combined</li><li><span>MttdTracker + DetectionRegistry</span> — 12 tests: p50/p95/p99</li></ul>'
+  },
+  'app-tsx': {
+    title: 'App.tsx',
+    sub: 'ui/src/App.tsx · Root Admin Terminal · ADD in Phase 05',
+    content: '<ul><li><span>Topbar</span> — NCAOS // EGS logo, system status pill (ENFORCING/CONTAINMENT), partner selector dropdown</li><li><span>Role tabs</span> — SOC OPERATOR / ARCHITECT / AUDITOR / EXECUTIVE</li><li><span>Partner selector</span> — GLOBAL_ENT_2026 and TEST; switching refreshes all queries with X-Partner-ID header</li><li><span>Health badges</span> — POLICY=STRICT-PROD, SLA=HEALTHY from /v1/health</li><li><span>WebSocket</span> — /v1/state/stream (I-01 defect; falls back to polling)</li><li><span>Test UI-01:</span> Topbar + connection — PASS</li></ul>'
+  },
+  'dashboard-panel': {
+    title: 'DashboardPanel.tsx',
+    sub: 'ui/src/components/DashboardPanel.tsx · ADD in Phase 05',
+    content: '<ul><li><span>Integrity card</span> — level (Available/Limited/Degraded/Critical) + score bar</li><li><span>Authority card</span> — decision-ready / reference-only / invalid</li><li><span>Active event card</span> — shows NO ACTIVE EVENT or current event type + severity</li><li><span>Observed:</span> After BLOCK request — authority=INVALID, integrityScore=29, level=Critical</li></ul>'
+  },
+  'event-log': {
+    title: 'EventLog.tsx',
+    sub: 'ui/src/components/EventLog.tsx · ADD in Phase 05',
+    content: '<ul><li><span>EventLog</span> — table: RID, LAYER, SEV, ACTION, EVIDENCE HANDLE, DETECTED columns; layer/severity filter buttons (ALL/gate/premise/authority/continuity)</li><li><span>MttdPanel</span> — gate/premise/authority/continuity p50 bars (SOC), expanded p95/p99/breach (ARCHITECT)</li><li><span>SequencePanel</span> — loads on EVD-...↗ click; shows patternType, escalationDetected, consistencyScore, actionChain viz</li><li><span>PolicyPanel</span> — profileId=STRICT-PROD, govLevel, mttdSlaMs</li><li><span>ContainmentChart</span> — RAW EXPOSURE vs GOVERNED OUTPUT bars; LineChart last 20 events</li></ul>'
+  },
+  'api-ts': {
+    title: 'api.ts (lib)',
+    sub: 'ui/src/lib/api.ts · ADD in Phase 05',
+    content: '<ul><li><span>14 typed fetch wrappers</span> — all Phase 04 endpoints: /health, /process, /state, /audit/:handle, /events, /events/stats, /events/sequence/:id, /events/sequence/:id/summary, /mttd, /policy, /policy (POST), /policy/history, /detectors</li><li><span>WebSocket wrapper</span> — /v1/state/stream?partnerId=X (I-01 deferred)</li><li><span>X-Partner-ID header</span> — injected on all requests; updated by partner selector</li><li><span>TanStack Query integration</span> — auto-refresh every 8s for SOC, 10s for others</li></ul>'
+  },
+  'soc-view': {
+    title: 'SOC OPERATOR — Active Containment',
+    sub: 'ui Tests UI-02, UI-03, UI-08 · PASS',
+    content: '<ul><li><span>Active event card:</span> Shows NO ACTIVE EVENT or EXTERNAL_THREAT_BLOCKED/HIGH after BLOCK request</li><li><span>Integrity card:</span> score=88 after DOWNGRADE, drops to Critical/29 after BLOCK</li><li><span>Authority card:</span> reference-only after DOWNGRADE, INVALID after BLOCK</li><li><span>Event log:</span> HIGH shown in red, BLOCK in red, DOWNGRADE in amber — confirmed UI-03</li><li><span>Evidence handle ↗:</span> WF-UI-TEST-001 sequences show indicator — confirmed UI-03</li><li><span>UI-08 live update:</span> cards update after polling refresh (~10s)</li></ul>'
+  },
+  'arch-view': {
+    title: 'ARCHITECT — Shell Integrity',
+    sub: 'UI Test UI-04 · PASS',
+    content: '<ul><li><span>Shell Integrity panel:</span> shellIntegrity=OPERATIONAL, failSafeEnabled=ENABLED</li><li><span>Core isolation %:</span> coreIsolationPct displayed</li><li><span>Latency overhead:</span> latencyOverheadMs displayed</li><li><span>Continuity panel:</span> updateState, continuityScore, changeWindowActive, equivalenceTests</li><li><span>MTTD expanded:</span> all 4 layers with p95, p99, sample count, breach count</li></ul>'
+  },
+  'auditor-view': {
+    title: 'AUDITOR — Evidence Trail',
+    sub: 'UI Test UI-05 · PASS',
+    content: '<ul><li><span>Event log:</span> full table with layer/severity filters — confirmed working</li><li><span>Evidence stats:</span> total, activeSequences, byLayer, byAction counts</li><li><span>Policy panel:</span> profileId=STRICT-PROD, govLevel, mttdSlaMs</li><li><span>Sequence panel:</span> loads after clicking EVD-... handle with ↗ indicator</li><li><span>Observed sequence:</span> WF-UI-TEST-001 — patternType=CONTAINED, escalationDetected=true, consistencyScore=94, actionChain=DOWNGRADE→BLOCK</li></ul>'
+  },
+  'exec-view': {
+    title: 'EXECUTIVE — Risk Overview',
+    sub: 'UI Test UI-06 · PASS',
+    content: '<ul><li><span>System status card:</span> operationalMode, watchdog, shell, slaHealthy</li><li><span>Integrity card:</span> level + score bar (green/amber/red based on threshold)</li><li><span>RAW vs GOVERNED bars:</span> containment effect visualization — confirmed visible</li><li><span>Drift pressure bar:</span> contextDriftPressurePct shown</li><li><span>LineChart:</span> integrity + authority over last 20 events — updates after new requests</li></ul>'
+  },
+  'evidence-level': {
+    title: 'evidenceLevel(signal)',
+    sub: 'audit-signal/src/audit-signal.ts · AS-01 / AS-02',
+    content: '<ul><li><span>WEAK</span> — low severity, no sequence</li><li><span>MODERATE</span> — high severity BLOCK, no sequence layer → observed in AS-01</li><li><span>STRONG</span> — high severity BLOCK + escalation detected (sequence present) → observed in AS-02</li><li><span>Logic:</span> considers core.severity, core.action, sequence.escalationDetected</li></ul>'
+  },
+  'finding-summary': {
+    title: 'auditFindingSummary(signal)',
+    sub: 'audit-signal/src/audit-signal.ts · AS-01',
+    content: '<ul><li><span>Observed output:</span> "Containment event detected at gate layer. Severity: high. Action: BLOCK. Output authority: invalid. Detection latency: 12.5ms (SLA policy: STRICT-PROD)."</li><li>Generates a human-readable audit finding string from core layer fields</li><li>Used by Urielle to produce audit-ready evidence descriptions</li></ul>'
+  },
+  'iso-map': {
+    title: 'ISO42001_CONTROL_MAP',
+    sub: 'audit-signal/src/audit-signal.ts · AS-01',
+    content: '<ul><li><span>gate layer:</span> ["ISO42001-6.1.2", "ISO42001-8.4", "ISO42001-9.1"]</li><li><span>premise layer:</span> maps to relevant AI system integrity controls</li><li><span>authority layer:</span> maps to human oversight and decision controls</li><li><span>continuity layer:</span> maps to monitoring and performance controls</li><li>Links each NCAOS detection layer to the ISO 42001 controls it evidences</li></ul>'
+  },
+  'schema-core': {
+    title: 'AuditSignal — Core Layer',
+    sub: '14 fields · Always present · AS-01 · PASS',
+    content: '<ul><li><span>evidenceHandle</span> — EVD-{timestamp}-{hash}</li><li><span>sequenceNumber</span> — monotonically increasing per tenant</li><li><span>layer</span> — gate / premise / authority / continuity</li><li><span>severity</span> — low / med / high</li><li><span>action</span> — PASS / DOWNGRADE / BLOCK / FAIL_SAFE</li><li><span>authority</span> — decision-ready / reference-only / invalid</li><li><span>integrityScore</span> — 0–100</li><li><span>detectionMode</span> — e.g. "Real-time Gate Enforcement"</li><li><span>routingHint</span> — "SOC / Security Queue"</li><li><span>mttdMs</span> — detection latency in ms</li><li><span>detectedAt / storedAt</span> — ISO timestamps</li><li><span>policyProfileId</span> — "STRICT-PROD"</li><li><span>partnerId</span> — "GLOBAL_ENT_2026"</li></ul>'
+  },
+  'schema-sequence': {
+    title: 'AuditSignal — Sequence Layer',
+    sub: '8 fields · When workflowId provided · AS-02 · PASS',
+    content: '<ul><li><span>sequenceId</span> — WF-UI-TEST-001 (derived from GovEvent.workflowId)</li><li><span>patternType</span> — STABLE / DEGRADING / CONTAINED / VOLATILE → observed: CONTAINED</li><li><span>escalationDetected</span> — true when PASS→DOWNGRADE→BLOCK rank increases → observed: true</li><li><span>consistencyScore</span> — 0–100 from action rank variance → observed: 94</li><li><span>eventCount</span> — 2</li><li><span>firstDetectedAt</span> — ISO timestamp</li><li><span>actionChain</span> — ["DOWNGRADE", "BLOCK"]</li><li><span>layersInvolved</span> — ["gate"]</li><li><span>Evidence level with sequence:</span> STRONG (vs MODERATE for core-only)</li></ul>'
+  },
+  'schema-enrichment': {
+    title: 'AuditSignal — Enrichment Layer',
+    sub: '5 fields · Optional · AS-03 · PASS',
+    content: '<ul><li><span>identityRef</span> — "user-ref-abc123" (optional)</li><li><span>assetRef</span> — "asset-ref-xyz789" (optional)</li><li><span>sessionId</span> — "sess-001" (optional)</li><li><span>serviceComponent</span> — "AuthService" (optional)</li><li><span>tags</span> — { env: "production", team: "security" } (optional)</li><li>All fields optional — core-only signal is valid without enrichment</li><li><span>AS-03 confirmed:</span> core + sequence + enrichment all populate correctly</li></ul>'
+  },
+  'adr006': {
+    title: 'ADR-006 — AuditSignal Interface Contract',
+    sub: 'docs/adr/ADR-006-audit-signal-schema.md · Phase 05',
+    content: '<ul><li><span>Decision:</span> AuditSignal schema is the formal typed contract between NCAOS EGS and the Urielle audit layer</li><li><span>Context:</span> Post-Phase 03 Toru-William alignment — agreed minimum viable signal layer</li><li><span>Boundary:</span> AuditSignal contains only boundary signals — no internal model state, no root-cause claims</li><li><span>Versioning:</span> schemaVersion:"1.0" enables Urielle to handle future schema evolution</li><li><span>ISO mapping:</span> ISO42001_CONTROL_MAP links each detection layer to relevant control IDs</li><li><span>Separation:</span> EGS enforcement logic strictly separated from Urielle audit interpretation</li></ul>'
+  },
+  'issue-i01': {
+    title: 'I-01 — WebSocket socket.send TypeError',
+    sub: 'api/dist/server.ts (built) · Deferred → Phase 06',
+    content: '<ul><li><span>Symptom:</span> /v1/state/stream throws TypeError: socket.send is not a function</li><li><span>Root cause:</span> server.ts compiled pre-Phase 05; calls socket.send() directly but @fastify/websocket passes connection.socket (a ws wrapper object, not raw socket)</li><li><span>Stack:</span> server.js:374 → @fastify/websocket index.js:137 → WebSocketServer.completeUpgrade</li><li><span>Impact:</span> WS DISCONNECTED badge shown in UI on reconnect; UI falls back to polling automatically</li><li><span>Disposition:</span> All 4 UI views functional via TanStack Query polling (8–10s refresh). Fix: change socket.send() to connection.socket.send() in server.ts and rebuild</li><li><span>Phase 06 action:</span> Rebuild api with corrected WebSocket handler</li></ul>'
+  },
+  'issue-i02': {
+    title: 'I-02 — MODULE_TYPELESS_PACKAGE_JSON Warning',
+    sub: 'egs/package.json · Node.js audit-signal import · Informational',
+    content: '<ul><li><span>Symptom:</span> [MODULE_TYPELESS_PACKAGE_JSON] Warning on node test-signal.mjs</li><li><span>Root cause:</span> audit-signal TypeScript source imported without "type":"module" declaration in package.json; Node.js must re-parse as ES module (performance overhead)</li><li><span>Impact:</span> Non-fatal. Performance overhead warning only. No test failures.</li><li><span>Fix:</span> Add "type":"module" to egs/package.json or compile audit-signal.ts to JS with tsc before importing</li><li><span>Phase 06 action:</span> Compile audit-signal to JS; add Vitest test file for automated schema validation</li></ul>'
+  },
+  'tw-detail': {
+    title: 'Toru-William Alignment — All 8 Concepts',
+    sub: 'ADR-006 · Phase 03 post-alignment · AS-01/02/03 confirmed',
+    content: '<ul><li><span>14-field core minimum:</span> AuditSignalCore has exactly 14 fields — the irreducible minimum for meaningful governance evidence. VERIFIED.</li><li><span>Sequence-level interpretation:</span> patternType=CONTAINED produced for DOWNGRADE→BLOCK sequences. VERIFIED (AS-02).</li><li><span>Consistency score:</span> consistencyScore=94 computed from action rank variance. VERIFIED (AS-02).</li><li><span>Escalation patterns:</span> escalationDetected=true when rank increases PASS→DOWNGRADE→BLOCK. VERIFIED (AS-02).</li><li><span>Boundary intact:</span> AuditSignal contains only boundary signals — no internal model state. VERIFIED.</li><li><span>Schema versioned:</span> schemaVersion:"1.0" enables future schema evolution handling. VERIFIED.</li><li><span>ISO 42001 mapped:</span> ISO42001_CONTROL_MAP["gate"] = ["ISO42001-6.1.2","ISO42001-8.4","ISO42001-9.1"]. VERIFIED (AS-01).</li><li><span>ADR-006 written:</span> Formal decision record present in docs/adr/. DONE.</li></ul>'
+  },
+};
+
+function openModal(key) {
+  const d = MODALS[key];
+  if (!d) return;
+  document.getElementById('modal-title').textContent = d.title;
+  document.getElementById('modal-sub').textContent = d.sub;
+  document.getElementById('modal-content').innerHTML = d.content;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e) { if (e.target === document.getElementById('modal')) closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modal').classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+</script>
+</body>
+</html>

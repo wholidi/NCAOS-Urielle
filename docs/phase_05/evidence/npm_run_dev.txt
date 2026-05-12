@@ -1,0 +1,23 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> cd ui
+PS D:\Projects\NCAOS-Urielle\egs\ui> npm run dev
+
+> @ncaos/ui@0.5.0 dev
+> vite
+
+[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+Re-optimizing dependencies because lockfile has changed
+
+  VITE v5.4.21  ready in 2014 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help

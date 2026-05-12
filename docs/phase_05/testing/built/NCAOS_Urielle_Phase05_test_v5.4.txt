@@ -1,0 +1,547 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> node --version
+v24.15.0
+PS D:\Projects\NCAOS-Urielle> npm --version
+11.12.1
+PS D:\Projects\NCAOS-Urielle> Remove-Item -Recurse phase05
+PS D:\Projects\NCAOS-Urielle> Remove-Item ncaos-phase05.tar.gz
+PS D:\Projects\NCAOS-Urielle> ls egs\ui\src
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\ui\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/12/2026  10:55 AM                components
+d-----         5/12/2026  10:55 AM                lib
+-a----         5/12/2026  11:42 AM          26618 App.tsx
+-a----          5/8/2026  10:49 AM            278 main.tsx
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\ui\src\components
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\ui\src\components
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          5/8/2026  10:48 AM           3263 DashboardPanel.tsx
+-a----          5/8/2026  10:49 AM          15200 EventLog.tsx
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\ui\src\lib
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\ui\src\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          5/8/2026  10:46 AM           8445 api.ts
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\audit-signal\src
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\audit-signal\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          5/8/2026  10:50 AM          14973 audit-signal.ts
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\docs\adr
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\docs\adr
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         5/10/2026   7:13 PM           2689 ADR-001-type-contracts.md
+-a----         5/10/2026   7:13 PM           2133 ADR-002-fail-safe-invariant.md
+-a----         5/10/2026   7:13 PM           3103 ADR-003-process-isolation.md
+-a----         5/10/2026   7:13 PM           2908 ADR-004-detection-layer-independence
+                                                  .md
+-a----         5/10/2026   7:13 PM           2624 ADR-005-per-tenant-detector-isolatio
+                                                  n.md
+-a----         5/12/2026  12:29 PM           3843 ADR-006-audit-signal-schema.md
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\ui\src
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\ui\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/12/2026  10:55 AM                components
+d-----         5/12/2026  10:55 AM                lib
+-a----         5/12/2026  11:42 AM          26618 App.tsx
+-a----          5/8/2026  10:49 AM            278 main.tsx
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\node_modules\react
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\node_modules\react
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/12/2026  11:12 AM                cjs
+d-----         5/12/2026  11:12 AM                umd
+-a----         5/12/2026  11:11 AM            190 index.js
+-a----         5/12/2026  11:11 AM            222 jsx-dev-runtime.js
+-a----         5/12/2026  11:11 AM            214 jsx-runtime.js
+-a----         5/12/2026  11:11 AM           1086 LICENSE
+-a----         5/12/2026  11:12 AM            999 package.json
+-a----         5/12/2026  11:12 AM            218 react.shared-subset.js
+-a----         5/12/2026  11:12 AM           1162 README.md
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\node_modules\recharts
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\node_modules\recharts
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/12/2026  11:12 AM                es6
+d-----         5/12/2026  11:12 AM                lib
+d-----         5/12/2026  11:12 AM                types
+d-----         5/12/2026  11:12 AM                umd
+-a----         5/12/2026  11:12 AM          45897 CHANGELOG.md
+-a----         5/12/2026  11:12 AM           4799 CONTRIBUTING.md
+-a----         5/12/2026  11:11 AM           1084 LICENSE
+-a----         5/12/2026  11:12 AM           5791 package.json
+-a----         5/12/2026  11:12 AM           4838 README.md
+
+
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> npm test 2>&1 | Select-String "Tests|passed|failed"
+
+ Γ£ô tests/detection.test.ts  (16 tests) 7ms
+ Γ£ô tests/scoring.test.ts  (16 tests) 8ms
+ Γ£ô tests/verdict.test.ts  (15 tests) 19ms
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Duration  2.10s (transform 1.32s, setup 0ms, collect 1.57s, tests 34ms,
+environment 1ms, prepare 3.69s)
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö lifecycle > starts and stops cleanly
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > returns
+PASS for clean input
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > sets
+operationalMode to NORMAL on PASS
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > sets
+shellIntegrity=true and failSafeEnabled=true
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > no
+containment event emitted on PASS
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > produces a
+valid requestId
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > governed
+output < raw exposure
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> returns BLOCK for high-severity threat
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> sets operationalMode to CONTAINMENT on BLOCK
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> emits containment event on BLOCK
+stderr | tests/shell-loop.test.ts > ShellLoop ΓÇö lifecycle > returns FAIL_SAFE when
+not running
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> sets integrity to Critical on high severity
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> includes routing hint on BLOCK
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö event emission > emits shell:output
+event on each process() call
+ Γ£ô tests/shell-loop.test.ts  (15 tests) 12ms
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Duration  717ms (transform 228ms, setup 0ms, collect 265ms, tests 12ms,
+environment 0ms, prepare 163ms)
+ Γ£ô tests/event-store.test.ts  (23 tests) 16ms
+ Γ£ô tests/stores.test.ts  (16 tests) 13ms
+stdout | tests/api.test.ts
+stdout | tests/api-v4.test.ts
+ Γ£ô tests/api.test.ts  (8 tests) 293ms
+ Γ£ô tests/api-v4.test.ts  (18 tests) 311ms
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Duration  9.30s (transform 842ms, setup 0ms, collect 17.52s, tests 633ms,
+environment 1ms, prepare 748ms)
+npm error Lifecycle script `test` failed with error:
+stderr | tests/mttd.test.ts > MttdTracker > flags SLA breach when mttd exceeds sla
+stderr | tests/mttd.test.ts > MttdTracker > tracks breach count correctly
+stderr | tests/mttd.test.ts > MttdTracker > resets breach count on reset()
+ Γ£ô tests/gate.test.ts  (18 tests) 13ms
+ Γ£ô tests/mttd.test.ts  (12 tests) 39ms
+ Γ£ô tests/detection.test.ts  (24 tests) 18ms
+ Test Files  3 passed (3)
+      Tests  54 passed (54)
+   Duration  1.06s (transform 829ms, setup 2ms, collect 1.29s, tests 70ms,
+environment 1ms, prepare 625ms)
+
+
+PS D:\Projects\NCAOS-Urielle\egs> cd api
+PS D:\Projects\NCAOS-Urielle\egs\api> npm start
+
+> @ncaos/api@0.2.0 start
+> node dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+[API] Fatal startup error: Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at node:net:2274:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
+}
+npm error Lifecycle script `start` failed with error:
+npm error code 1
+npm error path D:\Projects\NCAOS-Urielle\egs\api
+npm error workspace @ncaos/api@0.2.0
+npm error location D:\Projects\NCAOS-Urielle\egs\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node dist/server.js
+PS D:\Projects\NCAOS-Urielle\egs\api> cd ui
+cd : Cannot find path 'D:\Projects\NCAOS-Urielle\egs\api\ui' because it does not
+exist.
+At line:1 char:1
++ cd ui
++ ~~~~~
+    + CategoryInfo          : ObjectNotFound: (D:\Projects\NCAOS-Urielle\egs\api\ui:S
+   tring) [Set-Location], ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.SetLocationC
+   ommand
+
+PS D:\Projects\NCAOS-Urielle\egs\api> cd..
+PS D:\Projects\NCAOS-Urielle\egs> cd ui
+PS D:\Projects\NCAOS-Urielle\egs\ui> npm run dev
+
+> @ncaos/ui@0.5.0 dev
+> vite
+
+[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+
+  VITE v5.4.21  ready in 1737 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+12:56:32 PM [vite] hmr update /src/App.tsx, /src/components/EventLog.tsx
+PS D:\Projects\NCAOS-Urielle\egs\ui> npm run dev
+
+> @ncaos/ui@0.5.0 dev
+> vite
+
+[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+
+  VITE v5.4.21  ready in 3483 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+PS D:\Projects\NCAOS-Urielle\egs\ui> cd..
+PS D:\Projects\NCAOS-Urielle\egs> cd "D:\Projects\NCAOS-Urielle\egs"
+PS D:\Projects\NCAOS-Urielle\egs> npm --workspace @ncaos/api run build
+
+> @ncaos/api@0.2.0 build
+> tsc
+
+PS D:\Projects\NCAOS-Urielle\egs> netstat -ano | findstr :3000
+  TCP    0.0.0.0:3000           0.0.0.0:0              LISTENING       8752
+PS D:\Projects\NCAOS-Urielle\egs> taskkill /PID <PID> /F
+At line:1 char:15
++ taskkill /PID <PID> /F
++               ~
+The '<' operator is reserved for future use.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : RedirectionNotSupported
+
+PS D:\Projects\NCAOS-Urielle\egs> netstat -ano | findstr :3000
+  TCP    0.0.0.0:3000           0.0.0.0:0              LISTENING       8752
+PS D:\Projects\NCAOS-Urielle\egs> taskkill /PID 8752 /F
+SUCCESS: The process with PID 8752 has been terminated.
+PS D:\Projects\NCAOS-Urielle\egs> cd api
+PS D:\Projects\NCAOS-Urielle\egs\api> npm start
+
+> @ncaos/api@0.2.0 start
+> node dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+{"level":30,"time":1778564114918,"pid":2956,"hostname":"DESKTOP-2JNEOET","msg":"Server listening at http://0.0.0.0:3000"}
+[API] EGS API running on http://0.0.0.0:3000
+{"level":30,"time":1778564202365,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","req":{"method":"GET","url":"/v1/events?limit=30","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":54375},"msg":"incoming request"}
+{"level":30,"time":1778564202374,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":7.857499999925494,"msg":"request completed"}
+{"level":30,"time":1778564202376,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":54376},"msg":"incoming request"}
+{"level":30,"time":1778564202378,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":200},"responseTime":2.4627000000327826,"msg":"request completed"}
+{"level":30,"time":1778564202379,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":54377},"msg":"incoming request"}
+{"level":30,"time":1778564202380,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":200},"responseTime":1.1458999998867512,"msg":"request completed"}
+{"level":30,"time":1778564202657,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"GET","url":"/v1/state/stream?x-partnerId=GLOBAL_ENT_2026","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":62649},"msg":"incoming request"}
+{"level":30,"time":1778564202658,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":401},"responseTime":0.25650000013411045,"msg":"request completed"}
+{"level":30,"time":1778564207406,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":59618},"msg":"incoming request"}
+{"level":30,"time":1778564207406,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":0.35759999975562096,"msg":"request completed"}
+{"level":30,"time":1778564207513,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":57872},"msg":"incoming request"}
+{"level":30,"time":1778564207514,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":0.5067999996244907,"msg":"request completed"}
+{"level":30,"time":1778564208161,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/events?limit=30","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":61372},"msg":"incoming request"}
+{"level":30,"time":1778564208162,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":200},"responseTime":1.0113999992609024,"msg":"request completed"}
+{"level":30,"time":1778564208162,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"GET","url":"/v1/events/stats","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":61373},"msg":"incoming request"}
+{"level":30,"time":1778564208163,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":200},"responseTime":0.613799998536706,"msg":"request completed"}
+{"level":30,"time":1778564208164,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"GET","url":"/v1/policy","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":61374},"msg":"incoming request"}
+{"level":30,"time":1778564208165,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":200},"responseTime":0.7061000000685453,"msg":"request completed"}
+{"level":30,"time":1778564208980,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"method":"GET","url":"/v1/events?limit=20","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":58991},"msg":"incoming request"}
+{"level":30,"time":1778564208981,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","res":{"statusCode":200},"responseTime":0.6182999983429909,"msg":"request completed"}
+{"level":30,"time":1778564212416,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":62447},"msg":"incoming request"}
+{"level":30,"time":1778564212416,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","res":{"statusCode":200},"responseTime":0.35050000064074993,"msg":"request completed"}
+{"level":30,"time":1778564223967,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":49538},"msg":"incoming request"}
+{"level":30,"time":1778564223968,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","res":{"statusCode":200},"responseTime":0.5694999992847443,"msg":"request completed"}
+{"level":30,"time":1778564223969,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","req":{"method":"GET","url":"/v1/events?limit=30","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":49539},"msg":"incoming request"}
+{"level":30,"time":1778564223970,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","res":{"statusCode":200},"responseTime":1.2303999997675419,"msg":"request completed"}
+{"level":30,"time":1778564223971,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":49540},"msg":"incoming request"}
+{"level":30,"time":1778564223972,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","res":{"statusCode":200},"responseTime":0.7449999991804361,"msg":"request completed"}
+{"level":30,"time":1778564228984,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":49923},"msg":"incoming request"}
+{"level":30,"time":1778564228984,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","res":{"statusCode":200},"responseTime":0.3049999997019768,"msg":"request completed"}
+{"level":30,"time":1778564229663,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","req":{"method":"GET","url":"/v1/events?limit=30","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64053},"msg":"incoming request"}
+{"level":30,"time":1778564229664,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","res":{"statusCode":200},"responseTime":0.8185000009834766,"msg":"request completed"}
+{"level":30,"time":1778564229665,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","req":{"method":"GET","url":"/v1/events/stats","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64054},"msg":"incoming request"}
+{"level":30,"time":1778564229665,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","res":{"statusCode":200},"responseTime":0.45160000026226044,"msg":"request completed"}
+{"level":30,"time":1778564229665,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","req":{"method":"GET","url":"/v1/policy","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64055},"msg":"incoming request"}
+{"level":30,"time":1778564229666,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","res":{"statusCode":200},"responseTime":0.4164000004529953,"msg":"request completed"}
+{"level":30,"time":1778564230981,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","req":{"method":"GET","url":"/v1/events?limit=20","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64032},"msg":"incoming request"}
+{"level":30,"time":1778564230981,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","res":{"statusCode":200},"responseTime":0.5669999998062849,"msg":"request completed"}
+{"level":30,"time":1778564231739,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64987},"msg":"incoming request"}
+{"level":30,"time":1778564231740,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","res":{"statusCode":200},"responseTime":0.4367999993264675,"msg":"request completed"}
+{"level":30,"time":1778564259793,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":60158},"msg":"incoming request"}
+{"level":30,"time":1778564259795,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","res":{"statusCode":200},"responseTime":1.9245999995619059,"msg":"request completed"}
+{"level":30,"time":1778564259797,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-m","req":{"method":"GET","url":"/v1/events?limit=30","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":60160},"msg":"incoming request"}
+{"level":30,"time":1778564259798,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-m","res":{"statusCode":200},"responseTime":0.7296999990940094,"msg":"request completed"}
+{"level":30,"time":1778564259799,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-n","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":60161},"msg":"incoming request"}
+{"level":30,"time":1778564259800,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-n","res":{"statusCode":200},"responseTime":0.6187999993562698,"msg":"request completed"}
+{"level":30,"time":1778564264795,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-o","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":54685},"msg":"incoming request"}
+{"level":30,"time":1778564264795,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-o","res":{"statusCode":200},"responseTime":0.34009999968111515,"msg":"request completed"}
+{"level":30,"time":1778564267804,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-p","req":{"method":"GET","url":"/v1/events?limit=30","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64962},"msg":"incoming request"}
+{"level":30,"time":1778564267805,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-p","res":{"statusCode":200},"responseTime":0.5296000000089407,"msg":"request completed"}
+{"level":30,"time":1778564269803,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-q","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":54646},"msg":"incoming request"}
+{"level":30,"time":1778564269803,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-q","res":{"statusCode":200},"responseTime":0.3564999997615814,"msg":"request completed"}
+{"level":30,"time":1778564441212,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-r","req":{"method":"GET","url":"/v1/events?limit=30","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":61241},"msg":"incoming request"}
+{"level":30,"time":1778564441213,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-r","res":{"statusCode":200},"responseTime":0.6015999987721443,"msg":"request completed"}
+{"level":30,"time":1778564441213,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-s","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":61242},"msg":"incoming request"}
+{"level":30,"time":1778564441214,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-s","res":{"statusCode":200},"responseTime":0.28790000081062317,"msg":"request completed"}
+{"level":30,"time":1778564441214,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-t","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":61244},"msg":"incoming request"}
+{"level":30,"time":1778564441214,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-t","res":{"statusCode":200},"responseTime":0.3081999998539686,"msg":"request completed"}
+{"level":30,"time":1778564441510,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-u","req":{"method":"GET","url":"/v1/state/stream?partnerId=GLOBAL_ENT_2026","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":62957},"msg":"incoming request"}
+{"level":30,"time":1778564441510,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-u","res":{"statusCode":401},"responseTime":0.2639000006020069,"msg":"request completed"}
+{"level":30,"time":1778564573217,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-v","req":{"method":"GET","url":"/v1/events?limit=30","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":63547},"msg":"incoming request"}
+{"level":30,"time":1778564573217,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-v","res":{"statusCode":200},"responseTime":0.7365000005811453,"msg":"request completed"}
+{"level":30,"time":1778564573219,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-w","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":63550},"msg":"incoming request"}
+{"level":30,"time":1778564573220,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-w","res":{"statusCode":200},"responseTime":0.42679999954998493,"msg":"request completed"}
+{"level":30,"time":1778564573220,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-x","req":{"method":"GET","url":"/v1/health","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":63551},"msg":"incoming request"}
+{"level":30,"time":1778564573222,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-x","res":{"statusCode":200},"responseTime":1.3720000013709068,"msg":"request completed"}
+{"level":30,"time":1778564573515,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-y","req":{"method":"GET","url":"/v1/state/stream?partnerId=GLOBAL_ENT_2026","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50273},"msg":"incoming request"}
+{"level":30,"time":1778564573516,"pid":2956,"hostname":"DESKTOP-2JNEOET","reqId":"req-y","res":{"statusCode":401},"responseTime":0.7279000002890825,"msg":"request completed"}
+npm error Lifecycle script `start` failed with error:
+npm error code 1
+npm error path D:\Projects\NCAOS-Urielle\egs\api
+npm error workspace @ncaos/api@0.2.0
+npm error location D:\Projects\NCAOS-Urielle\egs\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node dist/server.js
+PS D:\Projects\NCAOS-Urielle\egs\api> npm start
+
+> @ncaos/api@0.2.0 start
+> node dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+[API] Fatal startup error: Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at node:net:2274:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
+}
+npm error Lifecycle script `start` failed with error:
+npm error code 1
+npm error path D:\Projects\NCAOS-Urielle\egs\api
+npm error workspace @ncaos/api@0.2.0
+npm error location D:\Projects\NCAOS-Urielle\egs\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node dist/server.js
+PS D:\Projects\NCAOS-Urielle\egs\api> npm start
+
+> @ncaos/api@0.2.0 start
+> node dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+[API] Fatal startup error: Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at node:net:2274:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
+}
+npm error Lifecycle script `start` failed with error:
+npm error code 1
+npm error path D:\Projects\NCAOS-Urielle\egs\api
+npm error workspace @ncaos/api@0.2.0
+npm error location D:\Projects\NCAOS-Urielle\egs\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node dist/server.js
+PS D:\Projects\NCAOS-Urielle\egs\api> # Send clean request
+PS D:\Projects\NCAOS-Urielle\egs\api> $body = @{
+>>   sourceId="src-001"; inputHash="abc123"; inputFlags=@()
+>>   claimedPremises=@("A","B"); validatedPremises=@("A","B")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="decision-ready"; overrideAttempted=$false
+>>   workflowId="WF-UI-TEST-001"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="GLOBAL_ENT_2026"} -Body $body
+
+
+requestId      : REQ-000002
+action         : DOWNGRADE
+authority      : reference-only
+integrity      : @{level=Available; score=88}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs;
+                 validate perimeter; rotate credentials if needed.}
+evidenceHandle : EVD-1778566492081-A10E01E4
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs\api>
+PS D:\Projects\NCAOS-Urielle\egs\api> # Send threat request
+PS D:\Projects\NCAOS-Urielle\egs\api> $threat = @{
+>>   sourceId="attacker"; inputHash="bad"; inputFlags=@("INJECTION_PATTERN")
+>>   claimedPremises=@("A","B","C"); validatedPremises=@("A")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="reference-only"; overrideAttempted=$false
+>>   workflowId="WF-UI-TEST-001"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="GLOBAL_ENT_2026"} -Body $threat
+
+
+requestId      : REQ-000003
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs;
+                 validate perimeter; rotate credentials if needed.}
+evidenceHandle : EVD-1778566492250-36E03604
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs\api> # Send threat request
+PS D:\Projects\NCAOS-Urielle\egs\api> $threat = @{
+>>   sourceId="attacker"
+>>   inputHash="bad"
+>>   inputFlags=@("INJECTION_PATTERN")
+>>   claimedPremises=@("A","B","C")
+>>   validatedPremises=@("A")
+>>   contractVersion="1.0"
+>>   requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="reference-only"
+>>   overrideAttempted=$false
+>>   workflowId="WF-UI-TEST-001"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api>
+PS D:\Projects\NCAOS-Urielle\egs\api> Invoke-RestMethod `
+>>   -Uri http://localhost:3000/v1/process `
+>>   -Method POST `
+>>   -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="GLOBAL_ENT_2026"} `
+>>   -Body $threat
+
+
+requestId      : REQ-000004
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs;
+                 validate perimeter; rotate credentials if needed.}
+evidenceHandle : EVD-1778566502540-FE4A6554
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs\api> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="GLOBAL_ENT_2026"} -Body $threat
+
+
+requestId      : REQ-000005
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs;
+                 validate perimeter; rotate credentials if needed.}
+evidenceHandle : EVD-1778566733234-5C6555C8
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs\api>
+PS D:\Projects\NCAOS-Urielle\egs\api> curl.exe `
+>>   -H "X-Partner-ID: GLOBAL_ENT_2026" `
+>>   http://localhost:3000/v1/events `
+>>   -o events.json
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  8857  100  8857    0     0  36400      0 --:--:-- --:--:-- --:--:-- 36448
+PS D:\Projects\NCAOS-Urielle\egs\api> curl.exe -H "X-Partner-ID: GLOBAL_ENT_2026" http://localhost:3000/v1/events -o events.json
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  8857  100  8857    0     0  35279      0 --:--:-- --:--:-- --:--:-- 35146
+PS D:\Projects\NCAOS-Urielle\egs\api> curl.exe -H "X-Partner-ID: GLOBAL_ENT_2026" http://localhost:3000/v1/state -o state.json
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   679  100   679    0     0   2893      0 --:--:-- --:--:-- --:--:--  2901
+PS D:\Projects\NCAOS-Urielle\egs\api>
+PS D:\Projects\NCAOS-Urielle\egs\api> curl.exe -H "X-Partner-ID: GLOBAL_ENT_2026" http://localhost:3000/v1/events/stats -o event-stats.json
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   121  100   121    0     0    219      0 --:--:-- --:--:-- --:--:--   220
+PS D:\Projects\NCAOS-Urielle\egs\api>
+PS D:\Projects\NCAOS-Urielle\egs\api> curl.exe -H "X-Partner-ID: GLOBAL_ENT_2026" http://localhost:3000/v1/mttd -o mttd.json
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   649  100   649    0     0   2690      0 --:--:-- --:--:-- --:--:--  2692
+PS D:\Projects\NCAOS-Urielle\egs\api>
+PS D:\Projects\NCAOS-Urielle\egs\api> curl.exe -H "X-Partner-ID: GLOBAL_ENT_2026" http://localhost:3000/v1/policy -o policy.json
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   424  100   424    0     0   1791      0 --:--:-- --:--:-- --:--:--  1796
+PS D:\Projects\NCAOS-Urielle\egs\api>

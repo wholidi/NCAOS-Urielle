@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>NCAOS Phase 05 Evidence Viewer</title>
+  <style>
+    body { background:#020812; color:#7efcff; font-family:Consolas, monospace; padding:20px; }
+    h1 { color:#35d3ff; }
+    .panel { border:1px solid #00c3ff66; padding:14px; margin:12px 0; background:#00142866; }
+    .badge { display:inline-block; padding:3px 8px; margin:2px; border:1px solid #00c3ff66; }
+    .high { color:#ff4d6d; }
+    .low { color:#00ff88; }
+    .block { color:#ff4d6d; font-weight:bold; }
+    .downgrade { color:#ffd166; font-weight:bold; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th, td { border-bottom:1px solid #00c3ff33; padding:8px; text-align:left; font-size:13px; }
+  </style>
+</head>
+<body>
+
+<h1>NCAOS // Phase 05 Runtime Governance Evidence</h1>
+
+<div class="panel">
+  <h2>Evidence Summary</h2>
+  <div id="summary"></div>
+</div>
+
+<div class="panel">
+  <h2>Runtime Events</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Request ID</th>
+        <th>Layer</th>
+        <th>Severity</th>
+        <th>Action</th>
+        <th>Evidence Handle</th>
+        <th>Detected At</th>
+      </tr>
+    </thead>
+    <tbody id="events"></tbody>
+  </table>
+</div>
+
+<script>
+const evidence = 
+{"records":[{"evidenceHandle":"EVD-1778566733234-5C6555C8","partnerId":"GLOBAL_ENT_2026","event":{"requestId":"REQ-000005","evidenceHandle":"EVD-1778566733234-5C6555C8","workflowId":"WF-UI-TEST-001","tenant":{"partnerId":"GLOBAL_ENT_2026","instanceId":"EGS_INST_001","deployment":"ENTERPRISE"},"type":"EXTERNAL_THREAT_BLOCKED","layer":"gate","scope":"sys","severity":"high","detectionMode":"Real-time Gate Enforcement","integrity":{"level":"Critical","score":29},"authority":{"authority":"invalid","score":22},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"detectedAt":"2026-05-12T06:18:53.234Z","mttdMs":0},"verdict":{"requestId":"REQ-000005","action":"BLOCK","authority":"invalid","integrity":{"level":"Critical","score":29},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"policyProfileId":"STRICT-PROD","enforcedAt":"2026-05-12T06:18:53.234Z","processingMs":0},"storedAt":"2026-05-12T06:18:53.234Z","sequenceNumber":8,"sequenceId":"WF-UI-TEST-001"},{"evidenceHandle":"EVD-1778566733234-5C6555C8","partnerId":"GLOBAL_ENT_2026","event":{"requestId":"REQ-000005","evidenceHandle":"EVD-1778566733234-5C6555C8","workflowId":"WF-UI-TEST-001","tenant":{"partnerId":"GLOBAL_ENT_2026","instanceId":"EGS_INST_001","deployment":"ENTERPRISE"},"type":"EXTERNAL_THREAT_BLOCKED","layer":"gate","scope":"sys","severity":"high","detectionMode":"Real-time Gate Enforcement","integrity":{"level":"Critical","score":29},"authority":{"authority":"invalid","score":22},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"detectedAt":"2026-05-12T06:18:53.234Z","mttdMs":0},"verdict":{"requestId":"REQ-000005","action":"BLOCK","authority":"invalid","integrity":{"level":"Critical","score":29},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"policyProfileId":"STRICT-PROD","enforcedAt":"2026-05-12T06:18:53.234Z","processingMs":0},"storedAt":"2026-05-12T06:18:53.234Z","sequenceNumber":7,"sequenceId":"WF-UI-TEST-001"},{"evidenceHandle":"EVD-1778566502540-FE4A6554","partnerId":"GLOBAL_ENT_2026","event":{"requestId":"REQ-000004","evidenceHandle":"EVD-1778566502540-FE4A6554","workflowId":"WF-UI-TEST-001","tenant":{"partnerId":"GLOBAL_ENT_2026","instanceId":"EGS_INST_001","deployment":"ENTERPRISE"},"type":"EXTERNAL_THREAT_BLOCKED","layer":"gate","scope":"sys","severity":"high","detectionMode":"Real-time Gate Enforcement","integrity":{"level":"Critical","score":29},"authority":{"authority":"invalid","score":22},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"detectedAt":"2026-05-12T06:15:02.540Z","mttdMs":0},"verdict":{"requestId":"REQ-000004","action":"BLOCK","authority":"invalid","integrity":{"level":"Critical","score":29},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"policyProfileId":"STRICT-PROD","enforcedAt":"2026-05-12T06:15:02.540Z","processingMs":0},"storedAt":"2026-05-12T06:15:02.540Z","sequenceNumber":6,"sequenceId":"WF-UI-TEST-001"},{"evidenceHandle":"EVD-1778566502540-FE4A6554","partnerId":"GLOBAL_ENT_2026","event":{"requestId":"REQ-000004","evidenceHandle":"EVD-1778566502540-FE4A6554","workflowId":"WF-UI-TEST-001","tenant":{"partnerId":"GLOBAL_ENT_2026","instanceId":"EGS_INST_001","deployment":"ENTERPRISE"},"type":"EXTERNAL_THREAT_BLOCKED","layer":"gate","scope":"sys","severity":"high","detectionMode":"Real-time Gate Enforcement","integrity":{"level":"Critical","score":29},"authority":{"authority":"invalid","score":22},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"detectedAt":"2026-05-12T06:15:02.540Z","mttdMs":0},"verdict":{"requestId":"REQ-000004","action":"BLOCK","authority":"invalid","integrity":{"level":"Critical","score":29},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"policyProfileId":"STRICT-PROD","enforcedAt":"2026-05-12T06:15:02.540Z","processingMs":0},"storedAt":"2026-05-12T06:15:02.540Z","sequenceNumber":5,"sequenceId":"WF-UI-TEST-001"},{"evidenceHandle":"EVD-1778566492250-36E03604","partnerId":"GLOBAL_ENT_2026","event":{"requestId":"REQ-000003","evidenceHandle":"EVD-1778566492250-36E03604","workflowId":"WF-UI-TEST-001","tenant":{"partnerId":"GLOBAL_ENT_2026","instanceId":"EGS_INST_001","deployment":"ENTERPRISE"},"type":"EXTERNAL_THREAT_BLOCKED","layer":"gate","scope":"sys","severity":"high","detectionMode":"Real-time Gate Enforcement","integrity":{"level":"Critical","score":29},"authority":{"authority":"invalid","score":22},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"detectedAt":"2026-05-12T06:14:52.250Z","mttdMs":0},"verdict":{"requestId":"REQ-000003","action":"BLOCK","authority":"invalid","integrity":{"level":"Critical","score":29},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"policyProfileId":"STRICT-PROD","enforcedAt":"2026-05-12T06:14:52.250Z","processingMs":0},"storedAt":"2026-05-12T06:14:52.251Z","sequenceNumber":4,"sequenceId":"WF-UI-TEST-001"},{"evidenceHandle":"EVD-1778566492250-36E03604","partnerId":"GLOBAL_ENT_2026","event":{"requestId":"REQ-000003","evidenceHandle":"EVD-1778566492250-36E03604","workflowId":"WF-UI-TEST-001","tenant":{"partnerId":"GLOBAL_ENT_2026","instanceId":"EGS_INST_001","deployment":"ENTERPRISE"},"type":"EXTERNAL_THREAT_BLOCKED","layer":"gate","scope":"sys","severity":"high","detectionMode":"Real-time Gate Enforcement","integrity":{"level":"Critical","score":29},"authority":{"authority":"invalid","score":22},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"detectedAt":"2026-05-12T06:14:52.250Z","mttdMs":0},"verdict":{"requestId":"REQ-000003","action":"BLOCK","authority":"invalid","integrity":{"level":"Critical","score":29},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"policyProfileId":"STRICT-PROD","enforcedAt":"2026-05-12T06:14:52.250Z","processingMs":0},"storedAt":"2026-05-12T06:14:52.251Z","sequenceNumber":3,"sequenceId":"WF-UI-TEST-001"},{"evidenceHandle":"EVD-1778566492081-A10E01E4","partnerId":"GLOBAL_ENT_2026","event":{"requestId":"REQ-000002","evidenceHandle":"EVD-1778566492081-A10E01E4","workflowId":"WF-UI-TEST-001","tenant":{"partnerId":"GLOBAL_ENT_2026","instanceId":"EGS_INST_001","deployment":"ENTERPRISE"},"type":"NO_EVENT","layer":"gate","scope":"req","severity":"low","detectionMode":"Real-time Gate Enforcement","integrity":{"level":"Available","score":88},"authority":{"authority":"decision-ready","score":84},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Review and validate."},"detectedAt":"2026-05-12T06:14:52.081Z","mttdMs":0},"verdict":{"requestId":"REQ-000002","action":"DOWNGRADE","authority":"reference-only","integrity":{"level":"Available","score":88},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"policyProfileId":"STRICT-PROD","enforcedAt":"2026-05-12T06:14:52.081Z","processingMs":0},"storedAt":"2026-05-12T06:14:52.082Z","sequenceNumber":2,"sequenceId":"WF-UI-TEST-001"},{"evidenceHandle":"EVD-1778566492081-A10E01E4","partnerId":"GLOBAL_ENT_2026","event":{"requestId":"REQ-000002","evidenceHandle":"EVD-1778566492081-A10E01E4","workflowId":"WF-UI-TEST-001","tenant":{"partnerId":"GLOBAL_ENT_2026","instanceId":"EGS_INST_001","deployment":"ENTERPRISE"},"type":"NO_EVENT","layer":"gate","scope":"req","severity":"low","detectionMode":"Real-time Gate Enforcement","integrity":{"level":"Available","score":88},"authority":{"authority":"decision-ready","score":84},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Review and validate."},"detectedAt":"2026-05-12T06:14:52.081Z","mttdMs":0},"verdict":{"requestId":"REQ-000002","action":"DOWNGRADE","authority":"reference-only","integrity":{"level":"Available","score":88},"routing":{"hint":"SOC / Security Queue","recommendedAction":"Isolate inputs; validate perimeter; rotate credentials if needed."},"policyProfileId":"STRICT-PROD","enforcedAt":"2026-05-12T06:14:52.081Z","processingMs":0},"storedAt":"2026-05-12T06:14:52.082Z","sequenceNumber":1,"sequenceId":"WF-UI-TEST-001"}],"pagination":{"total":8,"hasMore":false,"nextCursor":null,"limit":20}}
+;
+
+const records = evidence.records || [];
+
+document.getElementById("summary").innerHTML = `
+  <span class="badge">Total Events: ${evidence.pagination?.total ?? records.length}</span>
+  <span class="badge">Export Type: Runtime Governance Evidence</span>
+  <span class="badge">Partner: ${records[0]?.partnerId ?? "GLOBAL_ENT_2026"}</span>
+`;
+
+document.getElementById("events").innerHTML = records.map(r => {
+  const sev = r.event?.severity ?? "";
+  const action = r.verdict?.action ?? "";
+  return `
+    <tr>
+      <td>${r.event?.requestId ?? ""}</td>
+      <td>${r.event?.layer ?? ""}</td>
+      <td class="${sev}">${sev.toUpperCase()}</td>
+      <td class="${action === "BLOCK" ? "block" : "downgrade"}">${action}</td>
+      <td>${r.evidenceHandle ?? ""}</td>
+      <td>${r.event?.detectedAt ?? ""}</td>
+    </tr>
+  `;
+}).join("");
+</script>
+
+</body>
+</html>

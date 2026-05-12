@@ -1,0 +1,81 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> node --input-type=module
+Cannot specify --input-type for REPL
+PS D:\Projects\NCAOS-Urielle\egs> node
+Welcome to Node.js v24.15.0.
+Type ".help" for more information.
+> node test-signal.mjs
+node test-signal.mjs
+     ^^^^
+
+Uncaught SyntaxError: Unexpected identifier 'test'
+> .exit
+PS D:\Projects\NCAOS-Urielle\egs> node test-signal.mjs
+Required fields: true
+Valid layer: true
+Valid severity: true
+Valid action: true
+PS D:\Projects\NCAOS-Urielle\egs> import { AuditSignalSchema, fromEventRecord, evidenceLevel,
+>>          auditFindingSummary, ISO42001_CONTROL_MAP }
+At line:1 char:27
++ import { AuditSignalSchema, fromEventRecord, evidenceLevel,
++                           ~
+Missing argument in parameter list.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingArgument
+
+PS D:\Projects\NCAOS-Urielle\egs>   from './audit-signal/src/audit-signal.ts';
+At line:1 char:3
++   from './audit-signal/src/audit-signal.ts';
++   ~~~~
+The 'from' keyword is not supported in this version of the language.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : ReservedKeywordNotAllowed
+
+PS D:\Projects\NCAOS-Urielle\egs> node test-signal.mjs
+(node:152) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Projects/NCAOS-Urielle/egs/audit-signal/src/audit-signal.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to D:\Projects\NCAOS-Urielle\egs\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Schema valid: true
+Evidence level: MODERATE
+Finding: Containment event detected at gate layer. Severity: high. Action: BLOCK. Output authority: invalid. Detection latency: 12.5ms (SLA policy: STRICT-PROD).
+ISO controls: [ 'ISO42001-6.1.2', 'ISO42001-8.4', 'ISO42001-9.1' ]
+Validation correctly rejects invalid: true
+PS D:\Projects\NCAOS-Urielle\egs> node test-signal.mjs
+(node:10404) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Projects/NCAOS-Urielle/egs/audit-signal/src/audit-signal.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to D:\Projects\NCAOS-Urielle\egs\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Schema valid: true
+Evidence level: MODERATE
+Finding: Containment event detected at gate layer. Severity: high. Action: BLOCK. Output authority: invalid. Detection latency: 12.5ms (SLA policy: STRICT-PROD).
+ISO controls: [ 'ISO42001-6.1.2', 'ISO42001-8.4', 'ISO42001-9.1' ]
+Validation correctly rejects invalid: true
+Sequence layer valid: true
+Pattern type: CONTAINED
+Evidence level with sequence: STRONG
+PS D:\Projects\NCAOS-Urielle\egs> node test-signal.mjs
+(node:17440) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Projects/NCAOS-Urielle/egs/audit-signal/src/audit-signal.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to D:\Projects\NCAOS-Urielle\egs\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Schema valid: true
+Evidence level: MODERATE
+Finding: Containment event detected at gate layer. Severity: high. Action: BLOCK. Output authority: invalid. Detection latency: 12.5ms (SLA policy: STRICT-PROD).
+ISO controls: [ 'ISO42001-6.1.2', 'ISO42001-8.4', 'ISO42001-9.1' ]
+Validation correctly rejects invalid: true
+Sequence layer valid: true
+Pattern type: CONTAINED
+Evidence level with sequence: STRONG
+Enrichment valid: true
+All three layers present: true
+PS D:\Projects\NCAOS-Urielle\egs>

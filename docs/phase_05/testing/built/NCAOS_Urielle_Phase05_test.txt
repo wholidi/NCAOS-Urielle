@@ -1,0 +1,248 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> node --version
+v24.15.0
+PS D:\Projects\NCAOS-Urielle> npm --version
+11.12.1
+PS D:\Projects\NCAOS-Urielle> Remove-Item -Recurse phase05
+PS D:\Projects\NCAOS-Urielle> Remove-Item ncaos-phase05.tar.gz
+PS D:\Projects\NCAOS-Urielle> ls egs\ui\src
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\ui\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/12/2026  10:55 AM                components
+d-----         5/12/2026  10:55 AM                lib
+-a----         5/12/2026  11:42 AM          26618 App.tsx
+-a----          5/8/2026  10:49 AM            278 main.tsx
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\ui\src\components
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\ui\src\components
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          5/8/2026  10:48 AM           3263 DashboardPanel.tsx
+-a----          5/8/2026  10:49 AM          15200 EventLog.tsx
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\ui\src\lib
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\ui\src\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          5/8/2026  10:46 AM           8445 api.ts
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\audit-signal\src
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\audit-signal\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          5/8/2026  10:50 AM          14973 audit-signal.ts
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\docs\adr
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\docs\adr
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         5/10/2026   7:13 PM           2689 ADR-001-type-contracts.md
+-a----         5/10/2026   7:13 PM           2133 ADR-002-fail-safe-invariant.md
+-a----         5/10/2026   7:13 PM           3103 ADR-003-process-isolation.md
+-a----         5/10/2026   7:13 PM           2908 ADR-004-detection-layer-independence
+                                                  .md
+-a----         5/10/2026   7:13 PM           2624 ADR-005-per-tenant-detector-isolatio
+                                                  n.md
+-a----         5/12/2026  12:29 PM           3843 ADR-006-audit-signal-schema.md
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\ui\src
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\ui\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/12/2026  10:55 AM                components
+d-----         5/12/2026  10:55 AM                lib
+-a----         5/12/2026  11:42 AM          26618 App.tsx
+-a----          5/8/2026  10:49 AM            278 main.tsx
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\node_modules\react
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\node_modules\react
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/12/2026  11:12 AM                cjs
+d-----         5/12/2026  11:12 AM                umd
+-a----         5/12/2026  11:11 AM            190 index.js
+-a----         5/12/2026  11:11 AM            222 jsx-dev-runtime.js
+-a----         5/12/2026  11:11 AM            214 jsx-runtime.js
+-a----         5/12/2026  11:11 AM           1086 LICENSE
+-a----         5/12/2026  11:12 AM            999 package.json
+-a----         5/12/2026  11:12 AM            218 react.shared-subset.js
+-a----         5/12/2026  11:12 AM           1162 README.md
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\node_modules\recharts
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\node_modules\recharts
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/12/2026  11:12 AM                es6
+d-----         5/12/2026  11:12 AM                lib
+d-----         5/12/2026  11:12 AM                types
+d-----         5/12/2026  11:12 AM                umd
+-a----         5/12/2026  11:12 AM          45897 CHANGELOG.md
+-a----         5/12/2026  11:12 AM           4799 CONTRIBUTING.md
+-a----         5/12/2026  11:11 AM           1084 LICENSE
+-a----         5/12/2026  11:12 AM           5791 package.json
+-a----         5/12/2026  11:12 AM           4838 README.md
+
+
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> npm test 2>&1 | Select-String "Tests|passed|failed"
+
+ Γ£ô tests/detection.test.ts  (16 tests) 7ms
+ Γ£ô tests/scoring.test.ts  (16 tests) 8ms
+ Γ£ô tests/verdict.test.ts  (15 tests) 19ms
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Duration  2.10s (transform 1.32s, setup 0ms, collect 1.57s, tests 34ms,
+environment 1ms, prepare 3.69s)
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö lifecycle > starts and stops cleanly
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > returns
+PASS for clean input
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > sets
+operationalMode to NORMAL on PASS
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > sets
+shellIntegrity=true and failSafeEnabled=true
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > no
+containment event emitted on PASS
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > produces a
+valid requestId
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > governed
+output < raw exposure
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> returns BLOCK for high-severity threat
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> sets operationalMode to CONTAINMENT on BLOCK
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> emits containment event on BLOCK
+stderr | tests/shell-loop.test.ts > ShellLoop ΓÇö lifecycle > returns FAIL_SAFE when
+not running
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> sets integrity to Critical on high severity
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT)
+> includes routing hint on BLOCK
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö event emission > emits shell:output
+event on each process() call
+ Γ£ô tests/shell-loop.test.ts  (15 tests) 12ms
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Duration  717ms (transform 228ms, setup 0ms, collect 265ms, tests 12ms,
+environment 0ms, prepare 163ms)
+ Γ£ô tests/event-store.test.ts  (23 tests) 16ms
+ Γ£ô tests/stores.test.ts  (16 tests) 13ms
+stdout | tests/api.test.ts
+stdout | tests/api-v4.test.ts
+ Γ£ô tests/api.test.ts  (8 tests) 293ms
+ Γ£ô tests/api-v4.test.ts  (18 tests) 311ms
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Duration  9.30s (transform 842ms, setup 0ms, collect 17.52s, tests 633ms,
+environment 1ms, prepare 748ms)
+npm error Lifecycle script `test` failed with error:
+stderr | tests/mttd.test.ts > MttdTracker > flags SLA breach when mttd exceeds sla
+stderr | tests/mttd.test.ts > MttdTracker > tracks breach count correctly
+stderr | tests/mttd.test.ts > MttdTracker > resets breach count on reset()
+ Γ£ô tests/gate.test.ts  (18 tests) 13ms
+ Γ£ô tests/mttd.test.ts  (12 tests) 39ms
+ Γ£ô tests/detection.test.ts  (24 tests) 18ms
+ Test Files  3 passed (3)
+      Tests  54 passed (54)
+   Duration  1.06s (transform 829ms, setup 2ms, collect 1.29s, tests 70ms,
+environment 1ms, prepare 625ms)
+
+
+PS D:\Projects\NCAOS-Urielle\egs> cd api
+PS D:\Projects\NCAOS-Urielle\egs\api> npm start
+
+> @ncaos/api@0.2.0 start
+> node dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+[API] Fatal startup error: Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at node:net:2274:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
+}
+npm error Lifecycle script `start` failed with error:
+npm error code 1
+npm error path D:\Projects\NCAOS-Urielle\egs\api
+npm error workspace @ncaos/api@0.2.0
+npm error location D:\Projects\NCAOS-Urielle\egs\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node dist/server.js
+PS D:\Projects\NCAOS-Urielle\egs\api> cd ui
+cd : Cannot find path 'D:\Projects\NCAOS-Urielle\egs\api\ui' because it does not
+exist.
+At line:1 char:1
++ cd ui
++ ~~~~~
+    + CategoryInfo          : ObjectNotFound: (D:\Projects\NCAOS-Urielle\egs\api\ui:S
+   tring) [Set-Location], ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.SetLocationC
+   ommand
+
+PS D:\Projects\NCAOS-Urielle\egs\api> cd..
+PS D:\Projects\NCAOS-Urielle\egs> cd ui
+PS D:\Projects\NCAOS-Urielle\egs\ui> npm run dev
+
+> @ncaos/ui@0.5.0 dev
+> vite
+
+[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+
+  VITE v5.4.21  ready in 1737 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help

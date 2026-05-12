@@ -1,0 +1,19 @@
+cd "D:\Projects\NCAOS-Urielle\egs"
+
+npm install -D typescript
+npm install -D vite
+npm install
+npm run build
+
+cd "D:\Projects\NCAOS-Urielle\egs\api"
+npm start
+
+cd "D:\Projects\NCAOS-Urielle\egs"
+
+npm --workspace @ncaos/core run build
+npm --workspace @ncaos/shell run build
+npm --workspace @ncaos/detection run build
+npm --workspace @ncaos/api run build
+
+cd api
+npm start

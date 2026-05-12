@@ -1,0 +1,49 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> cd ui
+PS D:\Projects\NCAOS-Urielle\egs\ui> npm run dev
+
+> @ncaos/ui@0.5.0 dev
+> vite
+
+[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+
+  VITE v5.4.21  ready in 1339 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+1:51:41 PM [vite] hmr update /src/App.tsx, /src/components/EventLog.tsx
+PS D:\Projects\NCAOS-Urielle\egs\ui> cd "D:\Projects\NCAOS-Urielle\egs\ui"
+PS D:\Projects\NCAOS-Urielle\egs\ui> Select-String -Path .\src\App.tsx -Pattern "WS DISCONNECTED|wsConnected|createStateStream|setWs"
+
+src\App.tsx:18:import { api, createStateStream } from './lib/api.js';
+src\App.tsx:369:  const [wsConnected, setWsConnected] = useState(false);
+src\App.tsx:373:    const disconnect = createStateStream(
+src\App.tsx:374:      (state) => { setLiveState(state); setWsConnected(true); },
+src\App.tsx:375:      () => setWsConnected(false),
+src\App.tsx:402:          {!wsConnected && (
+src\App.tsx:405:              <span style={{ color: 'var(--warn)' }}>WS
+DISCONNECTED</span>
+
+
+PS D:\Projects\NCAOS-Urielle\egs\ui> npm run dev
+
+> @ncaos/ui@0.5.0 dev
+> vite
+
+[vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+
+  VITE v5.4.21  ready in 1141 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+2:08:55 PM [vite] hmr update /src/App.tsx, /src/components/EventLog.tsx
