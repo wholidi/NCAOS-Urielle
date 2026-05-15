@@ -1,0 +1,966 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> node --version
+v24.15.0
+PS D:\Projects\NCAOS-Urielle> tar -xzf ncaos-phase06.tar.gz
+PS D:\Projects\NCAOS-Urielle> Copy-Item -Recurse phase06\hardening egs\hardening
+PS D:\Projects\NCAOS-Urielle> Copy-Item phase06\docs\adr\ADR-007-phase06-security-hardening.md egs\docs\adr\
+PS D:\Projects\NCAOS-Urielle> Remove-Item -Recurse phase06
+PS D:\Projects\NCAOS-Urielle> Remove-Item ncaos-phase06.tar.gz
+PS D:\Projects\NCAOS-Urielle> notepad "D:\Projects\NCAOS-Urielle\egs\package.json"
+PS D:\Projects\NCAOS-Urielle> ls egs\hardening\src
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\hardening\src
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/15/2026   3:06 PM                aiml
+d-----         5/15/2026   3:06 PM                chaos
+d-----         5/15/2026   3:06 PM                iso42001
+d-----         5/15/2026   3:06 PM                jwt
+d-----         5/15/2026   3:06 PM                pentest
+d-----         5/15/2026   3:06 PM                stride
+d-----         5/15/2026   3:06 PM                {jwt,chaos,pentest,iso42001}
+-a----         5/14/2026  12:47 PM           1203 index.ts
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\hardening\tests
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\hardening\tests
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         5/14/2026  12:44 PM           2275 auth.test.ts
+-a----         5/14/2026  12:46 PM           2566 chaos.test.ts
+-a----         5/14/2026  12:44 PM           4151 iso42001.test.ts
+-a----         5/13/2026   9:40 PM           8992 mttd-regression.test.ts
+-a----         5/14/2026  12:44 PM           2081 stride.test.ts
+
+
+PS D:\Projects\NCAOS-Urielle> ls egs\docs\adr
+
+
+    Directory: D:\Projects\NCAOS-Urielle\egs\docs\adr
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         5/10/2026   7:13 PM           2689 ADR-001-type-contracts.md
+-a----         5/10/2026   7:13 PM           2133 ADR-002-fail-safe-invariant.md
+-a----         5/10/2026   7:13 PM           3103 ADR-003-process-isolation.md
+-a----         5/10/2026   7:13 PM           2908 ADR-004-detection-layer-independence.md
+-a----         5/10/2026   7:13 PM           2624 ADR-005-per-tenant-detector-isolation.md
+-a----         5/12/2026  12:29 PM           3843 ADR-006-audit-signal-schema.md
+-a----         5/14/2026  12:46 PM           3637 ADR-007-phase06-security-hardening.md
+
+
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> npm install
+
+added 1 package, and audited 386 packages in 8s
+
+77 packages are looking for funding
+  run `npm fund` for details
+
+9 vulnerabilities (4 moderate, 5 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm notice
+npm notice New minor version of npm available! 11.12.1 -> 11.14.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.14.1
+npm notice To update run: npm install -g npm@11.14.1
+npm notice
+PS D:\Projects\NCAOS-Urielle\egs> npm test 2>&1 | Select-String "Tests|passed|failed"
+
+ Γ£ô tests/detection.test.ts  (16 tests) 12ms
+ Γ£ô tests/scoring.test.ts  (16 tests) 11ms
+ Γ£ô tests/verdict.test.ts  (15 tests) 17ms
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Duration  2.21s (transform 425ms, setup 1ms, collect 1.18s, tests 40ms, environment 1ms, prepare
+4.16s)
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö lifecycle > starts and stops cleanly
+stderr | tests/shell-loop.test.ts > ShellLoop ΓÇö lifecycle > returns FAIL_SAFE when not running
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > returns PASS for clean input
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > sets operationalMode to
+NORMAL on PASS
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > sets shellIntegrity=true and
+failSafeEnabled=true
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > no containment event emitted
+on PASS
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > produces a valid requestId
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö clean request (PILOT) > governed output < raw exposure
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT) > returns BLOCK
+for high-severity threat
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT) > sets
+operationalMode to CONTAINMENT on BLOCK
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT) > emits
+containment event on BLOCK
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT) > sets integrity
+to Critical on high severity
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö threat request (ENTERPRISE_STRICT) > includes routing
+hint on BLOCK
+ Γ£ô tests/shell-loop.test.ts  (15 tests) 10ms
+stdout | tests/shell-loop.test.ts > ShellLoop ΓÇö event emission > emits shell:output event on each
+process() call
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Duration  577ms (transform 150ms, setup 0ms, collect 188ms, tests 10ms, environment 0ms, prepare
+141ms)
+ Γ£ô tests/event-store.test.ts  (23 tests) 18ms
+ Γ£ô tests/stores.test.ts  (16 tests) 12ms
+stdout | tests/api.test.ts
+stdout | tests/api-v4.test.ts
+ Γ£ô tests/api.test.ts  (8 tests) 266ms
+ Γ£ô tests/api-v4.test.ts  (18 tests) 278ms
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Duration  10.21s (transform 710ms, setup 1ms, collect 19.44s, tests 574ms, environment 1ms, prepare
+839ms)
+npm error Lifecycle script `test` failed with error:
+stderr | tests/mttd.test.ts > MttdTracker > flags SLA breach when mttd exceeds sla
+stderr | tests/mttd.test.ts > MttdTracker > tracks breach count correctly
+stderr | tests/mttd.test.ts > MttdTracker > resets breach count on reset()
+ Γ£ô tests/gate.test.ts  (18 tests) 10ms
+ Γ£ô tests/detection.test.ts  (24 tests) 9ms
+ Γ£ô tests/mttd.test.ts  (12 tests) 49ms
+ Test Files  3 passed (3)
+      Tests  54 passed (54)
+   Duration  670ms (transform 229ms, setup 1ms, collect 496ms, tests 68ms, environment 1ms, prepare
+533ms)
+ Γ£ô tests/stride.test.ts  (8 tests) 8ms
+ Γ£ô tests/chaos.test.ts  (8 tests) 30ms
+ Γ¥» tests/iso42001.test.ts  (19 tests | 2 failed) 26ms
+   Γ¥» tests/iso42001.test.ts > AI/ML Threat Model > covers model drift threats
+   Γ¥» tests/iso42001.test.ts > AI/ML Threat Model > all threats have EGS mitigation defined
+ Γ£ô tests/mttd-regression.test.ts  (5 tests) 40ms
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression ΓÇö Gate Detector > gate p99 Γëñ 50ms over
+1000 iterations
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression ΓÇö Premise Detector > premise p99 Γëñ
+200ms over 1000 iterations
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression ΓÇö Authority Detector > authority p99 Γëñ
+100ms over 1000 iterations
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression ΓÇö Continuity Detector > continuity p99
+Γëñ 500ms over 1000 iterations
+ Γ£ô tests/auth.test.ts  (8 tests) 367ms
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 2 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ FAIL  tests/iso42001.test.ts > AI/ML Threat Model > covers model drift threats
+ Γ¥» tests/iso42001.test.ts:114:19
+ FAIL  tests/iso42001.test.ts > AI/ML Threat Model > all threats have EGS mitigation defined
+ Γ¥» tests/iso42001.test.ts:124:21
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 46 passed (48)
+   Duration  938ms (transform 581ms, setup 0ms, collect 853ms, tests 471ms, environment 2ms, prepare
+998ms)
+npm error Lifecycle script `test` failed with error:
+npm error command failed
+
+
+PS D:\Projects\NCAOS-Urielle\egs> cd hardening
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run test/stride.test.ts tests/iso42001.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ❯ tests/iso42001.test.ts (19)
+   ✓ ISO 42001 Control Mapping (8)
+     ✓ has at least 12 controls documented
+     ✓ covers clauses 6, 8, 9, and 10
+     ✓ all controls have evidenceSource defined
+     ✓ all IMPLEMENTED controls have an API endpoint or component
+     ✓ coverage is at least 70%
+     ✓ control IDs are unique
+     ✓ controlsByClause groups correctly
+     ✓ critical controls (8.4, 9.1, 9.2) are IMPLEMENTED
+   ✓ Pen Test Scenarios (7)
+     ✓ has 11 scenarios (10 + chaos test)
+     ✓ covers HIGH severity tests
+     ✓ includes chaos test (PT-CHAOS-001)
+     ✓ all scenarios have pass criteria defined
+     ✓ all HIGH scenarios have PowerShell commands
+     ✓ penTestSummary returns correct totals
+     ✓ all scenarios have STRIDE reference
+   ❯ AI/ML Threat Model (4)
+     ✓ has threats defined
+     × covers model drift threats
+     ✓ covers adversarial input threats
+     × all threats have EGS mitigation defined
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/iso42001.test.ts > AI/ML Threat Model > covers model drift threats
+AssertionError: expected undefined not to be undefined
+ ❯ tests/iso42001.test.ts:114:19
+    112|   it('covers model drift threats', () => {
+    113|     const drift = AIML_THREATS.find(t => t.category === 'ModelDrift');
+    114|     expect(drift).toBeDefined();
+       |                   ^
+    115|   });
+    116|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/iso42001.test.ts > AI/ML Threat Model > all threats have EGS mitigation defined
+AssertionError: expected [ { id: 'ADV-001', …(8) }, …(11) ] to have a length of +0 but got 12
+
+- Expected
++ Received
+
+- 0
++ 12
+
+ ❯ tests/iso42001.test.ts:124:21
+    122|   it('all threats have EGS mitigation defined', () => {
+    123|     const missing = AIML_THREATS.filter(t => !t.egsMitigation);
+    124|     expect(missing).toHaveLength(0);
+       |                     ^
+    125|   });
+    126| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 17 passed (19)
+   Start at  15:16:32
+   Duration  535ms (transform 83ms, setup 0ms, collect 90ms, tests 14ms, environment 0ms, prepare 124ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/stride.test.ts tests/iso42001.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/stride.test.ts (8)
+ ❯ tests/iso42001.test.ts (19)
+   ✓ ISO 42001 Control Mapping (8)
+   ✓ Pen Test Scenarios (7)
+   ❯ AI/ML Threat Model (4)
+     ✓ has threats defined
+     × covers model drift threats
+     ✓ covers adversarial input threats
+     × all threats have EGS mitigation defined
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/iso42001.test.ts > AI/ML Threat Model > covers model drift threats
+AssertionError: expected undefined not to be undefined
+ ❯ tests/iso42001.test.ts:114:19
+    112|   it('covers model drift threats', () => {
+    113|     const drift = AIML_THREATS.find(t => t.category === 'ModelDrift');
+    114|     expect(drift).toBeDefined();
+       |                   ^
+    115|   });
+    116|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/iso42001.test.ts > AI/ML Threat Model > all threats have EGS mitigation defined
+AssertionError: expected [ { id: 'ADV-001', …(8) }, …(11) ] to have a length of +0 but got 12
+
+- Expected
++ Received
+
+- 0
++ 12
+
+ ❯ tests/iso42001.test.ts:124:21
+    122|   it('all threats have EGS mitigation defined', () => {
+    123|     const missing = AIML_THREATS.filter(t => !t.egsMitigation);
+    124|     expect(missing).toHaveLength(0);
+       |                     ^
+    125|   });
+    126| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 25 passed (27)
+   Start at  15:18:54
+   Duration  887ms (transform 189ms, setup 0ms, collect 259ms, tests 46ms, environment 1ms, prepare 477ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> Select-String -Path .\**\*.ts -Pattern "AIML_THREATS"
+
+src\index.ts:10:export { AIML_THREATS } from './aiml/aiml-threat-model.js';
+tests\iso42001.test.ts:12:import { AIML_THREATS } from '../src/aiml/aiml-threat-model.js';
+tests\iso42001.test.ts:109:    expect(AIML_THREATS.length).toBeGreaterThan(0);
+tests\iso42001.test.ts:113:    const drift = AIML_THREATS.find(t => t.category === 'ModelDrift');
+tests\iso42001.test.ts:118:    const adversarial = AIML_THREATS.find(t => t.category ===
+'AdversarialInput');
+tests\iso42001.test.ts:123:    const missing = AIML_THREATS.filter(t => !t.egsMitigation);
+
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> code .\src\aiml\aiml-threat-model.ts
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/iso42001.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/iso42001.test.ts (19)
+   ✓ ISO 42001 Control Mapping (8)
+     ✓ has at least 12 controls documented
+     ✓ covers clauses 6, 8, 9, and 10
+     ✓ all controls have evidenceSource defined
+     ✓ all IMPLEMENTED controls have an API endpoint or component
+     ✓ coverage is at least 70%
+     ✓ control IDs are unique
+     ✓ controlsByClause groups correctly
+     ✓ critical controls (8.4, 9.1, 9.2) are IMPLEMENTED
+   ✓ Pen Test Scenarios (7)
+     ✓ has 11 scenarios (10 + chaos test)
+     ✓ covers HIGH severity tests
+     ✓ includes chaos test (PT-CHAOS-001)
+     ✓ all scenarios have pass criteria defined
+     ✓ all HIGH scenarios have PowerShell commands
+     ✓ penTestSummary returns correct totals
+     ✓ all scenarios have STRIDE reference
+   ✓ AI/ML Threat Model (4)
+     ✓ has threats defined
+     ✓ covers model drift threats
+     ✓ covers adversarial input threats
+     ✓ all threats have EGS mitigation defined
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  16:02:57
+   Duration  1.48s (transform 317ms, setup 0ms, collect 194ms, tests 7ms, environment 0ms, prepare 834ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/auth.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/auth.test.ts (8) 396ms
+   ✓ RateLimiter (7) 395ms
+     ✓ allows requests within burst limit
+     ✓ blocks requests beyond burst limit
+     ✓ isolates rate limits per tenant
+     ✓ returns correct stats
+     ✓ returns burst tokens for unknown tenant
+     ✓ refills tokens over time
+     ✓ does not exceed burst on refill
+   ✓ RateLimiter — high volume (1)
+     ✓ handles 1000 rapid checks without error
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  16:04:04
+   Duration  1.01s (transform 167ms, setup 0ms, collect 165ms, tests 396ms, environment 0ms, prepare 177ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run test/mttd-regression.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+filter:  test/mttd-regression.test.ts
+include: **/*.{test,spec}.?(c|m)[jt]s?(x)
+exclude:  **/node_modules/**, **/dist/**, **/cypress/**, **/.{idea,git,cache,output,temp}/**, **/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*
+watch exclude:  **/node_modules/**, **/dist/**
+
+No test files found, exiting with code 1
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/mttd-regression.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Gate Detector > gate p99 ≤ 50ms over 1000 iterations
+[GATE MTTD] p50=0.00ms p95=0.00ms p99=0.01ms mean=0.00ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Premise Detector > premise p99 ≤ 200ms over 1000 iterations
+[PREMISE MTTD] p50=0.00ms p95=0.01ms p99=0.02ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Authority Detector > authority p99 ≤ 100ms over 1000 iterations
+[AUTHORITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Continuity Detector > continuity p99 ≤ 500ms over 1000 iterations
+[CONTINUITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+ ✓ tests/mttd-regression.test.ts (5)
+   ✓ MTTD SLA Regression — Gate Detector (2)
+     ✓ gate p99 ≤ 50ms over 1000 iterations
+     ✓ gate SLA healthy flag correct after regression run
+   ✓ MTTD SLA Regression — Premise Detector (1)
+     ✓ premise p99 ≤ 200ms over 1000 iterations
+   ✓ MTTD SLA Regression — Authority Detector (1)
+     ✓ authority p99 ≤ 100ms over 1000 iterations
+   ✓ MTTD SLA Regression — Continuity Detector (1)
+     ✓ continuity p99 ≤ 500ms over 1000 iterations
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  16:06:39
+   Duration  1.51s (transform 547ms, setup 0ms, collect 732ms, tests 55ms, environment 0ms, prepare 274ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/chaos.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/chaos.test.ts (8)
+   ✓ Chaos Scenarios — documented (4)
+     ✓ has all 5 chaos scenarios defined
+     ✓ all scenarios have pass criteria
+     ✓ CHAOS-001 references ADR-002 invariant
+     ✓ CHAOS-002 references rate limiting
+   ✓ CHAOS-002 — Rate Limit Exhaustion (unit) (4)
+     ✓ passes CHAOS-002 scenario
+     ✓ allows burst then blocks
+     ✓ FAIL_SAFE: tenant isolation maintained under rate limit
+     ✓ tokens refill over time
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  16:07:40
+   Duration  584ms (transform 113ms, setup 0ms, collect 114ms, tests 15ms, environment 0ms, prepare 185ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> cd egs
+cd : Cannot find path 'D:\Projects\NCAOS-Urielle\egs\hardening\egs' because it does not exist.
+At line:1 char:1
++ cd egs
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (D:\Projects\NCA...s\hardening\egs:String) [Set-Location]
+   , ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.SetLocationCommand
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> cd..
+PS D:\Projects\NCAOS-Urielle\egs> npm test
+
+> ncaos@0.1.0 test
+> npm run test --workspaces
+
+
+> @ncaos/core@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/core
+
+ ✓ tests/scoring.test.ts (16)
+ ✓ tests/detection.test.ts (16)
+ ✓ tests/verdict.test.ts (15)
+
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  16:08:21
+   Duration  1.37s (transform 1.13s, setup 1ms, collect 1.86s, tests 71ms, environment 1ms, prepare 927ms)
+
+
+> @ncaos/shell@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/shell
+
+stdout | tests/shell-loop.test.ts > ShellLoop — lifecycle > starts and stops cleanly
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stderr | tests/shell-loop.test.ts > ShellLoop — lifecycle > returns FAIL_SAFE when not running
+[ShellLoop] FAIL_SAFE: Shell not running
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > returns PASS for clean input
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets operationalMode to NORMAL on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets shellIntegrity=true and failSafeEnabled=true
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > no containment event emitted on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > produces a valid requestId
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > governed output < raw exposure
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > returns BLOCK for high-severity threat
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets operationalMode to CONTAINMENT on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > emits containment event on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets integrity to Critical on high severity
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > includes routing hint on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — event emission > emits shell:output event on each process() call
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+ ✓ tests/shell-loop.test.ts (15)
+   ✓ ShellLoop — lifecycle (3)
+     ✓ starts and stops cleanly
+     ✓ returns FAIL_SAFE when not running
+     ✓ throws on invalid policy consistency
+   ✓ ShellLoop — clean request (PILOT) (6)
+     ✓ returns PASS for clean input
+     ✓ sets operationalMode to NORMAL on PASS
+     ✓ sets shellIntegrity=true and failSafeEnabled=true
+     ✓ no containment event emitted on PASS
+     ✓ produces a valid requestId
+     ✓ governed output < raw exposure
+   ✓ ShellLoop — threat request (ENTERPRISE_STRICT) (5)
+     ✓ returns BLOCK for high-severity threat
+     ✓ sets operationalMode to CONTAINMENT on BLOCK
+     ✓ emits containment event on BLOCK
+     ✓ sets integrity to Critical on high severity
+     ✓ includes routing hint on BLOCK
+   ✓ ShellLoop — event emission (1)
+     ✓ emits shell:output event on each process() call
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  16:08:26
+   Duration  1.97s (transform 806ms, setup 0ms, collect 888ms, tests 23ms, environment 1ms, prepare 396ms)
+
+
+> @ncaos/api@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/api
+
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778832521642,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"stdout | tests/api.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+{"level":30,"time":1778832521651,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":6.993699999526143,"msg":"request completed"}
+{"level":30,"time":1778832521654,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521658,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":3.683399999514222,"msg":"request completed"}
+{"level":30,"time":1778832521659,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+stdout | tests/api-v4.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+{"level":30,"time":1778832521669,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":400},"responseTime":9.19759999960661,"msg":"request completed"}
+{"level":30,"time":1778832521669,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521650,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":7.13329999987036,"msg":"request completed"}
+{"level":30,"time":1778832521653,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521654,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":0.4819999998435378,"msg":"request completed"}
+{"level":30,"time":1778832521655,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521667,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":200},"responseTime":11.438800000585616,"msg":"request completed"}
+{"level":30,"time":1778832521669,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521677,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":7.388399999588728,"msg":"request completed"}
+{"level":30,"time":1778832521679,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778832521678,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":8.775899999774992,"msg":"request completed"}
+{"level":30,"time":1778832521683,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521682,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":2.9912999998778105,"msg":"request completed"}
+{"level":30,"time":1778832521683,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"GET","url":"/v1/audit/EVD-1778832521681-13DF4F64","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521684,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":0.7295000003650784,"msg":"request completed"}
+{"level":30,"time":1778832521686,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521686,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":404},"responseTime":0.5493000000715256,"msg":"request completed"}
+{"level":30,"time":1778832521688,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521690,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":200},"responseTime":2.0413999995216727,"msg":"request completed"}
+{"level":30,"time":1778832521690,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"GET","url":"/v1/audit/EVD-1778832521689-C88E27A3","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521691,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":404},"responseTime":0.5235000001266599,"msg":"request completed"}
+{"level":30,"time":1778832521693,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521686,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":2.7154999999329448,"msg":"request completed"}
+{"level":30,"time":1778832521688,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521699,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":10.832900000736117,"msg":"request completed"}
+{"level":30,"time":1778832521699,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/state","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521700,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":200},"responseTime":0.6110999993979931,"msg":"request completed"}
+{"level":30,"time":1778832521702,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521702,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":404},"responseTime":0.6083999993279576,"msg":"request completed"}
+{"level":30,"time":1778832521703,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521705,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":200},"responseTime":1.454699999652803,"msg":"request completed"}
+{"level":30,"time":1778832521705,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"method":"GET","url":"/v1/audit/EVD-1778832521704-B00A5C9C","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521706,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","res":{"statusCode":200},"responseTime":0.6759000001475215,"msg":"request completed"}
+{"level":30,"time":1778832521695,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","res":{"statusCode":200},"responseTime":2.1575999995693564,"msg":"request completed"}
+{"level":30,"time":1778832521696,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","req":{"method":"GET","url":"/v1/events?limit=10","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521698,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","res":{"statusCode":200},"responseTime":1.2681999998167157,"msg":"request completed"}
+{"level":30,"time":1778832521699,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","req":{"method":"GET","url":"/v1/events?layer=gate","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521700,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","res":{"statusCode":200},"responseTime":0.8034000005573034,"msg":"request completed"}
+{"level":30,"time":1778832521702,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","req":{"method":"GET","url":"/v1/events?severity=high","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521703,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","res":{"statusCode":200},"responseTime":0.6092999996617436,"msg":"request completed"}
+{"level":30,"time":1778832521704,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","req":{"method":"GET","url":"/v1/events?limit=9999","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521706,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","res":{"statusCode":400},"responseTime":1.456500000320375,"msg":"request completed"}
+{"level":30,"time":1778832521707,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521708,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","res":{"statusCode":200},"responseTime":0.44490000046789646,"msg":"request completed"}
+{"level":30,"time":1778832521708,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521708,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","res":{"statusCode":200},"responseTime":0.28539999946951866,"msg":"request completed"}
+{"level":30,"time":1778832521709,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","req":{"method":"GET","url":"/v1/events/stats","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521710,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","res":{"statusCode":200},"responseTime":0.3564999997615814,"msg":"request completed"}
+{"level":30,"time":1778832521711,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521712,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","res":{"statusCode":200},"responseTime":0.6501000002026558,"msg":"request completed"}
+{"level":30,"time":1778832521714,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","req":{"method":"GET","url":"/v1/policy","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521714,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","res":{"statusC ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778832521723,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","res":{"statusCode":400},"responseTime":8.385400000028312,"msg":"request completed"}
+{"level":30,"time":1778832521724,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","req":{"method":"GET","url":"/v1/policy/history","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778832521725,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","res":{"statusCode":200},"responseTime":0.3319000005722046,"msg":"request completed"}
+{"level":30,"time":1778832521725,"pid":18492,"hostname":"DESKTOP-2JNEOET","reqId":"req-m","req":{"method" ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ ✓ tests/api-v4.test.ts (18) 310ms
+
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Start at  16:08:32
+   Duration  9.66s (transform 1.35s, setup 0ms, collect 18.13s, tests 646ms, environment 2ms, prepare 1.33s)
+
+npm error Lifecycle script `test` failed with error:
+npm error workspace @ncaos/ui@0.5.0
+npm error location D:\Projects\NCAOS-Urielle\egs\ui
+npm error Missing script: "test"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run --workspace=@ncaos/ui@0.5.0
+
+
+> @ncaos/detection@0.3.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/detection
+
+stderr | tests/mttd.test.ts > MttdTracker > flags SLA breach when mttd exceeds sla
+[MTTD] SLA BREACH layer=gate mttd=80.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > tracks breach count correctly
+[MTTD] SLA BREACH layer=gate mttd=60.00ms sla=50ms
+[MTTD] SLA BREACH layer=gate mttd=70.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > resets breach count on reset()
+[MTTD] SLA BREACH layer=gate mttd=100.00ms sla=50ms
+
+ ✓ tests/mttd.test.ts (12)
+ ✓ tests/gate.test.ts (18)
+ ✓ tests/detection.test.ts (24)
+
+ Test Files  3 passed (3)
+      Tests  54 passed (54)
+   Start at  16:08:45
+   Duration  1.68s (transform 968ms, setup 11ms, collect 1.89s, tests 131ms, environment 2ms, prepare 1.19s)
+
+
+> @ncaos/hardening@0.6.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Gate Detector > gate p99 ≤ 50ms over 1000 iterations
+[GATE MTTD] p50=0.00ms p95=0.01ms p99=0.03ms mean=0.00ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Premise Detector > premise p99 ≤ 200ms over 1000 iterations
+[PREMISE MTTD] p50=0.00ms p95=0.02ms p99=0.05ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Authority Detector > authority p99 ≤ 100ms over 1000 iterations
+[AUTHORITY MTTD] p50=0.01ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Continuity Detector > continuity p99 ≤ 500ms over 1000 iterations
+[CONTINUITY MTTD] p50=0.00ms p95=0.01ms p99=0.05ms breachRate=0.00%
+
+ ✓ tests/stride.test.ts (8)
+ ✓ tests/auth.test.ts (8) 375ms
+ ✓ tests/chaos.test.ts (8)
+ ✓ tests/iso42001.test.ts (19)
+ ✓ tests/mttd-regression.test.ts (5)
+
+ Test Files  5 passed (5)
+      Tests  48 passed (48)
+   Start at  16:08:50
+   Duration  3.09s (transform 3.29s, setup 1ms, collect 4.67s, tests 598ms, environment 4ms, prepare 3.84s)
+
+PS D:\Projects\NCAOS-Urielle\egs> npm test
+
+> ncaos@0.1.0 test
+> npm run test --workspaces
+
+
+> @ncaos/core@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/core
+
+ ✓ tests/detection.test.ts (16)
+ ✓ tests/scoring.test.ts (16)
+ ✓ tests/verdict.test.ts (15)
+
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  16:21:26
+   Duration  1.48s (transform 487ms, setup 0ms, collect 796ms, tests 33ms, environment 1ms, prepare 2.31s)
+
+
+> @ncaos/shell@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/shell
+
+stdout | tests/shell-loop.test.ts > ShellLoop — lifecycle > starts and stops cleanly
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stderr | tests/shell-loop.test.ts > ShellLoop — lifecycle > returns FAIL_SAFE when not running
+[ShellLoop] FAIL_SAFE: Shell not running
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > returns PASS for clean input
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets operationalMode to NORMAL on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets shellIntegrity=true and failSafeEnabled=true
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > no containment event emitted on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > produces a valid requestId
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > governed output < raw exposure
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > returns BLOCK for high-severity threat
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets operationalMode to CONTAINMENT on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > emits containment event on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets integrity to Critical on high severity
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > includes routing hint on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — event emission > emits shell:output event on each process() call
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+ ✓ tests/shell-loop.test.ts (15)
+   ✓ ShellLoop — lifecycle (3)
+     ✓ starts and stops cleanly
+     ✓ returns FAIL_SAFE when not running
+     ✓ throws on invalid policy consistency
+   ✓ ShellLoop — clean request (PILOT) (6)
+     ✓ returns PASS for clean input
+     ✓ sets operationalMode to NORMAL on PASS
+     ✓ sets shellIntegrity=true and failSafeEnabled=true
+     ✓ no containment event emitted on PASS
+     ✓ produces a valid requestId
+     ✓ governed output < raw exposure
+   ✓ ShellLoop — threat request (ENTERPRISE_STRICT) (5)
+     ✓ returns BLOCK for high-severity threat
+     ✓ sets operationalMode to CONTAINMENT on BLOCK
+     ✓ emits containment event on BLOCK
+     ✓ sets integrity to Critical on high severity
+     ✓ includes routing hint on BLOCK
+   ✓ ShellLoop — event emission (1)
+     ✓ emits shell:output event on each process() call
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  16:21:30
+   Duration  1.12s (transform 344ms, setup 0ms, collect 408ms, tests 20ms, environment 0ms, prepare 333ms)
+
+
+> @ncaos/api@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/api
+
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778833299374,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"stdout | tests/api.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+{"level":30,"time":1778833299381,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":5.683799999766052,"msg":"request completed"}
+{"level":30,"time":1778833299384,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299387,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":3.026300000026822,"msg":"request completed"}
+{"level":30,"time":1778833299388,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+stdout | tests/api-v4.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+{"level":30,"time":1778833299396,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":400},"responseTime":8.250899999402463,"msg":"request completed"}
+{"level":30,"time":1778833299397,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778833299381,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":5.774799999780953,"msg":"request completed"}
+{"level":30,"time":1778833299383,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299383,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":0.3627000004053116,"msg":"request completed"}
+{"level":30,"time":1778833299384,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299393,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":200},"responseTime":9.077500000596046,"msg":"request completed"}
+{"level":30,"time":1778833299396,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299403,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":6.9287999998778105,"msg":"request completed"}
+{"level":30,"time":1778833299405,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299406,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":8.549499999731779,"msg":"request completed"}
+{"level":30,"time":1778833299411,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299407,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":2.4490000000223517,"msg":"request completed"}
+{"level":30,"time":1778833299408,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"GET","url":"/v1/audit/EVD-1778833299407-3295E099","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299409,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":0.5614000000059605,"msg":"request completed"}
+{"level":30,"time":1778833299410,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299411,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":404},"responseTime":0.9474999997764826,"msg":"request completed"}
+{"level":30,"time":1778833299413,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299415,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":200},"responseTime":1.947300000116229,"msg":"request completed"}
+{"level":30,"time":1778833299416,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"GET","url":"/v1/audit/EVD-1778833299414-23321DA8","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299416,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":404},"responseTime":0.553600000217557,"msg":"request completed"}
+{"level":30,"time":1778833299418,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299416,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":5.002999999560416,"msg":"request completed"}
+{"level":30,"time":1778833299418,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299424,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":5.911700000055134,"msg":"request completed"}
+{"level":30,"time":1778833299424,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/state","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299425,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":200},"responseTime":0.40280000027269125,"msg":"request completed"}
+{"level":30,"time":1778833299425,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299426,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":404},"responseTime":0.35949999932199717,"msg":"request completed"}
+{"level":30,"time":1778833299427,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299430,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":200},"responseTime":2.8738000001758337,"msg":"request completed"}
+{"level":30,"time":1778833299431,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"method":"GET","url":"/v1/audit/EVD-1778833299429-263460F8","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299432,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","res":{"statusCode":200},"responseTime":1.1174999997019768,"msg":"request completed"}
+{"level":30,"time":1778833299420,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","res":{"statusCode":200},"responseTime":1.8136999998241663,"msg":"request completed"}
+{"level":30,"time":1778833299421,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","req":{"method":"GET","url":"/v1/events?limit=10","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299422,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","res":{"statusCode":200},"responseTime":1.2066000001505017,"msg":"request completed"}
+{"level":30,"time":1778833299424,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","req":{"method":"GET","url":"/v1/events?layer=gate","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299425,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","res":{"statusCode":200},"responseTime":0.6439000004902482,"msg":"request completed"}
+{"level":30,"time":1778833299427,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","req":{"method":"GET","url":"/v1/events?severity=high","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299429,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","res":{"statusCode":200},"responseTime":1.200500000268221,"msg":"request completed"}
+{"level":30,"time":1778833299430,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","req":{"method":"GET","url":"/v1/events?limit=9999","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299432,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","res":{"statusCode":400},"responseTime":1.4018000001087785,"msg":"request completed"}
+{"level":30,"time":1778833299432,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299433,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","res":{"statusCode":200},"responseTime":0.3316999999806285,"msg":"request completed"}
+{"level":30,"time":1778833299433,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299433,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","res":{"statusCode":200},"responseTime":0.21980000007897615,"msg":"request completed"}
+{"level":30,"time":1778833299434,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","req":{"method":"GET","url":"/v1/events/stats","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299434,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","res":{"statusCode":200},"responseTime":0.25490000005811453,"msg":"request completed"}
+{"level":30,"time":1778833299436,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299437,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","res":{"statusCode":200},"responseTime":1.0686999997124076,"msg":"request completed"}
+{"level":30,"time":1778833299440,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","req":{"method":"GET","url":"/v1/policy","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299440,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","res":{"statusC ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778833299449,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","res":{"statusCode":400},"responseTime":7.828900000080466,"msg":"request completed"}
+{"level":30,"time":1778833299450,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","req":{"method":"GET","url":"/v1/policy/history","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778833299451,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","res":{"statusCode":200},"responseTime":0.5939999995753169,"msg":"request completed"}
+{"level":30,"time":1778833299452,"pid":18096,"hostname":"DESKTOP-2JNEOET","reqId":"req-m","req":{"method" ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ ✓ tests/api-v4.test.ts (18)
+
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Start at  16:21:34
+   Duration  5.22s (transform 1.12s, setup 0ms, collect 9.40s, tests 522ms, environment 2ms, prepare 1.35s)
+
+
+> @ncaos/ui@0.5.0 test
+> echo "No UI tests yet"
+
+"No UI tests yet"
+
+> @ncaos/detection@0.3.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/detection
+
+stderr | tests/mttd.test.ts > MttdTracker > flags SLA breach when mttd exceeds sla
+[MTTD] SLA BREACH layer=gate mttd=80.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > tracks breach count correctly
+[MTTD] SLA BREACH layer=gate mttd=60.00ms sla=50ms
+[MTTD] SLA BREACH layer=gate mttd=70.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > resets breach count on reset()
+[MTTD] SLA BREACH layer=gate mttd=100.00ms sla=50ms
+
+ ✓ tests/mttd.test.ts (12)
+ ✓ tests/gate.test.ts (18)
+ ✓ tests/detection.test.ts (24)
+
+ Test Files  3 passed (3)
+      Tests  54 passed (54)
+   Start at  16:21:42
+   Duration  1.09s (transform 516ms, setup 0ms, collect 1.20s, tests 90ms, environment 1ms, prepare 787ms)
+
+
+> @ncaos/hardening@0.6.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Gate Detector > gate p99 ≤ 50ms over 1000 iterations
+[GATE MTTD] p50=0.00ms p95=0.01ms p99=0.02ms mean=0.00ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Premise Detector > premise p99 ≤ 200ms over 1000 iterations
+[PREMISE MTTD] p50=0.00ms p95=0.01ms p99=0.04ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Authority Detector > authority p99 ≤ 100ms over 1000 iterations
+[AUTHORITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Continuity Detector > continuity p99 ≤ 500ms over 1000 iterations
+[CONTINUITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+ ✓ tests/stride.test.ts (8)
+ ✓ tests/auth.test.ts (8) 387ms
+ ✓ tests/chaos.test.ts (8)
+ ✓ tests/iso42001.test.ts (19)
+ ✓ tests/mttd-regression.test.ts (5)
+
+ Test Files  5 passed (5)
+      Tests  48 passed (48)
+   Start at  16:21:46
+   Duration  1.43s (transform 1.18s, setup 7ms, collect 1.79s, tests 544ms, environment 3ms, prepare 1.55s)
+
+PS D:\Projects\NCAOS-Urielle\egs>

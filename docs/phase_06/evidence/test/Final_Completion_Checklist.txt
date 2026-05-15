@@ -1,0 +1,1132 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> npm test
+
+> ncaos@0.1.0 test
+> npm run test --workspaces
+
+
+> @ncaos/core@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/core
+
+ ✓ tests/detection.test.ts (16)
+ ✓ tests/scoring.test.ts (16)
+ ✓ tests/verdict.test.ts (15)
+
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  22:55:38
+   Duration  1.23s (transform 414ms, setup 8ms, collect 777ms, tests 77ms, environment 2ms, prepare 1.06s)
+
+
+> @ncaos/shell@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/shell
+
+stdout | tests/shell-loop.test.ts > ShellLoop — lifecycle > starts and stops cleanly
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stderr | tests/shell-loop.test.ts > ShellLoop — lifecycle > returns FAIL_SAFE when not running
+[ShellLoop] FAIL_SAFE: Shell not running
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > returns PASS for clean input
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets operationalMode to NORMAL on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets shellIntegrity=true and failSafeEnabled=true
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > no containment event emitted on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > produces a valid requestId
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > governed output < raw exposure
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > returns BLOCK for high-severity threat
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets operationalMode to CONTAINMENT on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > emits containment event on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets integrity to Critical on high severity
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > includes routing hint on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — event emission > emits shell:output event on each process() call
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+ ✓ tests/shell-loop.test.ts (15)
+   ✓ ShellLoop — lifecycle (3)
+     ✓ starts and stops cleanly
+     ✓ returns FAIL_SAFE when not running
+     ✓ throws on invalid policy consistency
+   ✓ ShellLoop — clean request (PILOT) (6)
+     ✓ returns PASS for clean input
+     ✓ sets operationalMode to NORMAL on PASS
+     ✓ sets shellIntegrity=true and failSafeEnabled=true
+     ✓ no containment event emitted on PASS
+     ✓ produces a valid requestId
+     ✓ governed output < raw exposure
+   ✓ ShellLoop — threat request (ENTERPRISE_STRICT) (5)
+     ✓ returns BLOCK for high-severity threat
+     ✓ sets operationalMode to CONTAINMENT on BLOCK
+     ✓ emits containment event on BLOCK
+     ✓ sets integrity to Critical on high severity
+     ✓ includes routing hint on BLOCK
+   ✓ ShellLoop — event emission (1)
+     ✓ emits shell:output event on each process() call
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  22:55:42
+   Duration  1.42s (transform 388ms, setup 0ms, collect 515ms, tests 42ms, environment 0ms, prepare 329ms)
+
+
+> @ncaos/api@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/api
+
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778856952083,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incomstdout | tests/api.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+{"level":30,"time":1778856952101,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":16.568999998271465,"msg":"request completed"}
+{"level":30,"time":1778856952106,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952115,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":8.850699998438358,"msg":"request completed"}
+{"level":30,"time":1778856952117,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778856952134,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"sstdout | tests/api-v4.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778856952111,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":14.865900002419949,"msg":"request completed"}
+{"level":30,"time":1778856952116,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952117,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":0.7543000020086765,"msg":"request completed"}
+{"level":30,"time":1778856952120,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952142,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":200},"responseTime":21.807199999690056,"msg":"request completed"}
+{"level":30,"time":1778856952146,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952146,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":9.94420000165701,"msg":"request completed"}
+{"level":30,"time":1778856952155,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952157,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":11.236600000411272,"msg":"request completed"}
+{"level":30,"time":1778856952161,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952159,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":3.9691999964416027,"msg":"request completed"}
+{"level":30,"time":1778856952161,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952163,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":2.502199999988079,"msg":"request completed"}
+{"level":30,"time":1778856952165,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"GET","url":"/v1/audit/EVD-1778856952162-75169C0E","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952166,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":0.873599998652935,"msg":"request completed"}
+{"level":30,"time":1778856952168,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952169,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":404},"responseTime":0.5401999987661839,"msg":"request completed"}
+{"level":30,"time":1778856952170,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952163,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":1.7733999975025654,"msg":"request completed"}
+{"level":30,"time":1778856952164,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/state","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952165,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":200},"responseTime":1.3109000027179718,"msg":"request completed"}
+{"level":30,"time":1778856952168,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952169,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":404},"responseTime":0.7272000014781952,"msg":"request completed"}
+{"level":30,"time":1778856952171,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952173,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":200},"responseTime":2.482700001448393,"msg":"request completed"}
+{"level":30,"time":1778856952174,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"GET","url":"/v1/audit/EVD-1778856952172-B3903F80","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952175,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":404},"responseTime":1.3333999998867512,"msg":"request completed"}
+{"level":30,"time":1778856952178,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952174,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":200},"responseTime":3.1933999992907047,"msg":"request completed"}
+{"level":30,"time":1778856952175,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"m ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778856952181,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","res":{"statusCode":200},"responseTime":3.1130999997258186,"msg":"request completed"}
+{"level":30,"time":1778856952183,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","req":{"method":"GET","url":"/v1/events?limit=10","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952185,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","res":{"statusCode":200},"responseTime":1.8056000024080276,"msg":"request completed"}
+{"level":30,"time":1778856952187,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","req":{"method":"GET","url":"/v1/events?layer=gate","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952188,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","res":{"statusCode":200},"responseTime":1.0421000011265278,"msg":"request completed"}
+{"level":30,"time":1778856952191,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","req":{"method":"GET","url":"/v1/events?severity=high","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952192,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","res":{"statusCode":200},"responseTime":0.9971999973058701,"msg":"request completed"}
+{"level":30,"time":1778856952193,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","req":{"method":"GET","url":"/v1/events?limit=9999","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952195,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","res":{"statusCode":400},"responseTime":1.737900000065565,"msg":"request completed"}
+{"level":30,"time":1778856952196,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952196,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","res":{"statusCode":200},"responseTime":0.48809999972581863,"msg":"request completed"}
+{"level":30,"time":1778856952196,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952197,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","res":{"statusCode":200},"responseTime":0.5656000003218651,"msg":"request completed"}
+{"level":30,"time":1778856952199,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","req":{"method":"GET","url":"/v1/events/stats","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952200,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","res":{"statusCode":200},"responseTime":0.5650999993085861,"msg":"request completed"}
+{"level":30,"time":1778856952202,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952203,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","res":{"statusCode":200},"responseTime":1.1805000007152557,"msg":"request completed"}
+{"level":30,"time":1778856952207,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","req":{"method":"GET","url":"/v1/policy","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952208,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","res":{"statusCode":200},"responseTime":0.6083000004291534,"msg":"request completed"}
+{"level":30,"time":1778856952210,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","req":{"method":"POST","url":"/v1/policy","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952215,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","res":{"statusCode":400},"responseTime":4.5273999981582165,"msg":"request completed"}
+{"level":30,"time":1778856952216,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","req":{"method":"GET","url":"/v1/policy/history","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778856952217,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","res":{"statusCode":200},"responseTime":0.6729000024497509,"msg":"request completed"}
+{"level":30,"time":1778856952218,"pid":11080,"hostname":"DESKTOP-2JNEOET","reqId":"req-m","req":{"m ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ ✓ tests/api-v4.test.ts (18)
+
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Start at  22:55:49
+   Duration  2.70s (transform 1.19s, setup 1ms, collect 4.20s, tests 577ms, environment 3ms, prepare 1.78s)
+
+
+> @ncaos/ui@0.5.0 test
+> echo "No UI tests yet"
+
+"No UI tests yet"
+
+> @ncaos/detection@0.3.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/detection
+
+stderr | tests/mttd.test.ts > MttdTracker > flags SLA breach when mttd exceeds sla
+[MTTD] SLA BREACH layer=gate mttd=80.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > tracks breach count correctly
+[MTTD] SLA BREACH layer=gate mttd=60.00ms sla=50ms
+[MTTD] SLA BREACH layer=gate mttd=70.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > resets breach count on reset()
+[MTTD] SLA BREACH layer=gate mttd=100.00ms sla=50ms
+
+ ✓ tests/mttd.test.ts (12)
+ ✓ tests/gate.test.ts (18)
+ ✓ tests/detection.test.ts (24)
+
+ Test Files  3 passed (3)
+      Tests  54 passed (54)
+   Start at  22:55:56
+   Duration  1.49s (transform 539ms, setup 1ms, collect 1.25s, tests 139ms, environment 4ms, prepare 1.19s)
+
+
+> @ncaos/hardening@0.6.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Gate Detector > gate p99 ≤ 50ms over 1000 iterations
+[GATE MTTD] p50=0.00ms p95=0.01ms p99=0.04ms mean=0.01ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Premise Detector > premise p99 ≤ 200ms over 1000 iterations
+[PREMISE MTTD] p50=0.01ms p95=0.02ms p99=0.06ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Authority Detector > authority p99 ≤ 100ms over 1000 iterations
+[AUTHORITY MTTD] p50=0.01ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Continuity Detector > continuity p99 ≤ 500ms over 1000 iterations
+[CONTINUITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+ ✓ tests/auth.test.ts (8) 387ms
+ ✓ tests/stride.test.ts (8)
+ ✓ tests/chaos.test.ts (8)
+ ✓ tests/iso42001.test.ts (19)
+ ✓ tests/mttd-regression.test.ts (5)
+
+ Test Files  5 passed (5)
+      Tests  48 passed (48)
+   Start at  22:56:02
+   Duration  1.77s (transform 1.45s, setup 0ms, collect 2.12s, tests 579ms, environment 3ms, prepare 1.72s)
+
+PS D:\Projects\NCAOS-Urielle\egs> cd hardening
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Gate Detector > gate p99 ≤ 50ms over 1000 iterations
+[GATE MTTD] p50=0.00ms p95=0.01ms p99=0.04ms mean=0.00ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Premise Detector > premise p99 ≤ 200ms over 1000 iterations
+[PREMISE MTTD] p50=0.00ms p95=0.02ms p99=0.06ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Authority Detector > authority p99 ≤ 100ms over 1000 iterations
+[AUTHORITY MTTD] p50=0.00ms p95=0.01ms p99=0.05ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Continuity Detector > continuity p99 ≤ 500ms over 1000 iterations
+[CONTINUITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+ ✓ tests/auth.test.ts (8) 384ms
+ ✓ tests/iso42001.test.ts (19)
+ ✓ tests/stride.test.ts (8)
+ ✓ tests/chaos.test.ts (8)
+ ✓ tests/mttd-regression.test.ts (5)
+
+ Test Files  5 passed (5)
+      Tests  48 passed (48)
+   Start at  22:57:07
+   Duration  2.18s (transform 1.60s, setup 2ms, collect 2.44s, tests 574ms, environment 3ms, prepare 2.54s)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> cd..
+PS D:\Projects\NCAOS-Urielle\egs> cd api
+PS D:\Projects\NCAOS-Urielle\egs\api> cd..
+PS D:\Projects\NCAOS-Urielle\egs> cd hardening
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/stride.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/stride.test.ts (8)
+   ✓ STRIDE Threat Model (8)
+     ✓ has at least 15 threats documented
+     ✓ covers all six STRIDE categories
+     ✓ all HIGH risk threats have a Phase 06 action defined
+     ✓ all HIGH risk threats have a test reference
+     ✓ threat IDs are unique
+     ✓ identifies S-001 (tenant spoofing) as HIGH risk
+     ✓ identifies D-001 (DoS) as HIGH risk
+     ✓ identifies E-001 (policy privilege escalation) as HIGH risk
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:02:54
+   Duration  856ms (transform 108ms, setup 0ms, collect 106ms, tests 11ms, environment 0ms, prepare 262ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/stride.test.ts --reporter=verbose
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/stride.test.ts (8)
+   ✓ STRIDE Threat Model (8)
+     ✓ has at least 15 threats documented
+     ✓ covers all six STRIDE categories
+     ✓ all HIGH risk threats have a Phase 06 action defined
+     ✓ all HIGH risk threats have a test reference
+     ✓ threat IDs are unique
+     ✓ identifies S-001 (tenant spoofing) as HIGH risk
+     ✓ identifies D-001 (DoS) as HIGH risk
+     ✓ identifies E-001 (policy privilege escalation) as HIGH risk
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:03:16
+   Duration  1.62s (transform 251ms, setup 1ms, collect 215ms, tests 32ms, environment 1ms, prepare 580ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/iso42001.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/iso42001.test.ts (19)
+   ✓ ISO 42001 Control Mapping (8)
+     ✓ has at least 12 controls documented
+     ✓ covers clauses 6, 8, 9, and 10
+     ✓ all controls have evidenceSource defined
+     ✓ all IMPLEMENTED controls have an API endpoint or component
+     ✓ coverage is at least 70%
+     ✓ control IDs are unique
+     ✓ controlsByClause groups correctly
+     ✓ critical controls (8.4, 9.1, 9.2) are IMPLEMENTED
+   ✓ Pen Test Scenarios (7)
+     ✓ has 11 scenarios (10 + chaos test)
+     ✓ covers HIGH severity tests
+     ✓ includes chaos test (PT-CHAOS-001)
+     ✓ all scenarios have pass criteria defined
+     ✓ all HIGH scenarios have PowerShell commands
+     ✓ penTestSummary returns correct totals
+     ✓ all scenarios have STRIDE reference
+   ✓ AI/ML Threat Model (4)
+     ✓ has threats defined
+     ✓ covers model drift threats
+     ✓ covers adversarial input threats
+     ✓ all threats have EGS mitigation defined
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  23:04:37
+   Duration  1.18s (transform 280ms, setup 0ms, collect 293ms, tests 18ms, environment 0ms, prepare 330ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/auth.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/auth.test.ts (8) 372ms
+   ✓ RateLimiter (7) 370ms
+     ✓ allows requests within burst limit
+     ✓ blocks requests beyond burst limit
+     ✓ isolates rate limits per tenant
+     ✓ returns correct stats
+     ✓ returns burst tokens for unknown tenant
+     ✓ refills tokens over time
+     ✓ does not exceed burst on refill
+   ✓ RateLimiter — high volume (1)
+     ✓ handles 1000 rapid checks without error
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:05:54
+   Duration  1.25s (transform 104ms, setup 0ms, collect 105ms, tests 372ms, environment 0ms, prepare 238ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/mttd-regression.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Gate Detector > gate p99 ≤ 50ms over 1000 iterations
+[GATE MTTD] p50=0.00ms p95=0.01ms p99=0.03ms mean=0.00ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Premise Detector > premise p99 ≤ 200ms over 1000 iterations
+[PREMISE MTTD] p50=0.00ms p95=0.01ms p99=0.04ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Authority Detector > authority p99 ≤ 100ms over 1000 iterations
+[AUTHORITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Continuity Detector > continuity p99 ≤ 500ms over 1000 iterations
+[CONTINUITY MTTD] p50=0.00ms p95=0.01ms p99=0.04ms breachRate=0.00%
+
+ ✓ tests/mttd-regression.test.ts (5)
+   ✓ MTTD SLA Regression — Gate Detector (2)
+     ✓ gate p99 ≤ 50ms over 1000 iterations
+     ✓ gate SLA healthy flag correct after regression run
+   ✓ MTTD SLA Regression — Premise Detector (1)
+     ✓ premise p99 ≤ 200ms over 1000 iterations
+   ✓ MTTD SLA Regression — Authority Detector (1)
+     ✓ authority p99 ≤ 100ms over 1000 iterations
+   ✓ MTTD SLA Regression — Continuity Detector (1)
+     ✓ continuity p99 ≤ 500ms over 1000 iterations
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  23:07:12
+   Duration  1.74s (transform 629ms, setup 0ms, collect 763ms, tests 76ms, environment 1ms, prepare 426ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/mttd-regression.test.ts --reporter=verbose
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Gate Detector > gate p99 ≤ 50ms over 1000 iterations
+[GATE MTTD] p50=0.00ms p95=0.01ms p99=0.03ms mean=0.00ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Premise Detector > premise p99 ≤ 200ms over 1000 iterations
+[PREMISE MTTD] p50=0.00ms p95=0.02ms p99=0.05ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Authority Detector > authority p99 ≤ 100ms over 1000 iterations
+[AUTHORITY MTTD] p50=0.00ms p95=0.01ms p99=0.02ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Continuity Detector > continuity p99 ≤ 500ms over 1000 iterations
+[CONTINUITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+ ✓ tests/mttd-regression.test.ts (5)
+   ✓ MTTD SLA Regression — Gate Detector (2)
+     ✓ gate p99 ≤ 50ms over 1000 iterations
+     ✓ gate SLA healthy flag correct after regression run
+   ✓ MTTD SLA Regression — Premise Detector (1)
+     ✓ premise p99 ≤ 200ms over 1000 iterations
+   ✓ MTTD SLA Regression — Authority Detector (1)
+     ✓ authority p99 ≤ 100ms over 1000 iterations
+   ✓ MTTD SLA Regression — Continuity Detector (1)
+     ✓ continuity p99 ≤ 500ms over 1000 iterations
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  23:08:06
+   Duration  1.62s (transform 385ms, setup 0ms, collect 482ms, tests 84ms, environment 0ms, prepare 331ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/chaos.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/chaos.test.ts (8)
+   ✓ Chaos Scenarios — documented (4)
+     ✓ has all 5 chaos scenarios defined
+     ✓ all scenarios have pass criteria
+     ✓ CHAOS-001 references ADR-002 invariant
+     ✓ CHAOS-002 references rate limiting
+   ✓ CHAOS-002 — Rate Limit Exhaustion (unit) (4)
+     ✓ passes CHAOS-002 scenario
+     ✓ allows burst then blocks
+     ✓ FAIL_SAFE: tenant isolation maintained under rate limit
+     ✓ tokens refill over time
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:10:21
+   Duration  1.11s (transform 179ms, setup 0ms, collect 180ms, tests 27ms, environment 1ms, prepare 367ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/chaos.test.ts --reporter=verbose
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/chaos.test.ts (8)
+   ✓ Chaos Scenarios — documented (4)
+     ✓ has all 5 chaos scenarios defined
+     ✓ all scenarios have pass criteria
+     ✓ CHAOS-001 references ADR-002 invariant
+     ✓ CHAOS-002 references rate limiting
+   ✓ CHAOS-002 — Rate Limit Exhaustion (unit) (4)
+     ✓ passes CHAOS-002 scenario
+     ✓ allows burst then blocks
+     ✓ FAIL_SAFE: tenant isolation maintained under rate limit
+     ✓ tokens refill over time
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  23:10:55
+   Duration  1.20s (transform 224ms, setup 1ms, collect 239ms, tests 33ms, environment 0ms, prepare 357ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening>
+PS D:\Projects\NCAOS-Urielle\egs\hardening> cd..
+PS D:\Projects\NCAOS-Urielle\egs> npm test
+
+> ncaos@0.1.0 test
+> npm run test --workspaces
+
+
+> @ncaos/core@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/core
+
+ ✓ tests/detection.test.ts (16)
+ ✓ tests/scoring.test.ts (16)
+ ✓ tests/verdict.test.ts (15)
+
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  23:13:16
+   Duration  1.55s (transform 445ms, setup 1ms, collect 786ms, tests 78ms, environment 2ms, prepare 1.40s)
+
+
+> @ncaos/shell@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/shell
+
+stdout | tests/shell-loop.test.ts > ShellLoop — lifecycle > starts and stops cleanly
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stderr | tests/shell-loop.test.ts > ShellLoop — lifecycle > returns FAIL_SAFE when not running
+[ShellLoop] FAIL_SAFE: Shell not running
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > returns PASS for clean input
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets operationalMode to NORMAL on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > sets shellIntegrity=true and failSafeEnabled=true
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > no containment event emitted on PASS
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > produces a valid requestId
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — clean request (PILOT) > governed output < raw exposure
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > returns BLOCK for high-severity threat
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets operationalMode to CONTAINMENT on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > emits containment event on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > sets integrity to Critical on high severity
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — threat request (ENTERPRISE_STRICT) > includes routing hint on BLOCK
+[ShellLoop] Started — policy: STRICT-PROD
+[ShellLoop] Stopped
+
+stdout | tests/shell-loop.test.ts > ShellLoop — event emission > emits shell:output event on each process() call
+[ShellLoop] Started — policy: PILOT-OBS
+[ShellLoop] Stopped
+
+ ✓ tests/shell-loop.test.ts (15)
+   ✓ ShellLoop — lifecycle (3)
+     ✓ starts and stops cleanly
+     ✓ returns FAIL_SAFE when not running
+     ✓ throws on invalid policy consistency
+   ✓ ShellLoop — clean request (PILOT) (6)
+     ✓ returns PASS for clean input
+     ✓ sets operationalMode to NORMAL on PASS
+     ✓ sets shellIntegrity=true and failSafeEnabled=true
+     ✓ no containment event emitted on PASS
+     ✓ produces a valid requestId
+     ✓ governed output < raw exposure
+   ✓ ShellLoop — threat request (ENTERPRISE_STRICT) (5)
+     ✓ returns BLOCK for high-severity threat
+     ✓ sets operationalMode to CONTAINMENT on BLOCK
+     ✓ emits containment event on BLOCK
+     ✓ sets integrity to Critical on high severity
+     ✓ includes routing hint on BLOCK
+   ✓ ShellLoop — event emission (1)
+     ✓ emits shell:output event on each process() call
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  23:13:22
+   Duration  1.63s (transform 433ms, setup 0ms, collect 595ms, tests 77ms, environment 0ms, prepare 336ms)
+
+
+> @ncaos/api@0.2.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/api
+
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778858013264,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incomistdout | tests/api.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+{"level":30,"time":1778858013276,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":10.422800000756979,"msg":"request completed"}
+{"level":30,"time":1778858013281,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013286,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":5.311099998652935,"msg":"request completed"}
+{"level":30,"time":1778858013287,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778858013301,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"ststdout | tests/api-v4.test.ts
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+
+ ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ · tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778858013274,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":200},"responseTime":8.80739999935031,"msg":"request completed"}
+{"level":30,"time":1778858013279,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"GET","url":"/v1/health","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013280,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":401},"responseTime":0.6374999992549419,"msg":"request completed"}
+{"level":30,"time":1778858013283,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013299,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":200},"responseTime":15.7618000023067,"msg":"request completed"}
+{"level":30,"time":1778858013304,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013313,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":9.306800000369549,"msg":"request completed"}
+{"level":30,"time":1778858013315,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013310,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":200},"responseTime":7.997300002723932,"msg":"request completed"}
+{"level":30,"time":1778858013316,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013320,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":4.2479999996721745,"msg":"request completed"}
+{"level":30,"time":1778858013322,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013318,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":200},"responseTime":3.4183000028133392,"msg":"request completed"}
+{"level":30,"time":1778858013319,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"GET","url":"/v1/audit/EVD-1778858013317-9100D959","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013320,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":0.8718000017106533,"msg":"request completed"}
+{"level":30,"time":1778858013322,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013323,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":404},"responseTime":0.4562999978661537,"msg":"request completed"}
+{"level":30,"time":1778858013324,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013326,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":200},"responseTime":2.0445000007748604,"msg":"request completed"}
+{"level":30,"time":1778858013327,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"GET","url":"/v1/audit/EVD-1778858013325-A0DC240C","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013328,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":404},"responseTime":0.5159999988973141,"msg":"request completed"}
+{"level":30,"time":1778858013329,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013324,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":200},"responseTime":2.1000999994575977,"msg":"request completed"}
+{"level":30,"time":1778858013325,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"GET","url":"/v1/state","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013326,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":200},"responseTime":0.5714000016450882,"msg":"request completed"}
+{"level":30,"time":1778858013327,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"GET","url":"/v1/audit/EVD-0000000000000-00000000","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013328,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":404},"responseTime":0.9098000004887581,"msg":"request completed"}
+{"level":30,"time":1778858013330,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"POST","url":"/v1/process","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013331,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":200},"responseTime":1.8441000021994114,"msg":"request completed"}
+{"level":30,"time":1778858013332,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"me ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ · tests/api-v4.test.ts (18)
+{"level":30,"time":1778858013332,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","res":{"statusCode":200},"responseTime":2.2250999994575977,"msg":"request completed"}
+{"level":30,"time":1778858013333,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","req":{"method":"GET","url":"/v1/events?limit=10","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013334,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","res":{"statusCode":200},"responseTime":1.122800000011921,"msg":"request completed"}
+{"level":30,"time":1778858013337,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","req":{"method":"GET","url":"/v1/events?layer=gate","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013338,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","res":{"statusCode":200},"responseTime":1.0771000012755394,"msg":"request completed"}
+{"level":30,"time":1778858013340,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","req":{"method":"GET","url":"/v1/events?severity=high","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013341,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","res":{"statusCode":200},"responseTime":0.9456000030040741,"msg":"request completed"}
+{"level":30,"time":1778858013343,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","req":{"method":"GET","url":"/v1/events?limit=9999","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013344,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","res":{"statusCode":400},"responseTime":1.7163000032305717,"msg":"request completed"}
+{"level":30,"time":1778858013345,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013346,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","res":{"statusCode":200},"responseTime":0.5282999984920025,"msg":"request completed"}
+{"level":30,"time":1778858013346,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","req":{"method":"GET","url":"/v1/events","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013347,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","res":{"statusCode":200},"responseTime":0.3903999999165535,"msg":"request completed"}
+{"level":30,"time":1778858013349,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","req":{"method":"GET","url":"/v1/events/stats","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013350,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","res":{"statusCode":200},"responseTime":0.7565000019967556,"msg":"request completed"}
+{"level":30,"time":1778858013352,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","req":{"method":"GET","url":"/v1/mttd","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013353,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","res":{"statusCode":200},"responseTime":0.9367999993264675,"msg":"request completed"}
+{"level":30,"time":1778858013356,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","req":{"method":"GET","url":"/v1/policy","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013356,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","res":{"statusCode":200},"responseTime":0.49560000002384186,"msg":"request completed"}
+{"level":30,"time":1778858013358,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","req":{"method":"POST","url":"/v1/policy","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013369,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","res":{"statusCode":400},"responseTime":11.276099998503923,"msg":"request completed"}
+{"level":30,"time":1778858013371,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","req":{"method":"GET","url":"/v1/policy/history","hostname":"localhost:80","remoteAddress":"127.0.0.1"},"msg":"incoming request"}
+{"level":30,"time":1778858013371,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","res":{"statusCode":200},"responseTime":0.39149999991059303,"msg":"request completed"}
+{"level":30,"time":1778858013372,"pid":3320,"hostname":"DESKTOP-2JNEOET","reqId":"req-m","req":{"me ✓ tests/event-store.test.ts (23)
+ ✓ tests/stores.test.ts (16)
+ ✓ tests/api.test.ts (8)
+ ✓ tests/api-v4.test.ts (18)
+
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Start at  23:13:28
+   Duration  4.83s (transform 1.15s, setup 0ms, collect 7.63s, tests 678ms, environment 2ms, prepare 2.15s)
+
+
+> @ncaos/ui@0.5.0 test
+> echo "No UI tests yet"
+
+"No UI tests yet"
+
+> @ncaos/detection@0.3.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/detection
+
+stderr | tests/mttd.test.ts > MttdTracker > flags SLA breach when mttd exceeds sla
+[MTTD] SLA BREACH layer=gate mttd=80.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > tracks breach count correctly
+[MTTD] SLA BREACH layer=gate mttd=60.00ms sla=50ms
+[MTTD] SLA BREACH layer=gate mttd=70.00ms sla=50ms
+
+stderr | tests/mttd.test.ts > MttdTracker > resets breach count on reset()
+[MTTD] SLA BREACH layer=gate mttd=100.00ms sla=50ms
+
+ ✓ tests/mttd.test.ts (12)
+ ✓ tests/gate.test.ts (18)
+ ✓ tests/detection.test.ts (24)
+
+ Test Files  3 passed (3)
+      Tests  54 passed (54)
+   Start at  23:13:37
+   Duration  1.85s (transform 1.30s, setup 2ms, collect 2.38s, tests 157ms, environment 2ms, prepare 1.10s)
+
+
+> @ncaos/hardening@0.6.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Gate Detector > gate p99 ≤ 50ms over 1000 iterations
+[GATE MTTD] p50=0.00ms p95=0.01ms p99=0.03ms mean=0.01ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Premise Detector > premise p99 ≤ 200ms over 1000 iterations
+[PREMISE MTTD] p50=0.00ms p95=0.02ms p99=0.05ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Authority Detector > authority p99 ≤ 100ms over 1000 iterations
+[AUTHORITY MTTD] p50=0.01ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+stdout | tests/mttd-regression.test.ts > MTTD SLA Regression — Continuity Detector > continuity p99 ≤ 500ms over 1000 iterations
+[CONTINUITY MTTD] p50=0.00ms p95=0.01ms p99=0.03ms breachRate=0.00%
+
+ ✓ tests/auth.test.ts (8) 394ms
+ ✓ tests/chaos.test.ts (8)
+ ✓ tests/iso42001.test.ts (19)
+ ✓ tests/stride.test.ts (8)
+ ✓ tests/mttd-regression.test.ts (5)
+
+ Test Files  5 passed (5)
+      Tests  48 passed (48)
+   Start at  23:13:43
+   Duration  2.44s (transform 1.78s, setup 1ms, collect 2.64s, tests 589ms, environment 4ms, prepare 2.70s)
+
+PT-001 Tenant spoofing
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> $handle = "TENANT_A-EVD-DEMO"
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> try {
+>>   Invoke-RestMethod -Uri "http://localhost:3000/v1/audit/$handle" `
+>>     -Method GET `
+>>     -Headers @{"X-Partner-ID"="TENANT_B"}
+>> } catch {
+>>   Write-Host "Status:" $_.Exception.Response.StatusCode.value__
+>> }
+Status: 404
+
+PT-004 Policy update
+PS D:\Projects\NCAOS-Urielle\egs> $badPolicy = @{
+>>   profileId = ""
+>>   govLevel = "INVALID_LEVEL"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> try {
+>>   Invoke-RestMethod -Uri "http://localhost:3000/v1/policy" `
+>>     -Method POST `
+>>     -ContentType "application/json" `
+>>     -Headers @{"X-Partner-ID"="TEST"} `
+>>     -Body $badPolicy
+>> } catch {
+>>   Write-Host "Status:" $_.Exception.Response.StatusCode.value__
+>>   Write-Host "Message:" $_.ErrorDetails.Message
+>> }
+Status: 400
+Message: {"error":"INVALID_POLICY","errors":["Invalid policy schema: [\n  {\n    \"validation\": \"regex\",\n    \"code\": \"invalid_string\",\n    \"message\": \"Invalid\",\n    \"path\": [\n      \"profileId\"\n    ]\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"label\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"received\": \"INVALID_LEVEL\",\n    \"code\": \"invalid_enum_value\",\n    \"options\": [\n      \"CRITICAL_STRICT\",\n      \"ENTERPRISE_STRICT\",\n      \"ENTERPRISE_RELAXED\",\n      \"PILOT\"\n    ],\n    \"path\": [\n      \"govLevel\"\n    ],\n    \"message\": \"Invalid enum value. Expected 'CRITICAL_STRICT' | 'ENTERPRISE_STRICT' | 'ENTERPRISE_RELAXED' | 'PILOT', received 'INVALID_LEVEL'\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"object\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"integrityThresholds\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"object\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"continuityThresholds\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"object\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"mttdSlaMs\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"boolean\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"blockOnContainment\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"partnerId\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"createdAt\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"updatedAt\"\n    ],\n    \"message\": \"Required\"\n  }\n]"]}
+PS D:\Projects\NCAOS-Urielle\egs>
+
+PT-007 Rate limit
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> 1..50 | ForEach-Object {
+>>   try {
+>>     $r = Invoke-RestMethod -Uri "http://localhost:3000/v1/process" `
+>>       -Method POST `
+>>       -ContentType "application/json" `
+>>       -Headers @{"X-Partner-ID"="TEST"} `
+>>       -Body $body
+>>
+>>     Write-Host "$_ => $($r.action)"
+>>   } catch {
+>>     if ($_.Exception.Response) {
+>>       Write-Host "$_ => Status $($_.Exception.Response.StatusCode.value__)"
+>>     }
+>>   }
+>> }
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} => Status 400
+
+PT-008 Authority escalation
+PS D:\Projects\NCAOS-Urielle\egs> $r
+PS D:\Projects\NCAOS-Urielle\egs> Write-Host "Action:" $r.action
+Action:
+PS D:\Projects\NCAOS-Urielle\egs> $body = @{
+>>   sourceId = "PT-008-AUTH-ESCALATION"
+>>   inputHash = "hash-pt-008"
+>>   input = "authority escalation test"
+>>   partnerId = "TEST"
+>>   overrideAttempted = $true
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> $r = Invoke-RestMethod -Uri "http://localhost:3000/v1/process" `
+>>   -Method POST `
+>>   -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="TEST"} `
+>>   -Body $body
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> Write-Host "Action:" $r.action
+Action: BLOCK
+PS D:\Projects\NCAOS-Urielle\egs>
+
+PT-CHAOS-001 Shell kill
+[API] Shutting down...
+[ShellLoop] Stopped
+PS D:\Projects\NCAOS-Urielle\egs\api> npm run dev
+
+> @ncaos/api@0.2.0 dev
+> node --watch --env-file=.env dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+{"level":30,"time":1778859189146,"pid":6188,"hostname":"DESKTOP-2JNEOET","msg":"Server listening at http://0.0.0.0:3000"}
+[API] EGS API running on http://0.0.0.0:3000
+[API] Shutting down...
+
+PS D:\Projects\NCAOS-Urielle\egs> $body = @{
+>>   sourceId = "PT-CHAOS-001"
+>>   inputHash = "hash-chaos-001"
+>>   input = "chaos restart test"
+>>   partnerId = "TEST"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> 1..20 | ForEach-Object {
+>>   try {
+>>     $r = Invoke-RestMethod -Uri "http://localhost:3000/v1/process" `
+>>       -Method POST `
+>>       -ContentType "application/json" `
+>>       -Headers @{"X-Partner-ID"="TEST"} `
+>>       -Body $body
+>>
+>>     Write-Host "$_ => Action: $($r.action)"
+>>   } catch {
+>>     if ($_.Exception.Response) {
+>>       Write-Host "$_ => Status: $($_.Exception.Response.StatusCode.value__)"
+>>     } else {
+>>       Write-Host "$_ => Connection failed during restart"
+>>     }
+>>   }
+>>
+>>   Start-Sleep -Milliseconds 300
+>> }
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+Unable to connect to the remote server => Connection failed during restart
+
+PS D:\Projects\NCAOS-Urielle\egs> Write-Host "Action:" $r.action
+Action:
+PS D:\Projects\NCAOS-Urielle\egs> $body = @{
+>>   sourceId = "PT-008-AUTH-ESCALATION"
+>>   inputHash = "hash-pt-008"
+>>   input = "authority escalation test"
+>>   partnerId = "TEST"
+>>   overrideAttempted = $true
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> $r = Invoke-RestMethod -Uri "http://localhost:3000/v1/process" `
+>>   -Method POST `
+>>   -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="TEST"} `
+>>   -Body $body
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> Write-Host "Action:" $r.action
+Action: BLOCK
+PS D:\Projects\NCAOS-Urielle\egs> $body = @{
+>>   sourceId = "PT-CHAOS-001"
+>>   inputHash = "hash-chaos-001"
+>>   input = "chaos restart test"
+>>   partnerId = "TEST"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs>
+PS D:\Projects\NCAOS-Urielle\egs> 1..20 | ForEach-Object {
+>>   try {
+>>     $r = Invoke-RestMethod -Uri "http://localhost:3000/v1/process" `
+>>       -Method POST `
+>>       -ContentType "application/json" `
+>>       -Headers @{"X-Partner-ID"="TEST"} `
+>>       -Body $body
+>>
+>>     Write-Host "$_ => Action: $($r.action)"
+>>   } catch {
+>>     if ($_.Exception.Response) {
+>>       Write-Host "$_ => Status: $($_.Exception.Response.StatusCode.value__)"
+>>     } else {
+>>       Write-Host "$_ => Connection failed during restart"
+>>     }
+>>   }
+>>
+>>   Start-Sleep -Milliseconds 300
+>> }
+1 => Action: DOWNGRADE
+2 => Action: DOWNGRADE
+3 => Action: DOWNGRADE
+4 => Action: DOWNGRADE
+5 => Action: DOWNGRADE
+6 => Action: DOWNGRADE
+7 => Action: DOWNGRADE
+8 => Action: DOWNGRADE
+9 => Action: DOWNGRADE
+10 => Action: DOWNGRADE
+11 => Action: DOWNGRADE
+12 => Action: DOWNGRADE
+13 => Action: DOWNGRADE
+14 => Action: DOWNGRADE
+15 => Action: DOWNGRADE
+16 => Action: DOWNGRADE
+17 => Action: DOWNGRADE
+18 => Action: DOWNGRADE
+19 => Action: DOWNGRADE
+20 => Action: DOWNGRADE
+
+ISO 42001 summary
+PS D:\Projects\NCAOS-Urielle\egs> cd hardening
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/iso42001.test.ts --reporter=verbose
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/iso42001.test.ts (19)
+   ✓ ISO 42001 Control Mapping (8)
+     ✓ has at least 12 controls documented
+     ✓ covers clauses 6, 8, 9, and 10
+     ✓ all controls have evidenceSource defined
+     ✓ all IMPLEMENTED controls have an API endpoint or component
+     ✓ coverage is at least 70%
+     ✓ control IDs are unique
+     ✓ controlsByClause groups correctly
+     ✓ critical controls (8.4, 9.1, 9.2) are IMPLEMENTED
+   ✓ Pen Test Scenarios (7)
+     ✓ has 11 scenarios (10 + chaos test)
+     ✓ covers HIGH severity tests
+     ✓ includes chaos test (PT-CHAOS-001)
+     ✓ all scenarios have pass criteria defined
+     ✓ all HIGH scenarios have PowerShell commands
+     ✓ penTestSummary returns correct totals
+     ✓ all scenarios have STRIDE reference
+   ✓ AI/ML Threat Model (4)
+     ✓ has threats defined
+     ✓ covers model drift threats
+     ✓ covers adversarial input threats
+     ✓ all threats have EGS mitigation defined
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  23:30:20
+   Duration  1.56s (transform 385ms, setup 0ms, collect 236ms, tests 13ms, environment 0ms, prepare 889ms)
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> Select-String -Path .\src\**\*.ts -Pattern "IMPLEMENTED|PARTIAL|PLANNED|coverage"
+
+src\iso42001\iso42001-mapping.ts:24:export type ComplianceStatus = 'IMPLEMENTED' | 'PARTIAL' |
+'PLANNED' | 'NOT_APPLICABLE';
+src\iso42001\iso42001-mapping.ts:52:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:62:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:74:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:87:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:99:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:110:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:122:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:137:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:149:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:160:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:175:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:187:    status: 'PARTIAL',
+src\iso42001\iso42001-mapping.ts:188:    notes: 'Trend tracking implemented. Formal regression
+test suite (mttd-regression.test.ts) added in Phase 06. Historical trending and improvement
+metrics are Phase 07 scope.',
+src\iso42001\iso42001-mapping.ts:202:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:214:    status: 'IMPLEMENTED',
+src\iso42001\iso42001-mapping.ts:224:    status: 'PARTIAL',
+src\iso42001\iso42001-mapping.ts:225:    notes: 'STRIDE model (15 threats) and AI/ML threat model
+complete. JWT middleware implemented but not deployed (JWT_SECRET not set in dev). Full
+deployment is Phase 07 scope.',
+src\iso42001\iso42001-mapping.ts:235:  implemented: number;
+src\iso42001\iso42001-mapping.ts:236:  partial: number;
+src\iso42001\iso42001-mapping.ts:237:  planned: number;
+src\iso42001\iso42001-mapping.ts:238:  coveragePercent: number;
+src\iso42001\iso42001-mapping.ts:240:  const implemented = ISO42001_CONTROLS.filter(c => c.status
+=== 'IMPLEMENTED').length;
+src\iso42001\iso42001-mapping.ts:241:  const partial = ISO42001_CONTROLS.filter(c => c.status ===
+'PARTIAL').length;
+src\iso42001\iso42001-mapping.ts:242:  const planned = ISO42001_CONTROLS.filter(c => c.status ===
+'PLANNED').length;
+src\iso42001\iso42001-mapping.ts:244:  const coveragePercent = Math.round(((implemented + partial
+* 0.5) / total) * 100);
+src\iso42001\iso42001-mapping.ts:246:  return { total, implemented, partial, planned,
+coveragePercent };
+
+
+PS D:\Projects\NCAOS-Urielle\egs\hardening> npx vitest run tests/iso42001.test.ts
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/egs/hardening
+
+ ✓ tests/iso42001.test.ts (19)
+   ✓ ISO 42001 Control Mapping (8)
+     ✓ has at least 12 controls documented
+     ✓ covers clauses 6, 8, 9, and 10
+     ✓ all controls have evidenceSource defined
+     ✓ all IMPLEMENTED controls have an API endpoint or component
+     ✓ coverage is at least 70%
+     ✓ control IDs are unique
+     ✓ controlsByClause groups correctly
+     ✓ critical controls (8.4, 9.1, 9.2) are IMPLEMENTED
+   ✓ Pen Test Scenarios (7)
+     ✓ has 11 scenarios (10 + chaos test)
+     ✓ covers HIGH severity tests
+     ✓ includes chaos test (PT-CHAOS-001)
+     ✓ all scenarios have pass criteria defined
+     ✓ all HIGH scenarios have PowerShell commands
+     ✓ penTestSummary returns correct totals
+     ✓ all scenarios have STRIDE reference
+   ✓ AI/ML Threat Model (4)
+     ✓ has threats defined
+     ✓ covers model drift threats
+     ✓ covers adversarial input threats
+     ✓ all threats have EGS mitigation defined
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  23:31:18
+   Duration  975ms (transform 178ms, setup 0ms, collect 190ms, tests 15ms, environment 1ms, prepare 259ms)

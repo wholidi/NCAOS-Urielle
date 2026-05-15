@@ -1,0 +1,478 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> D:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> cd api
+PS D:\Projects\NCAOS-Urielle\egs\api> node build-offline-dashboard.mjs
+Created phase05_offline_dashboard.html
+PS D:\Projects\NCAOS-Urielle\egs\api> cd..
+PS D:\Projects\NCAOS-Urielle\egs> cd..
+PS D:\Projects\NCAOS-Urielle> git add -A
+warning: in the working copy of 'docs/phase_05/architecture/NCAOS_Phase05_Architecture.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/phase_05/architecture/NCAOS_Phase05_Architecture.pdf', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/phase_05/report/phase05_offline_dashboard.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/audit-signal/src/audit-signal.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/docs/adr/ADR-006-audit-signal-schema.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/src/App.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/src/components/DashboardPanel.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/src/components/EventLog.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/src/lib/api.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/src/main.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/tsconfig.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'egs/ui/vite.config.ts', LF will be replaced by CRLF the next time Git touches it
+PS D:\Projects\NCAOS-Urielle> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   docs/phase_05/architecture/NCAOS_Phase05_Architecture.html
+        new file:   docs/phase_05/architecture/NCAOS_Phase05_Architecture.pdf
+        deleted:    docs/phase_05/architecture/ncaos_egs_project_plan.html
+        new file:   docs/phase_05/evidence/v5.1/NCAOS_EGS_Architect_v5.1.jpg
+        new file:   docs/phase_05/evidence/v5.1/NCAOS_EGS_Auditor_v5.1.jpg
+        new file:   docs/phase_05/evidence/v5.1/NCAOS_EGS_Executive_v5.1.jpg
+        new file:   docs/phase_05/evidence/v5.1/NCAOS_EGS_SOC_operator_5.1.jpg
+        new file:   docs/phase_05/evidence/v5.2/NCAOS_EGS_Architect_v5.2.jpg
+        new file:   docs/phase_05/evidence/v5.2/NCAOS_EGS_Auditor_v5.2.jpg
+        new file:   docs/phase_05/evidence/v5.2/NCAOS_EGS_Executive_v5.2.jpg
+        new file:   docs/phase_05/evidence/v5.2/NCAOS_EGS_SOC_operator_5.2.jpg
+        new file:   docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Architect_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Auditor_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Executive_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_SOC_operator_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_Architect_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_Auditor_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_SOC_operator_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_Executive_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.4/Chapter05_06_07_testing_log.txt
+        new file:   docs/phase_05/evidence/v5.4/Chapter08_UI_Manual_Test.txt
+        new file:   docs/phase_05/evidence/v5.4/Chapter09_Test_AS01_AS03.txt
+        new file:   docs/phase_05/evidence/v5.4/NCAOS_EGS_Phase05_Test_Execution.docx
+        new file:   docs/phase_05/evidence/v5.4/Test UI-03.2.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-03.3.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-03.4.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-03.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-04.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-05.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-06.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-07.1.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-07.2.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-07.3.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-07.4.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-08.1.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-08.2.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-08.3.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-08.4.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test_UI-01.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test_UI-02.jpg
+        new file:   docs/phase_05/evidence/v5.4/npm_run_dev.txt
+        new file:   docs/phase_05/evidence/v5.4/phase05_test_result.zip
+        new file:   docs/phase_05/evidence/v5.4/test-signal.mjs
+        new file:   docs/phase_05/evidence/v5.4/~$AOS_EGS_Phase05_Test_Execution.docx
+        new file:   docs/phase_05/report/NCAOS_EGS_Phase05_Test_Report.xlsx
+        new file:   docs/phase_05/report/demo/build-offline-dashboard.mjs
+        new file:   docs/phase_05/report/demo/event-stats.json
+        new file:   docs/phase_05/report/demo/events.json
+        new file:   docs/phase_05/report/demo/mttd.json
+        new file:   docs/phase_05/report/demo/policy.json
+        new file:   docs/phase_05/report/demo/state.json
+        new file:   docs/phase_05/report/phase05_demo.html
+        new file:   docs/phase_05/report/phase05_offline_dashboard.html
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.1.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.2.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.3.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.4.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.5.txt
+        new file:   docs/phase_05/testing/built/installation command.txt
+        new file:   docs/phase_05/testing/built/repair_WS_DISCONNECTED.txt
+        modified:   egs/api/package.json
+        modified:   egs/api/src/server.ts
+        new file:   egs/audit-signal/src/audit-signal.ts
+        new file:   egs/docs/adr/ADR-006-audit-signal-schema.md
+        modified:   egs/package-lock.json
+        modified:   egs/package.json
+        new file:   egs/test-signal.mjs
+        new file:   egs/ui/index.html
+        new file:   egs/ui/package.json
+        new file:   egs/ui/src/App.tsx
+        new file:   egs/ui/src/components/DashboardPanel.tsx
+        new file:   egs/ui/src/components/EventLog.tsx
+        new file:   egs/ui/src/lib/api.ts
+        new file:   egs/ui/src/main.tsx
+        new file:   egs/ui/tsconfig.json
+        new file:   egs/ui/vite.config.ts
+
+PS D:\Projects\NCAOS-Urielle> # Verify: egs/ui/, egs/audit-signal/, ADR-006 staged
+PS D:\Projects\NCAOS-Urielle> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   docs/phase_05/architecture/NCAOS_Phase05_Architecture.html
+        new file:   docs/phase_05/architecture/NCAOS_Phase05_Architecture.pdf
+        deleted:    docs/phase_05/architecture/ncaos_egs_project_plan.html
+        new file:   docs/phase_05/evidence/v5.1/NCAOS_EGS_Architect_v5.1.jpg
+        new file:   docs/phase_05/evidence/v5.1/NCAOS_EGS_Auditor_v5.1.jpg
+        new file:   docs/phase_05/evidence/v5.1/NCAOS_EGS_Executive_v5.1.jpg
+        new file:   docs/phase_05/evidence/v5.1/NCAOS_EGS_SOC_operator_5.1.jpg
+        new file:   docs/phase_05/evidence/v5.2/NCAOS_EGS_Architect_v5.2.jpg
+        new file:   docs/phase_05/evidence/v5.2/NCAOS_EGS_Auditor_v5.2.jpg
+        new file:   docs/phase_05/evidence/v5.2/NCAOS_EGS_Executive_v5.2.jpg
+        new file:   docs/phase_05/evidence/v5.2/NCAOS_EGS_SOC_operator_5.2.jpg
+        new file:   docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Architect_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Auditor_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Executive_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_SOC_operator_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_Architect_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_Auditor_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_SOC_operator_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_Executive_5.3.jpg
+        new file:   docs/phase_05/evidence/v5.4/Chapter05_06_07_testing_log.txt
+        new file:   docs/phase_05/evidence/v5.4/Chapter08_UI_Manual_Test.txt
+        new file:   docs/phase_05/evidence/v5.4/Chapter09_Test_AS01_AS03.txt
+        new file:   docs/phase_05/evidence/v5.4/NCAOS_EGS_Phase05_Test_Execution.docx
+        new file:   docs/phase_05/evidence/v5.4/Test UI-03.2.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-03.3.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-03.4.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-03.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-04.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-05.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-06.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-07.1.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-07.2.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-07.3.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-07.4.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-08.1.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-08.2.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-08.3.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test UI-08.4.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test_UI-01.jpg
+        new file:   docs/phase_05/evidence/v5.4/Test_UI-02.jpg
+        new file:   docs/phase_05/evidence/v5.4/npm_run_dev.txt
+        new file:   docs/phase_05/evidence/v5.4/phase05_test_result.zip
+        new file:   docs/phase_05/evidence/v5.4/test-signal.mjs
+        new file:   docs/phase_05/evidence/v5.4/~$AOS_EGS_Phase05_Test_Execution.docx
+        new file:   docs/phase_05/report/NCAOS_EGS_Phase05_Test_Report.xlsx
+        new file:   docs/phase_05/report/demo/build-offline-dashboard.mjs
+        new file:   docs/phase_05/report/demo/event-stats.json
+        new file:   docs/phase_05/report/demo/events.json
+        new file:   docs/phase_05/report/demo/mttd.json
+        new file:   docs/phase_05/report/demo/policy.json
+        new file:   docs/phase_05/report/demo/state.json
+        new file:   docs/phase_05/report/phase05_demo.html
+        new file:   docs/phase_05/report/phase05_offline_dashboard.html
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.1.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.2.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.3.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.4.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.5.txt
+        new file:   docs/phase_05/testing/built/installation command.txt
+        new file:   docs/phase_05/testing/built/repair_WS_DISCONNECTED.txt
+        modified:   egs/api/package.json
+        modified:   egs/api/src/server.ts
+        new file:   egs/audit-signal/src/audit-signal.ts
+        new file:   egs/docs/adr/ADR-006-audit-signal-schema.md
+        modified:   egs/package-lock.json
+        modified:   egs/package.json
+        new file:   egs/test-signal.mjs
+        new file:   egs/ui/index.html
+        new file:   egs/ui/package.json
+        new file:   egs/ui/src/App.tsx
+        new file:   egs/ui/src/components/DashboardPanel.tsx
+        new file:   egs/ui/src/components/EventLog.tsx
+        new file:   egs/ui/src/lib/api.ts
+        new file:   egs/ui/src/main.tsx
+        new file:   egs/ui/tsconfig.json
+        new file:   egs/ui/vite.config.ts
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        deleted:    docs/phase_05/evidence/v5.1/NCAOS_EGS_Architect_v5.1.jpg
+        deleted:    docs/phase_05/evidence/v5.1/NCAOS_EGS_Auditor_v5.1.jpg
+        deleted:    docs/phase_05/evidence/v5.1/NCAOS_EGS_Executive_v5.1.jpg
+        deleted:    docs/phase_05/evidence/v5.1/NCAOS_EGS_SOC_operator_5.1.jpg
+        deleted:    docs/phase_05/evidence/v5.2/NCAOS_EGS_Architect_v5.2.jpg
+        deleted:    docs/phase_05/evidence/v5.2/NCAOS_EGS_Auditor_v5.2.jpg
+        deleted:    docs/phase_05/evidence/v5.2/NCAOS_EGS_Executive_v5.2.jpg
+        deleted:    docs/phase_05/evidence/v5.2/NCAOS_EGS_SOC_operator_5.2.jpg
+        deleted:    docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Architect_5.3.jpg
+        deleted:    docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Auditor_5.3.jpg
+        deleted:    docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_Executive_5.3.jpg
+        deleted:    docs/phase_05/evidence/v5.3/GENT/NCAOS_EGS_GENT_SOC_operator_5.3.jpg
+        deleted:    docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_Architect_5.3.jpg
+        deleted:    docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_Auditor_5.3.jpg
+        deleted:    docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_EGS_SOC_operator_5.3.jpg
+        deleted:    docs/phase_05/evidence/v5.3/TEST/NCAOS_Test_Executive_5.3.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Chapter05_06_07_testing_log.txt
+        deleted:    docs/phase_05/evidence/v5.4/Chapter08_UI_Manual_Test.txt
+        deleted:    docs/phase_05/evidence/v5.4/Chapter09_Test_AS01_AS03.txt
+        deleted:    docs/phase_05/evidence/v5.4/NCAOS_EGS_Phase05_Test_Execution.docx
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-03.2.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-03.3.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-03.4.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-03.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-04.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-05.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-06.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-07.1.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-07.2.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-07.3.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-07.4.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-08.1.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-08.2.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-08.3.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test UI-08.4.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test_UI-01.jpg
+        deleted:    docs/phase_05/evidence/v5.4/Test_UI-02.jpg
+        deleted:    docs/phase_05/evidence/v5.4/npm_run_dev.txt
+        deleted:    docs/phase_05/evidence/v5.4/phase05_test_result.zip
+        deleted:    docs/phase_05/evidence/v5.4/test-signal.mjs
+        deleted:    docs/phase_05/evidence/v5.4/~$AOS_EGS_Phase05_Test_Execution.docx
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        docs/phase_05/evidence/Chapter05_06_07_testing_log.txt
+        docs/phase_05/evidence/Chapter08_UI_Manual_Test.txt
+        docs/phase_05/evidence/Chapter09_Test_AS01_AS03.txt
+        docs/phase_05/evidence/NCAOS_EGS_Phase05_Test_Execution.docx
+        docs/phase_05/evidence/UI/
+        docs/phase_05/evidence/npm_run_dev.txt
+        docs/phase_05/evidence/phase05_test_result.zip
+        docs/phase_05/evidence/test-signal.mjs
+
+PS D:\Projects\NCAOS-Urielle> git add -A
+PS D:\Projects\NCAOS-Urielle> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   docs/phase_05/architecture/NCAOS_Phase05_Architecture.html
+        new file:   docs/phase_05/architecture/NCAOS_Phase05_Architecture.pdf
+        deleted:    docs/phase_05/architecture/ncaos_egs_project_plan.html
+        new file:   docs/phase_05/evidence/Chapter05_06_07_testing_log.txt
+        new file:   docs/phase_05/evidence/Chapter08_UI_Manual_Test.txt
+        new file:   docs/phase_05/evidence/Chapter09_Test_AS01_AS03.txt
+        new file:   docs/phase_05/evidence/NCAOS_EGS_Phase05_Test_Execution.docx
+        new file:   docs/phase_05/evidence/UI/Test UI-03.2.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-03.3.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-03.4.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-03.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-04.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-05.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-06.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-07.1.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-07.2.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-07.3.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-07.4.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-08.1.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-08.2.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-08.3.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-08.4.jpg
+        new file:   docs/phase_05/evidence/UI/Test_UI-01.jpg
+        new file:   docs/phase_05/evidence/UI/Test_UI-02.jpg
+        new file:   docs/phase_05/evidence/npm_run_dev.txt
+        new file:   docs/phase_05/evidence/phase05_test_result.zip
+        new file:   docs/phase_05/evidence/test-signal.mjs
+        new file:   docs/phase_05/report/NCAOS_EGS_Phase05_Test_Report.xlsx
+        new file:   docs/phase_05/report/demo/build-offline-dashboard.mjs
+        new file:   docs/phase_05/report/demo/event-stats.json
+        new file:   docs/phase_05/report/demo/events.json
+        new file:   docs/phase_05/report/demo/mttd.json
+        new file:   docs/phase_05/report/demo/policy.json
+        new file:   docs/phase_05/report/demo/state.json
+        new file:   docs/phase_05/report/phase05_demo.html
+        new file:   docs/phase_05/report/phase05_offline_dashboard.html
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.1.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.2.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.3.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.4.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.5.txt
+        new file:   docs/phase_05/testing/built/installation command.txt
+        new file:   docs/phase_05/testing/built/repair_WS_DISCONNECTED.txt
+        modified:   egs/api/package.json
+        modified:   egs/api/src/server.ts
+        new file:   egs/audit-signal/src/audit-signal.ts
+        new file:   egs/docs/adr/ADR-006-audit-signal-schema.md
+        modified:   egs/package-lock.json
+        modified:   egs/package.json
+        new file:   egs/test-signal.mjs
+        new file:   egs/ui/index.html
+        new file:   egs/ui/package.json
+        new file:   egs/ui/src/App.tsx
+        new file:   egs/ui/src/components/DashboardPanel.tsx
+        new file:   egs/ui/src/components/EventLog.tsx
+        new file:   egs/ui/src/lib/api.ts
+        new file:   egs/ui/src/main.tsx
+        new file:   egs/ui/tsconfig.json
+        new file:   egs/ui/vite.config.ts
+
+PS D:\Projects\NCAOS-Urielle> del "docs\phase_05\evidence\~$AOS_EGS_Phase05_Test_Execution.docx"
+del : Cannot find path 'D:\Projects\NCAOS-Urielle\docs\phase_05\evidence\~.docx' because it does not
+exist.
+At line:1 char:1
++ del "docs\phase_05\evidence\~$AOS_EGS_Phase05_Test_Execution.docx"
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (D:\Projects\NCA...evidence\~.docx:String) [Remove-Item],
+    ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.RemoveItemCommand
+
+PS D:\Projects\NCAOS-Urielle> git add -A
+PS D:\Projects\NCAOS-Urielle> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   docs/phase_05/architecture/NCAOS_Phase05_Architecture.html
+        new file:   docs/phase_05/architecture/NCAOS_Phase05_Architecture.pdf
+        deleted:    docs/phase_05/architecture/ncaos_egs_project_plan.html
+        new file:   docs/phase_05/evidence/Chapter05_06_07_testing_log.txt
+        new file:   docs/phase_05/evidence/Chapter08_UI_Manual_Test.txt
+        new file:   docs/phase_05/evidence/Chapter09_Test_AS01_AS03.txt
+        new file:   docs/phase_05/evidence/NCAOS_EGS_Phase05_Test_Execution.docx
+        new file:   docs/phase_05/evidence/UI/Test UI-03.2.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-03.3.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-03.4.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-03.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-04.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-05.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-06.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-07.1.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-07.2.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-07.3.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-07.4.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-08.1.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-08.2.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-08.3.jpg
+        new file:   docs/phase_05/evidence/UI/Test UI-08.4.jpg
+        new file:   docs/phase_05/evidence/UI/Test_UI-01.jpg
+        new file:   docs/phase_05/evidence/UI/Test_UI-02.jpg
+        new file:   docs/phase_05/evidence/npm_run_dev.txt
+        new file:   docs/phase_05/evidence/phase05_test_result.zip
+        new file:   docs/phase_05/evidence/test-signal.mjs
+        new file:   docs/phase_05/report/NCAOS_EGS_Phase05_Test_Report.xlsx
+        new file:   docs/phase_05/report/demo/build-offline-dashboard.mjs
+        new file:   docs/phase_05/report/demo/event-stats.json
+        new file:   docs/phase_05/report/demo/events.json
+        new file:   docs/phase_05/report/demo/mttd.json
+        new file:   docs/phase_05/report/demo/policy.json
+        new file:   docs/phase_05/report/demo/state.json
+        new file:   docs/phase_05/report/phase05_demo.html
+        new file:   docs/phase_05/report/phase05_offline_dashboard.html
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.1.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.2.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.3.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.4.txt
+        new file:   docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.5.txt
+        new file:   docs/phase_05/testing/built/installation command.txt
+        new file:   docs/phase_05/testing/built/repair_WS_DISCONNECTED.txt
+        modified:   egs/api/package.json
+        modified:   egs/api/src/server.ts
+        new file:   egs/audit-signal/src/audit-signal.ts
+        new file:   egs/docs/adr/ADR-006-audit-signal-schema.md
+        modified:   egs/package-lock.json
+        modified:   egs/package.json
+        new file:   egs/test-signal.mjs
+        new file:   egs/ui/index.html
+        new file:   egs/ui/package.json
+        new file:   egs/ui/src/App.tsx
+        new file:   egs/ui/src/components/DashboardPanel.tsx
+        new file:   egs/ui/src/components/EventLog.tsx
+        new file:   egs/ui/src/lib/api.ts
+        new file:   egs/ui/src/main.tsx
+        new file:   egs/ui/tsconfig.json
+        new file:   egs/ui/vite.config.ts
+
+PS D:\Projects\NCAOS-Urielle> git commit -m "feat: Phase 05 final — React Admin Terminal + AuditSignal schema"
+[main b3bbc28] feat: Phase 05 final — React Admin Terminal + AuditSignal schema
+ 60 files changed, 11459 insertions(+), 664 deletions(-)
+ create mode 100644 docs/phase_05/architecture/NCAOS_Phase05_Architecture.html
+ create mode 100644 docs/phase_05/architecture/NCAOS_Phase05_Architecture.pdf
+ delete mode 100644 docs/phase_05/architecture/ncaos_egs_project_plan.html
+ create mode 100644 docs/phase_05/evidence/Chapter05_06_07_testing_log.txt
+ create mode 100644 docs/phase_05/evidence/Chapter08_UI_Manual_Test.txt
+ create mode 100644 docs/phase_05/evidence/Chapter09_Test_AS01_AS03.txt
+ create mode 100644 docs/phase_05/evidence/NCAOS_EGS_Phase05_Test_Execution.docx
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-03.2.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-03.3.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-03.4.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-03.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-04.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-05.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-06.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-07.1.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-07.2.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-07.3.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-07.4.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-08.1.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-08.2.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-08.3.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test UI-08.4.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test_UI-01.jpg
+ create mode 100644 docs/phase_05/evidence/UI/Test_UI-02.jpg
+ create mode 100644 docs/phase_05/evidence/npm_run_dev.txt
+ create mode 100644 docs/phase_05/evidence/phase05_test_result.zip
+ create mode 100644 docs/phase_05/evidence/test-signal.mjs
+ create mode 100644 docs/phase_05/report/NCAOS_EGS_Phase05_Test_Report.xlsx
+ create mode 100644 docs/phase_05/report/demo/build-offline-dashboard.mjs
+ create mode 100644 docs/phase_05/report/demo/event-stats.json
+ create mode 100644 docs/phase_05/report/demo/events.json
+ create mode 100644 docs/phase_05/report/demo/mttd.json
+ create mode 100644 docs/phase_05/report/demo/policy.json
+ create mode 100644 docs/phase_05/report/demo/state.json
+ create mode 100644 docs/phase_05/report/phase05_demo.html
+ create mode 100644 docs/phase_05/report/phase05_offline_dashboard.html
+ create mode 100644 docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test.txt
+ create mode 100644 docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.1.txt
+ create mode 100644 docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.2.txt
+ create mode 100644 docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.3.txt
+ create mode 100644 docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.4.txt
+ create mode 100644 docs/phase_05/testing/built/NCAOS_Urielle_Phase05_test_v5.5.txt
+ create mode 100644 docs/phase_05/testing/built/installation command.txt
+ create mode 100644 docs/phase_05/testing/built/repair_WS_DISCONNECTED.txt
+ create mode 100644 egs/audit-signal/src/audit-signal.ts
+ create mode 100644 egs/docs/adr/ADR-006-audit-signal-schema.md
+ create mode 100644 egs/test-signal.mjs
+ create mode 100644 egs/ui/index.html
+ create mode 100644 egs/ui/package.json
+ create mode 100644 egs/ui/src/App.tsx
+ create mode 100644 egs/ui/src/components/DashboardPanel.tsx
+ create mode 100644 egs/ui/src/components/EventLog.tsx
+ create mode 100644 egs/ui/src/lib/api.ts
+ create mode 100644 egs/ui/src/main.tsx
+ create mode 100644 egs/ui/tsconfig.json
+ create mode 100644 egs/ui/vite.config.ts
+PS D:\Projects\NCAOS-Urielle> git push origin main
+Enumerating objects: 93, done.
+Counting objects: 100% (93/93), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (75/75), done.
+Writing objects: 100% (79/79), 5.79 MiB | 3.20 MiB/s, done.
+Total 79 (delta 15), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (15/15), completed with 9 local objects.
+To https://github.com/wholidi/NCAOS-Urielle.git
+   da3d5e1..b3bbc28  main -> main
+PS D:\Projects\NCAOS-Urielle> git tag -a v0.5.0 -m "Phase 05 Final — Admin UI + AuditSignal interface"
+PS D:\Projects\NCAOS-Urielle> git push origin v0.5.0
+Enumerating objects: 1, done.
+Counting objects: 100% (1/1), done.
+Writing objects: 100% (1/1), 212 bytes | 212.00 KiB/s, done.
+Total 1 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/wholidi/NCAOS-Urielle.git
+ * [new tag]         v0.5.0 -> v0.5.0
+PS D:\Projects\NCAOS-Urielle>

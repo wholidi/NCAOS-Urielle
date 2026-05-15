@@ -1,0 +1,149 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> cd api
+PS D:\Projects\NCAOS-Urielle\egs\api> npm start
+
+> @ncaos/api@0.2.0 start
+> node dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+[API] Fatal startup error: Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at node:net:2274:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
+}
+npm error Lifecycle script `start` failed with error:
+npm error code 1
+npm error path D:\Projects\NCAOS-Urielle\egs\api
+npm error workspace @ncaos/api@0.2.0
+npm error location D:\Projects\NCAOS-Urielle\egs\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node dist/server.js
+PS D:\Projects\NCAOS-Urielle\egs\api> Invoke-RestMethod -Uri http://localhost:3000/v1/health `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+
+
+status        : OK
+watchdog      : RUNNING
+shell         : True
+policy        : STRICT-PROD
+slaHealthy    : True
+activeTenants : 1
+totalEvents   : 0
+timestamp     : 2026-05-15T09:51:52.367Z
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs\api> $threat = @{
+>>   sourceId="attacker"; inputHash="bad"
+>>   inputFlags=@("INJECTION_PATTERN")
+>>   claimedPremises=@("A","B"); validatedPremises=@("A")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="reference-only"; overrideAttempted=$false
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api> $r = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="TENANT_A"} -Body $threat
+PS D:\Projects\NCAOS-Urielle\egs\api> $handle = $r.evidenceHandle
+PS D:\Projects\NCAOS-Urielle\egs\api> Write-Host "Handle: $handle"
+Handle: EVD-1778838735173-C533F791
+PS D:\Projects\NCAOS-Urielle\egs\api> try {
+>>   Invoke-RestMethod -Uri "http://localhost:3000/v1/audit/$handle" `
+>>     -Headers @{"X-Partner-ID"="TENANT_B"}
+>>   Write-Host "FAIL: TENANT_B accessed TENANT_A evidence!"
+>> } catch {
+>>   Write-Host "PASS: 404 NOT_FOUND — isolation enforced"
+>> }
+PASS: 404 NOT_FOUND — isolation enforced
+PS D:\Projects\NCAOS-Urielle\egs\api> $weakPolicy = @{
+>>   profileId="WEAK"; govLevel="NONE"
+>>   blockOnContainment=$false
+>>   integrityThresholds=@{available=0; limited=0; degraded=0}
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api> try {
+>>   Invoke-RestMethod -Uri http://localhost:3000/v1/policy `
+>>     -Method POST -ContentType "application/json" `
+>>     -Headers @{"X-Partner-ID"="TEST"} -Body $weakPolicy
+>>   Write-Host "Check response — should be 400 INVALID_POLICY"
+>> } catch {
+>>   Write-Host "PASS: policy update rejected — $($_.Exception.Message)"
+>> }
+PASS: policy update rejected — The remote server returned an error: (400) Bad Request.
+PS D:\Projects\NCAOS-Urielle\egs\api> $current = Invoke-RestMethod -Uri http://localhost:3000/v1/policy `
+>>   -Headers @{"X-Partner-ID"="TEST"}
+PS D:\Projects\NCAOS-Urielle\egs\api> Write-Host "Policy still: $($current.profileId)"
+Policy still: STRICT-PROD
+PS D:\Projects\NCAOS-Urielle\egs\api> $body = @{
+>>   sourceId="flood"; inputHash="flood"
+>>   inputFlags=@(); claimedPremises=@(); validatedPremises=@()
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="decision-ready"; overrideAttempted=$false
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api> $codes = @()
+PS D:\Projects\NCAOS-Urielle\egs\api> for ($i = 0; $i -lt 200; $i++) {
+>>   try {
+>>     $r = Invoke-WebRequest -Uri http://localhost:3000/v1/process `
+>>       -Method POST -ContentType "application/json" `
+>>       -Headers @{"X-Partner-ID"="FLOOD_TEST"} -Body $body
+>>     $codes += $r.StatusCode
+>>   } catch {
+>>     $codes += $_.Exception.Response.StatusCode.value__
+>>   }
+>> }
+
+Security Warning: Script Execution Risk
+Invoke-WebRequest parses the content of the web page. Script code in the web page might be run when
+the page is parsed.
+      RECOMMENDED ACTION:
+      Use the -UseBasicParsing switch to avoid script code execution.
+
+      Do you want to continue?
+
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "N"): A
+PS D:\Projects\NCAOS-Urielle\egs\api> $codes | Group-Object | Select-Object Name,Count
+
+Name Count
+---- -----
+200    200
+
+
+PS D:\Projects\NCAOS-Urielle\egs\api> $escalation = @{
+>>   sourceId="attacker"; inputHash="bad"
+>>   inputFlags=@()
+>>   claimedPremises=@("A"); validatedPremises=@("A")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="reference-only"
+>>   overrideAttempted=$true   # Attempting to escalate authority
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api> $r = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="TEST"} -Body $escalation
+PS D:\Projects\NCAOS-Urielle\egs\api> $r
+
+
+requestId      : REQ-000203
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=Governance / Policy Review; recommendedAction=Check policy profile; confirm
+                 stop-right boundaries.}
+evidenceHandle : EVD-1778839016888-2DEA2054
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\egs\api>

@@ -1,0 +1,100 @@
+Restarting 'dist/server.js'
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+{"level":30,"time":1778837914881,"pid":19816,"hostname":"DESKTOP-2JNEOET","msg":"Server listening at http://0.0.0.0:3000"}
+[API] EGS API running on http://0.0.0.0:3000
+{"level":30,"time":1778838210660,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838210671,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":400},"responseTime":10.485999999567866,"msg":"request completed"}
+{"level":30,"time":1778838211015,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838211017,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":400},"responseTime":1.4701999984681606,"msg":"request completed"}
+{"level":30,"time":1778838211335,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838211336,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":400},"responseTime":0.957099998369813,"msg":"request completed"}
+{"level":30,"time":1778838211655,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838211656,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":400},"responseTime":0.782600000500679,"msg":"request completed"}
+{"level":30,"time":1778838211967,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838211968,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":400},"responseTime":0.8756999988108873,"msg":"request completed"}
+{"level":30,"time":1778838212279,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838212280,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":400},"responseTime":0.8117999993264675,"msg":"request completed"}
+{"level":30,"time":1778838212585,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838212585,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":400},"responseTime":0.7013999987393618,"msg":"request completed"}
+{"level":30,"time":1778838212906,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838212907,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-8","res":{"statusCode":400},"responseTime":0.6304999999701977,"msg":"request completed"}
+{"level":30,"time":1778838213207,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838213209,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-9","res":{"statusCode":400},"responseTime":1.8091000001877546,"msg":"request completed"}
+{"level":30,"time":1778838213518,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838213519,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-a","res":{"statusCode":400},"responseTime":0.689300000667572,"msg":"request completed"}
+{"level":30,"time":1778838213835,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838213836,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-b","res":{"statusCode":400},"responseTime":0.6443000007420778,"msg":"request completed"}
+{"level":30,"time":1778838214144,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838214145,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-c","res":{"statusCode":400},"responseTime":0.6909999996423721,"msg":"request completed"}
+{"level":30,"time":1778838214461,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838214462,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-d","res":{"statusCode":400},"responseTime":0.962100001052022,"msg":"request completed"}
+{"level":30,"time":1778838214778,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838214779,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-e","res":{"statusCode":400},"responseTime":1.0727999992668629,"msg":"request completed"}
+{"level":30,"time":1778838215088,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838215089,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-f","res":{"statusCode":400},"responseTime":0.7784000001847744,"msg":"request completed"}
+{"level":30,"time":1778838215400,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838215401,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-g","res":{"statusCode":400},"responseTime":1.0355999991297722,"msg":"request completed"}
+{"level":30,"time":1778838215712,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838215713,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-h","res":{"statusCode":400},"responseTime":0.6597000006586313,"msg":"request completed"}
+{"level":30,"time":1778838216030,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838216030,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-i","res":{"statusCode":400},"responseTime":0.5781999994069338,"msg":"request completed"}
+{"level":30,"time":1778838216336,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838216337,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-j","res":{"statusCode":400},"responseTime":0.7689000014215708,"msg":"request completed"}
+{"level":30,"time":1778838216649,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838216649,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-k","res":{"statusCode":400},"responseTime":0.6286999993026257,"msg":"request completed"}
+{"level":30,"time":1778838254144,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838254145,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-l","res":{"statusCode":400},"responseTime":0.49679999984800816,"msg":"request completed"}
+{"level":30,"time":1778838254456,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-m","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838254457,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-m","res":{"statusCode":400},"responseTime":0.9250000007450581,"msg":"request completed"}
+{"level":30,"time":1778838254779,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-n","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838254780,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-n","res":{"statusCode":400},"responseTime":1.033900000154972,"msg":"request completed"}
+{"level":30,"time":1778838255087,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-o","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838255088,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-o","res":{"statusCode":400},"responseTime":0.8854000009596348,"msg":"request completed"}
+{"level":30,"time":1778838255405,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-p","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838255406,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-p","res":{"statusCode":400},"responseTime":0.6510000005364418,"msg":"request completed"}
+{"level":30,"time":1778838255733,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-q","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838255734,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-q","res":{"statusCode":400},"responseTime":0.7715999986976385,"msg":"request completed"}
+{"level":30,"time":1778838256047,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-r","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838256048,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-r","res":{"statusCode":400},"responseTime":0.9184000007808208,"msg":"request completed"}
+{"level":30,"time":1778838256348,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-s","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838256348,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-s","res":{"statusCode":400},"responseTime":0.4114999994635582,"msg":"request completed"}
+{"level":30,"time":1778838256669,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-t","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838256670,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-t","res":{"statusCode":400},"responseTime":0.6962999999523163,"msg":"request completed"}
+{"level":30,"time":1778838256998,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-u","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":50942},"msg":"incoming request"}
+{"level":30,"time":1778838256999,"pid":19816,"hostname":"DESKTOP-2JNEOET","reqId":"req-u","res":{"statusCode":400},"responseTime":0.4827999994158745,"msg":"request completed"}
+[API] Shutting down...
+[ShellLoop] Stopped
+PS D:\Projects\NCAOS-Urielle\egs\api> Y
+Y : The term 'Y' is not recognized as the name of a cmdlet, function, script file, or operable
+program. Check the spelling of the name, or if a path was included, verify that the path is correct
+and try again.
+At line:1 char:1
++ Y
++ ~
+    + CategoryInfo          : ObjectNotFound: (Y:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS D:\Projects\NCAOS-Urielle\egs\api> npm run dev
+
+> @ncaos/api@0.2.0 dev
+> node --watch --env-file=.env dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+{"level":30,"time":1778838274858,"pid":16884,"hostname":"DESKTOP-2JNEOET","msg":"Server listening at http://0.0.0.0:3000"}
+[API] EGS API running on http://0.0.0.0:3000
+{"level":30,"time":1778838276624,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64024},"msg":"incoming request"}
+{"level":30,"time":1778838276635,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-1","res":{"statusCode":400},"responseTime":10.639700001105666,"msg":"request completed"}
+{"level":30,"time":1778838276948,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64024},"msg":"incoming request"}
+{"level":30,"time":1778838276950,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-2","res":{"statusCode":400},"responseTime":1.3073999993503094,"msg":"request completed"}
+{"level":30,"time":1778838277257,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64024},"msg":"incoming request"}
+{"level":30,"time":1778838277258,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-3","res":{"statusCode":400},"responseTime":1.2702999990433455,"msg":"request completed"}
+{"level":30,"time":1778838277571,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64024},"msg":"incoming request"}
+{"level":30,"time":1778838277573,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-4","res":{"statusCode":400},"responseTime":1.7916000001132488,"msg":"request completed"}
+{"level":30,"time":1778838277898,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64024},"msg":"incoming request"}
+{"level":30,"time":1778838277899,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-5","res":{"statusCode":400},"responseTime":1.4117000009864569,"msg":"request completed"}
+{"level":30,"time":1778838278229,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64024},"msg":"incoming request"}
+{"level":30,"time":1778838278230,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-6","res":{"statusCode":400},"responseTime":0.8201999999582767,"msg":"request completed"}
+{"level":30,"time":1778838278541,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","req":{"method":"POST","url":"/v1/process","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":64024},"msg":"incoming request"}
+{"level":30,"time":1778838278542,"pid":16884,"hostname":"DESKTOP-2JNEOET","reqId":"req-7","res":{"statusCode":400},"responseTime":0.8064999990165234,"msg":"request completed"}

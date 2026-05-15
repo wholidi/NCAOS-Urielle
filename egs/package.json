@@ -9,7 +9,8 @@
     "api",
     "ui",
     "detection",
-    "audit-signal"
+    "audit-signal",
+    "hardening"
   ],
   "scripts": {
     "build": "npm run build --workspaces",

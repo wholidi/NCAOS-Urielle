@@ -1,0 +1,114 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> cd..
+PS C:\Users> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd egs
+PS D:\Projects\NCAOS-Urielle\egs> cd api
+PS D:\Projects\NCAOS-Urielle\egs\api> npm run dev
+
+> @ncaos/api@0.2.0 dev
+> node --watch --env-file=.env dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+[API] Fatal startup error: Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+    at listenInCluster (node:net:2065:12)
+    at node:net:2274:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
+}
+Failed running 'dist/server.js'. Waiting for file changes before restarting...
+PS D:\Projects\NCAOS-Urielle\egs\api> $body = @{
+>>   input = "test request during API restart"
+>>   partnerId = "TEST"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api>
+PS D:\Projects\NCAOS-Urielle\egs\api> 1..20 | ForEach-Object {
+>>   try {
+>>     $r = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>       -Method POST -ContentType "application/json" `
+>>       -Headers @{"X-Partner-ID"="TEST"} -Body $body
+>>
+>>     Write-Host "$_ Response action: $($r.action)"
+>>   } catch {
+>>     if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+>>       Write-Host "$_ Status: $($_.Exception.Response.StatusCode.value__)"
+>>     } else {
+>>       Write-Host "$_ Connection failed during restart = PASS"
+>>     }
+>>   }
+>>
+>>   Start-Sleep -Milliseconds 300
+>> }
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+PS D:\Projects\NCAOS-Urielle\egs\api> $body = @{
+>>   input = "test request during API restart"
+>>   partnerId = "TEST"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\egs\api>
+PS D:\Projects\NCAOS-Urielle\egs\api> 1..20 | ForEach-Object {
+>>   try {
+>>     $r = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>       -Method POST -ContentType "application/json" `
+>>       -Headers @{"X-Partner-ID"="TEST"} -Body $body
+>>
+>>     Write-Host "$_ Response action: $($r.action)"
+>>   } catch {
+>>     if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+>>       Write-Host "$_ Status: $($_.Exception.Response.StatusCode.value__)"
+>>     } else {
+>>       Write-Host "$_ Connection failed during restart = PASS"
+>>     }
+>>   }
+>>
+>>   Start-Sleep -Milliseconds 300
+>> }
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+Unable to connect to the remote server Connection failed during restart = PASS
+Unable to connect to the remote server Connection failed during restart = PASS
+Unable to connect to the remote server Connection failed during restart = PASS
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
+{"error":"INVALID_REQUEST","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["sourceId"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["inputHash"],"message":"Required"}]} Status: 400
