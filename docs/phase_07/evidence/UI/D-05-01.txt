@@ -1,0 +1,141 @@
+PS C:\AI Project\NCAOS-Urielle\egs> $event = Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> $event | ConvertTo-Json -Depth 10
+{
+  "evidenceHandle": "EVD-1779185789352-BF52C998",
+  "event": {
+    "requestId": "REQ-000003",
+    "evidenceHandle": "EVD-1779185789352-BF52C998",
+    "workflowId": "WF-DEMO-LIVE-001",
+    "tenant": {
+      "partnerId": "GLOBAL_ENT_2026",
+      "instanceId": "EGS_INST_001",
+      "deployment": "ENTERPRISE"
+    },
+    "type": "AUTHORITY_REVOKED",
+    "layer": "authority",
+    "scope": "sys",
+    "severity": "high",
+    "detectionMode": "Authority Boundary Enforcement",
+    "integrity": {
+      "level": "Critical",
+      "score": 29
+    },
+    "authority": {
+      "authority": "invalid",
+      "score": 22
+    },
+    "routing": {
+      "hint": "Governance / Policy Review",
+      "recommendedAction": "Check policy profile; confirm stop-right boundaries."
+    },
+    "detectedAt": "2026-05-19T10:16:29.352Z",
+    "mttdMs": 0
+  },
+  "verdict": {
+    "requestId": "REQ-000003",
+    "action": "BLOCK",
+    "authority": "invalid",
+    "integrity": {
+      "level": "Critical",
+      "score": 29
+    },
+    "routing": {
+      "hint": "Governance / Policy Review",
+      "recommendedAction": "Check policy profile; confirm stop-right boundaries."
+    },
+    "policyProfileId": "STRICT-PROD",
+    "enforcedAt": "2026-05-19T10:16:29.352Z",
+    "processingMs": 0
+  },
+  "storedAt": "2026-05-19T10:16:29.352Z",
+  "sequenceNumber": 2
+}
+PS C:\AI Project\NCAOS-Urielle\egs>
+
+PS C:\AI Project\NCAOS-Urielle\egs> $seq = Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> $seq.records | Select-Object evidenceHandle
+
+evidenceHandle
+--------------
+EVD-1779185776973-8D24C988
+EVD-1779185789352-BF52C998
+
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = $seq.records[0].evidenceHandle
+PS C:\AI Project\NCAOS-Urielle\egs> $handle
+EVD-1779185776973-8D24C988
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+evidenceHandle : EVD-1779185776973-8D24C988
+event          : @{requestId=REQ-000002; evidenceHandle=EVD-1779185776973-8D24C988;
+                 workflowId=WF-DEMO-LIVE-001; tenant=; type=NO_EVENT; layer=gate; scope=req;
+                 severity=low; detectionMode=Real-time Gate Enforcement; integrity=; authority=;
+                 routing=; detectedAt=5/19/2026 10:16:16 AM; mttdMs=1}
+verdict        : @{requestId=REQ-000002; action=DOWNGRADE; authority=reference-only; integrity=;
+                 routing=; policyProfileId=STRICT-PROD; enforcedAt=5/19/2026 10:16:16 AM;
+                 processingMs=0}
+storedAt       : 5/19/2026 10:16:16 AM
+sequenceNumber : 1
+
+PS C:\AI Project\NCAOS-Urielle\egs> $event = Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> $event | ConvertTo-Json -Depth 10
+{
+  "evidenceHandle": "EVD-1779185776973-8D24C988",
+  "event": {
+    "requestId": "REQ-000002",
+    "evidenceHandle": "EVD-1779185776973-8D24C988",
+    "workflowId": "WF-DEMO-LIVE-001",
+    "tenant": {
+      "partnerId": "GLOBAL_ENT_2026",
+      "instanceId": "EGS_INST_001",
+      "deployment": "ENTERPRISE"
+    },
+    "type": "NO_EVENT",
+    "layer": "gate",
+    "scope": "req",
+    "severity": "low",
+    "detectionMode": "Real-time Gate Enforcement",
+    "integrity": {
+      "level": "Available",
+      "score": 88
+    },
+    "authority": {
+      "authority": "decision-ready",
+      "score": 84
+    },
+    "routing": {
+      "hint": "SOC / Security Queue",
+      "recommendedAction": "Review and validate."
+    },
+    "detectedAt": "2026-05-19T10:16:16.974Z",
+    "mttdMs": 1
+  },
+  "verdict": {
+    "requestId": "REQ-000002",
+    "action": "DOWNGRADE",
+    "authority": "reference-only",
+    "integrity": {
+      "level": "Available",
+      "score": 88
+    },
+    "routing": {
+      "hint": "SOC / Security Queue",
+      "recommendedAction": "Isolate inputs; validate perimeter; rotate credentials if needed."
+    },
+    "policyProfileId": "STRICT-PROD",
+    "enforcedAt": "2026-05-19T10:16:16.974Z",
+    "processingMs": 0
+  },
+  "storedAt": "2026-05-19T10:16:16.976Z",
+  "sequenceNumber": 1
+}

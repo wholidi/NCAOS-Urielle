@@ -386,7 +386,10 @@ function AdminTerminal() {
 
   const opMode = liveState?.operationalMode ?? 'NORMAL';
   const statusColor = opMode === 'CONTAINMENT' ? 'bad' : opMode === 'LIMITED' ? 'warn' : 'ok';
-  const statusText = liveState?.systemStatus ?? 'CONNECTING...';
+//const statusText = liveState?.systemStatus ?? 'CONNECTING...';
+    const statusText = wsConnected
+  ? (liveState?.systemStatus ?? 'CONNECTED')
+  : 'CONNECTING...';
 
   return (
     <div className="app">

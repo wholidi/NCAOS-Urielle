@@ -1,0 +1,282 @@
+PowerShell 7.4.0-preview.2
+
+   A new PowerShell preview release is available: v7.7.0-preview.1
+   Upgrade now, or check out the release page at:
+     https://aka.ms/PowerShell-Release?tag=v7.7.0-preview.1
+
+PS C:\Users\930140> cd
+PS C:\Users\930140> cd\
+PS C:\> cd "AI Project"
+PS C:\AI Project> cd NCAOS-Urielle
+PS C:\AI Project\NCAOS-Urielle> cd egs
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+sequenceId       records count
+----------       ------- -----
+WF-DEMO-LIVE-001 {}          0
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001/summary" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+Invoke-RestMethod:
+{
+  "error": "NOT_FOUND",
+  "message": "No sequence found: WF-DEMO-LIVE-001"
+}
+PS C:\AI Project\NCAOS-Urielle\egs> $body1 = @{
+>>   sourceId = "demo-agent"
+>>   inputHash = "HASH-001"
+>>   workflowId = "WF-DEMO-LIVE-001"
+>>   overrideAttempted = $false
+>>   continuityScore = 94
+>> } | ConvertTo-Json
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/process" `
+>>   -Method POST `
+>>   -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} `
+>>   -Body $body1
+
+requestId      : REQ-000002
+action         : DOWNGRADE
+authority      : reference-only
+integrity      : @{level=Available; score=88}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1779185776973-8D24C988
+processingMs   : 0
+
+PS C:\AI Project\NCAOS-Urielle\egs> $body2 = @{
+>>   sourceId = "demo-agent"
+>>   inputHash = "HASH-002"
+>>   workflowId = "WF-DEMO-LIVE-001"
+>>   overrideAttempted = $true
+>>   continuityScore = 40
+>> } | ConvertTo-Json
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/process" `
+>>   -Method POST `
+>>   -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} `
+>>   -Body $body2
+
+requestId      : REQ-000003
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=Governance / Policy Review; recommendedAction=Check policy profile; confirm
+                 stop-right boundaries.}
+evidenceHandle : EVD-1779185789352-BF52C998
+processingMs   : 0
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+sequenceId       records
+----------       -------
+WF-DEMO-LIVE-001 {@{evidenceHandle=EVD-1779185776973-8D24C988; partnerId=DEMO_ENT_2026; event=; verdict…
+
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001/summary" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+sequenceId         : WF-DEMO-LIVE-001
+partnerId          : DEMO_ENT_2026
+eventCount         : 2
+firstDetectedAt    : 5/19/2026 10:16:16 AM
+lastDetectedAt     : 5/19/2026 10:16:29 AM
+layers             : {gate, authority}
+severities         : {low, high}
+actions            : {DOWNGRADE, BLOCK}
+escalationDetected : True
+consistencyScore   : 94
+patternType        : CONTAINED
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+Invoke-RestMethod:
+{
+  "error": "NOT_FOUND",
+  "message": "No event found for evidence handle: "
+}
+PS C:\AI Project\NCAOS-Urielle\egs> $seq = Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> $seq.records | Select-Object evidenceHandle
+
+evidenceHandle
+--------------
+EVD-1779185776973-8D24C988
+EVD-1779185789352-BF52C998
+
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = $seq.records[0].evidenceHandle
+PS C:\AI Project\NCAOS-Urielle\egs> $handle
+EVD-1779185776973-8D24C988
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+evidenceHandle : EVD-1779185776973-8D24C988
+event          : @{requestId=REQ-000002; evidenceHandle=EVD-1779185776973-8D24C988;
+                 workflowId=WF-DEMO-LIVE-001; tenant=; type=NO_EVENT; layer=gate; scope=req;
+                 severity=low; detectionMode=Real-time Gate Enforcement; integrity=; authority=;
+                 routing=; detectedAt=5/19/2026 10:16:16 AM; mttdMs=1}
+verdict        : @{requestId=REQ-000002; action=DOWNGRADE; authority=reference-only; integrity=;
+                 routing=; policyProfileId=STRICT-PROD; enforcedAt=5/19/2026 10:16:16 AM;
+                 processingMs=0}
+storedAt       : 5/19/2026 10:16:16 AM
+sequenceNumber : 1
+
+PS C:\AI Project\NCAOS-Urielle\egs> $event = Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> $event | ConvertTo-Json -Depth 10
+{
+  "evidenceHandle": "EVD-1779185776973-8D24C988",
+  "event": {
+    "requestId": "REQ-000002",
+    "evidenceHandle": "EVD-1779185776973-8D24C988",
+    "workflowId": "WF-DEMO-LIVE-001",
+    "tenant": {
+      "partnerId": "GLOBAL_ENT_2026",
+      "instanceId": "EGS_INST_001",
+      "deployment": "ENTERPRISE"
+    },
+    "type": "NO_EVENT",
+    "layer": "gate",
+    "scope": "req",
+    "severity": "low",
+    "detectionMode": "Real-time Gate Enforcement",
+    "integrity": {
+      "level": "Available",
+      "score": 88
+    },
+    "authority": {
+      "authority": "decision-ready",
+      "score": 84
+    },
+    "routing": {
+      "hint": "SOC / Security Queue",
+      "recommendedAction": "Review and validate."
+    },
+    "detectedAt": "2026-05-19T10:16:16.974Z",
+    "mttdMs": 1
+  },
+  "verdict": {
+    "requestId": "REQ-000002",
+    "action": "DOWNGRADE",
+    "authority": "reference-only",
+    "integrity": {
+      "level": "Available",
+      "score": 88
+    },
+    "routing": {
+      "hint": "SOC / Security Queue",
+      "recommendedAction": "Isolate inputs; validate perimeter; rotate credentials if needed."
+    },
+    "policyProfileId": "STRICT-PROD",
+    "enforcedAt": "2026-05-19T10:16:16.974Z",
+    "processingMs": 0
+  },
+  "storedAt": "2026-05-19T10:16:16.976Z",
+  "sequenceNumber": 1
+}
+PS C:\AI Project\NCAOS-Urielle\egs> b
+b: The term 'b' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+
+[general]
+  The most similar commands are:
+    ⮞ %, ?, h, r, B:
+
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = $seq.records[1].evidenceHandle
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> $event = Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> $event | ConvertTo-Json -Depth 10
+{
+  "evidenceHandle": "EVD-1779185789352-BF52C998",
+  "event": {
+    "requestId": "REQ-000003",
+    "evidenceHandle": "EVD-1779185789352-BF52C998",
+    "workflowId": "WF-DEMO-LIVE-001",
+    "tenant": {
+      "partnerId": "GLOBAL_ENT_2026",
+      "instanceId": "EGS_INST_001",
+      "deployment": "ENTERPRISE"
+    },
+    "type": "AUTHORITY_REVOKED",
+    "layer": "authority",
+    "scope": "sys",
+    "severity": "high",
+    "detectionMode": "Authority Boundary Enforcement",
+    "integrity": {
+      "level": "Critical",
+      "score": 29
+    },
+    "authority": {
+      "authority": "invalid",
+      "score": 22
+    },
+    "routing": {
+      "hint": "Governance / Policy Review",
+      "recommendedAction": "Check policy profile; confirm stop-right boundaries."
+    },
+    "detectedAt": "2026-05-19T10:16:29.352Z",
+    "mttdMs": 0
+  },
+  "verdict": {
+    "requestId": "REQ-000003",
+    "action": "BLOCK",
+    "authority": "invalid",
+    "integrity": {
+      "level": "Critical",
+      "score": 29
+    },
+    "routing": {
+      "hint": "Governance / Policy Review",
+      "recommendedAction": "Check policy profile; confirm stop-right boundaries."
+    },
+    "policyProfileId": "STRICT-PROD",
+    "enforcedAt": "2026-05-19T10:16:29.352Z",
+    "processingMs": 0
+  },
+  "storedAt": "2026-05-19T10:16:29.352Z",
+  "sequenceNumber": 2
+}
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/state `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+tenant                  : @{partnerId=GLOBAL_ENT_2026; instanceId=EGS_INST_001; deployment=ENTERPRISE}
+systemStatus            : ENFORCING (STRICT)
+operationalMode         : CONTAINMENT
+shellIntegrity          : True
+failSafeEnabled         : True
+integrity               : @{level=Critical; score=29}
+authority               : @{authority=invalid; score=22}
+rawExposurePct          : 100
+governedOutputPct       : 54
+coreIsolationPct        : 35
+contextDriftPressurePct : 43
+latencyOverheadMs       : 369
+updateState             : STABLE
+continuityScore         : 85
+changeWindowActive      : False
+equivalenceTests        : @{passed=12; total=12}
+activeEvent             : AUTHORITY_REVOKED / HIGH
+lastRouting             : Governance / Policy Review
+blockedLayer            : authority
+updatedAt               : 5/19/2026 10:16:29 AM
+
+PS C:\AI Project\NCAOS-Urielle\egs>

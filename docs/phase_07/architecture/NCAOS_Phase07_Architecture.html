@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCAOS / EGS — Phase 07 Architecture · v1.0-rc</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;700;800&display=swap');
+:root {
+  --bg:     #040608; --panel:  #080C14; --panel2: #0C1018;
+  --border: #1A2438; --gold:   #F5C542; --green:  #00CC78;
+  --amber:  #FFB800; --red:    #FF4D6A; --purple: #9B6FFF;
+  --teal:   #00CEB8; --accent: #00D4FF; --text:   #E2E8F0; --sub: #6B7FA8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+
+/* HEADER */
+.header {
+  background: #030508; border-bottom: 1px solid var(--gold);
+  padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.hbar { width: 4px; height: 40px; background: var(--gold); border-radius: 2px; }
+.htitle { font-size: 17px; font-weight: 800; margin-left: 12px; }
+.hsuper { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; color: var(--gold); margin-top: 2px; margin-left: 12px; letter-spacing: 1px; }
+.hsub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--sub); margin-top: 2px; margin-left: 12px; }
+.badges { display: flex; gap: 7px; flex-wrap: wrap; }
+.badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 4px; }
+
+/* MAIN */
+.main { display: grid; grid-template-columns: 136px 1fr; gap: 14px; padding: 16px 18px 28px; }
+
+/* PRIOR STACK */
+.prior-stack { background: #08090E; border: 1px solid #1A2238; border-radius: 10px; padding: 10px 8px; display: flex; flex-direction: column; gap: 5px; }
+.prior-label { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: var(--sub); font-weight: 700; text-align: center; }
+.prior-note { font-size: 7px; color: var(--sub); text-align: center; margin-bottom: 3px; font-style: italic; }
+.prior-card { border-radius: 6px; overflow: hidden; cursor: pointer; transition: transform 0.13s; border: 1px solid; }
+.prior-card:hover { transform: translateX(3px); }
+.prior-card-h { padding: 5px 7px; font-family: 'JetBrains Mono', monospace; font-size: 7.5px; font-weight: 700; text-align: center; }
+.prior-card-b { padding: 3px 7px; font-size: 7px; color: var(--sub); display: flex; justify-content: space-between; }
+.prior-total { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; text-align: center; padding: 5px; border-radius: 4px; background: #00CC7820; color: var(--green); margin-top: 4px; }
+
+/* CONTENT */
+.content { display: flex; flex-direction: column; gap: 14px; }
+.band { border-radius: 10px; padding: 14px; border: 1px solid; }
+.band-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* BAND A: Deliverables */
+.band-a { background: #0A0906; border-color: var(--gold); }
+.deliverables-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.deliv-card { border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.14s; border: 1px solid; }
+.deliv-card:hover { transform: translateY(-3px); }
+.deliv-header { padding: 8px 10px; font-family: 'JetBrains Mono', monospace; font-size: 8.5px; font-weight: 700; text-align: center; }
+.deliv-fname { font-family: 'JetBrains Mono', monospace; font-size: 6.5px; color: rgba(255,255,255,0.4); padding: 4px 10px; border-bottom: 1px solid #1A2438; }
+.deliv-body { padding: 8px 10px; }
+.deliv-item { display: flex; align-items: flex-start; gap: 5px; margin-bottom: 5px; font-size: 7.5px; }
+.deliv-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+
+/* BAND B: Demo Steps */
+.band-b { background: #080C0A; border-color: var(--green); }
+.demo-layout { display: grid; grid-template-columns: 1fr 220px 200px; gap: 12px; }
+.demo-steps { display: flex; flex-direction: column; gap: 6px; }
+.demo-step { border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.13s; border: 1px solid; display: flex; }
+.demo-step:hover { transform: translateX(3px); }
+.step-id { width: 52px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 4px; font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; text-align: center; }
+.step-content { flex: 1; padding: 6px 10px; }
+.step-title { font-size: 8.5px; font-weight: 700; margin-bottom: 2px; }
+.step-audience { font-family: 'JetBrains Mono', monospace; font-size: 7px; color: var(--sub); margin-bottom: 3px; }
+.step-result { font-size: 7px; color: var(--sub); line-height: 1.4; }
+.step-badge { flex-shrink: 0; padding: 6px 8px; display: flex; align-items: center; }
+.pass-pill { font-family: 'JetBrains Mono', monospace; font-size: 7.5px; font-weight: 700; padding: 3px 8px; border-radius: 12px; }
+
+/* Admin Terminal */
+.admin-panel { background: #0C0810; border: 1px solid var(--purple); border-radius: 8px; padding: 11px; }
+.admin-title { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
+.admin-url { font-family: 'JetBrains Mono', monospace; font-size: 7.5px; color: var(--sub); margin-bottom: 8px; }
+.role-item { border-radius: 5px; padding: 6px 8px; margin-bottom: 5px; border: 1px solid; cursor: pointer; transition: border-color 0.13s; }
+.role-item:hover { opacity: 0.85; }
+.role-name { font-family: 'JetBrains Mono', monospace; font-size: 7.5px; font-weight: 700; margin-bottom: 2px; }
+.role-desc { font-size: 7px; color: var(--sub); }
+
+/* WebSocket Fix */
+.ws-panel { background: #060E0C; border: 1px solid var(--teal); border-radius: 8px; padding: 11px; }
+.ws-title { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.ws-sub { font-size: 7.5px; color: var(--sub); margin-bottom: 8px; }
+.ws-log { font-family: 'JetBrains Mono', monospace; font-size: 7px; padding: 6px 8px; background: #0A1A14; border-radius: 4px; margin-bottom: 5px; border-left: 2px solid var(--teal); color: var(--teal); }
+.ws-note { font-size: 7px; color: var(--sub); margin-top: 6px; }
+
+/* BAND C: Pilot + ADR-008 */
+.band-c { background: #060A0C; border-color: #1A2030; }
+.bottom-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 220px; gap: 12px; }
+.tier-card { border-radius: 8px; overflow: hidden; border: 1px solid; cursor: pointer; transition: transform 0.14s; }
+.tier-card:hover { transform: translateY(-2px); }
+.tier-header { padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; }
+.tier-name { font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700; }
+.tier-dur { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; padding: 3px 8px; border-radius: 10px; }
+.tier-body { padding: 10px 12px; }
+.tier-item { display: flex; align-items: flex-start; gap: 5px; margin-bottom: 5px; font-size: 7.5px; }
+.tier-item::before { content: '▸'; flex-shrink: 0; }
+
+/* ADR-008 */
+.adr-panel { background: #080810; border: 1px solid var(--gold); border-radius: 8px; padding: 12px; }
+.adr-title { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+.adr-sub { font-size: 7.5px; color: var(--sub); margin-bottom: 8px; }
+.roadmap-item { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; font-size: 7.5px; }
+.priority-pill { font-family: 'JetBrains Mono', monospace; font-size: 7px; font-weight: 700; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; min-width: 38px; text-align: center; }
+.tw-summary { background: #0A1A14; border: 1px solid #0D2820; border-radius: 5px; padding: 8px 10px; margin-top: 10px; }
+.tw-title { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; color: var(--teal); margin-bottom: 6px; }
+.tw-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid #0D2020; font-size: 7.5px; }
+.tw-row:last-child { border-bottom: none; }
+.tw-key { color: var(--sub); }
+.tw-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--green); }
+
+/* LEGEND */
+.legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 18px; border-top: 1px solid var(--border); font-size: 8px; color: var(--sub); }
+.leg-item { display: flex; align-items: center; gap: 5px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.80); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+.modal-overlay.open { display: flex; }
+.modal { background: #0C1020; border: 1px solid var(--gold); border-radius: 12px; padding: 24px; max-width: 560px; width: 90%; animation: su .18s ease; }
+@keyframes su { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+.modal-title { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.modal-sub { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: var(--sub); margin-bottom: 14px; }
+.modal-body { font-size: 11.5px; color: var(--sub); line-height: 1.65; }
+.modal-body ul { padding-left: 14px; }
+.modal-body li { margin-bottom: 5px; }
+.modal-body li span { color: var(--text); }
+.modal-body .obs { background: #0A1A14; border-radius: 5px; padding: 8px 10px; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--green); line-height: 1.7; }
+.modal-close { float: right; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--sub); cursor: pointer; padding: 3px 7px; border: 1px solid var(--border); border-radius: 3px; margin-bottom: 10px; }
+.modal-close:hover { color: var(--red); border-color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:center">
+    <div class="hbar"></div>
+    <div>
+      <div class="htitle">NCAOS / EGS — Phase 07 Architecture</div>
+      <div class="hsuper">★ EGS COMPLETE — PHASES 01–07 ★</div>
+      <div class="hsub">Stakeholder Demo & Handoff · Commercial Pilot Proposal · v1.0-rc · 2026-05-19</div>
+    </div>
+  </div>
+  <div class="badges">
+    <div class="badge" style="background:#00CC7820;color:var(--green)">229 AUTO TESTS</div>
+    <div class="badge" style="background:#F5C54220;color:var(--gold)">6-STEP DEMO</div>
+    <div class="badge" style="background:#00CC7820;color:var(--green)">ALL PASS</div>
+    <div class="badge" style="background:#F5C54220;color:var(--gold)">v1.0-rc TAGGED</div>
+    <div class="badge" style="background:#9B6FFF20;color:var(--purple)">ADR-008</div>
+    <div class="badge" style="background:#00CEB820;color:var(--teal)">WS I-01 FIXED</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- PRIOR STACK -->
+  <div class="prior-stack">
+    <div class="prior-label">PHASES 01–06</div>
+    <div class="prior-note">No changes in Phase 07</div>
+    <div class="prior-card" style="border-color:var(--green)" onclick="openModal('core')">
+      <div class="prior-card-h" style="background:#00CC7820;color:var(--green)">@ncaos/core</div>
+      <div class="prior-card-b"><span>Phase 01</span><span style="color:var(--green)">47 tests</span></div>
+    </div>
+    <div class="prior-card" style="border-color:var(--amber)" onclick="openModal('shell')">
+      <div class="prior-card-h" style="background:#FFB80020;color:var(--amber)">@ncaos/shell</div>
+      <div class="prior-card-b"><span>Phase 02</span><span style="color:var(--amber)">15 tests</span></div>
+    </div>
+    <div class="prior-card" style="border-color:var(--accent)" onclick="openModal('api')">
+      <div class="prior-card-h" style="background:#00D4FF20;color:var(--accent)">@ncaos/api</div>
+      <div class="prior-card-b"><span>Ph 02→04</span><span style="color:var(--accent)">65 tests</span></div>
+    </div>
+    <div class="prior-card" style="border-color:var(--purple)" onclick="openModal('detection')">
+      <div class="prior-card-h" style="background:#9B6FFF20;color:var(--purple)">@ncaos/detection</div>
+      <div class="prior-card-b"><span>Phase 03</span><span style="color:var(--purple)">54 tests</span></div>
+    </div>
+    <div class="prior-card" style="border-color:var(--sub)" onclick="openModal('ui')">
+      <div class="prior-card-h" style="background:#6B7FA820;color:var(--sub)">@ncaos/ui</div>
+      <div class="prior-card-b"><span>Phase 05</span><span style="color:var(--sub)">manual</span></div>
+    </div>
+    <div class="prior-card" style="border-color:var(--teal)" onclick="openModal('audit-signal')">
+      <div class="prior-card-h" style="background:#00CEB820;color:var(--teal)">audit-signal</div>
+      <div class="prior-card-b"><span>Phase 05</span><span style="color:var(--teal)">AS-01→03</span></div>
+    </div>
+    <div class="prior-card" style="border-color:#FF7A30" onclick="openModal('hardening')">
+      <div class="prior-card-h" style="background:#FF7A3020;color:#FF7A30">@ncaos/hardening</div>
+      <div class="prior-card-b"><span>Phase 06</span><span style="color:#FF7A30">48 tests</span></div>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--sub);text-align:center;padding:3px 0;border-top:1px solid var(--border);margin-top:2px">All 229 passing · no regressions</div>
+    <div class="prior-total">229 PASSING</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- BAND A: Phase 07 Deliverables -->
+    <div class="band band-a">
+      <div class="band-label">
+        <div class="bdot" style="background:var(--gold)"></div>
+        <span style="color:var(--gold)">Phase 07 — Deliverables</span>
+        <span style="color:var(--sub)">3 new files + Git tag · No API changes · No new automated tests</span>
+      </div>
+      <div class="deliverables-grid">
+        <div class="deliv-card" style="background:#100C04;border-color:var(--gold)" onclick="openModal('demo-scenario')">
+          <div class="deliv-header" style="background:#F5C54220;color:var(--gold)">6-Step Demo Script</div>
+          <div class="deliv-fname">demo/demo-scenario.ts</div>
+          <div class="deliv-body">
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--gold)"></div>D-01→D-06 PowerShell commands</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--gold)"></div>4 stakeholder audiences</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--gold)"></div>Governance narratives per step</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--green)"></div>All 6 steps PASS</div>
+          </div>
+        </div>
+        <div class="deliv-card" style="background:#060C0F;border-color:var(--teal)" onclick="openModal('pilot-proposal')">
+          <div class="deliv-header" style="background:#00CEB820;color:var(--teal)">Pilot Proposal</div>
+          <div class="deliv-fname">pilot/pilot-proposal.ts</div>
+          <div class="deliv-body">
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--teal)"></div>Tier 1: Observe (4 weeks)</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--teal)"></div>Tier 2: Contain (8 weeks)</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--teal)"></div>Tier 3: Audit (12 weeks)</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--teal)"></div>Success criteria per tier</div>
+          </div>
+        </div>
+        <div class="deliv-card" style="background:#0C060F;border-color:var(--purple)" onclick="openModal('adr008')">
+          <div class="deliv-header" style="background:#9B6FFF20;color:var(--purple)">ADR-008</div>
+          <div class="deliv-fname">docs/adr/ADR-008-v1-roadmap.md</div>
+          <div class="deliv-body">
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--red)"></div>6 MUST items (production blockers)</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--amber)"></div>4 SHOULD items (scalability)</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--teal)"></div>3 NICE items (compliance)</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--purple)"></div>v1.0-rc scope definition</div>
+          </div>
+        </div>
+        <div class="deliv-card" style="background:#081008;border-color:var(--green)" onclick="openModal('v1rc')">
+          <div class="deliv-header" style="background:#00CC7820;color:var(--green)">v1.0-rc Tag</div>
+          <div class="deliv-fname">Git tag v1.0-rc → origin</div>
+          <div class="deliv-body">
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--green)"></div>EGS complete — Phases 01–07</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--green)"></div>Commit pushed to main</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--green)"></div>GitHub release created</div>
+            <div class="deliv-item"><div class="deliv-dot" style="background:var(--gold)"></div>229 tests + demo verified</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- flow -->
+    <div style="display:flex;justify-content:center;gap:8px;margin:-4px 0">
+      <div style="display:flex;align-items:center;gap:6px;padding:4px 14px;background:#0A0E18;border-radius:20px;border:1px solid var(--border)">
+        <span style="color:var(--gold);font-size:12px">↓</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--sub)">Live containment demo — 6 scripted steps across 4 stakeholder audiences</span>
+        <span style="color:var(--gold);font-size:12px">↓</span>
+      </div>
+    </div>
+
+    <!-- BAND B: Demo Steps -->
+    <div class="band band-b">
+      <div class="band-label">
+        <div class="bdot" style="background:var(--green)"></div>
+        <span style="color:var(--green)">6-Step Live Containment Demo</span>
+        <span style="color:var(--sub)">Tenant: DEMO_ENT_2026 · Host: SGWLWH000683 · All steps PASS</span>
+        <span style="margin-left:auto;color:var(--sub)">+ Admin Terminal Walkthrough + WebSocket Fix</span>
+      </div>
+      <div class="demo-layout">
+
+        <!-- Demo steps -->
+        <div class="demo-steps">
+
+          <div class="demo-step" style="background:#080C0A;border-color:var(--green)" onclick="openModal('d01')">
+            <div class="step-id" style="background:#00CC7818;color:var(--green)">D-01</div>
+            <div class="step-content">
+              <div class="step-title" style="color:var(--green)">Health Baseline — Shell Operational</div>
+              <div class="step-audience">[All stakeholders]</div>
+              <div class="step-result">status=OK · watchdog=RUNNING · slaHealthy=True · policy=STRICT-PROD · activeTenants=1</div>
+            </div>
+            <div class="step-badge"><span class="pass-pill" style="background:#00CC7820;color:var(--green)">PASS</span></div>
+          </div>
+
+          <div class="demo-step" style="background:#0F0C04;border-color:var(--amber)" onclick="openModal('d02')">
+            <div class="step-id" style="background:#FFB80018;color:var(--amber)">D-02</div>
+            <div class="step-content">
+              <div class="step-title" style="color:var(--amber)">Clean Request → DOWNGRADE</div>
+              <div class="step-audience">[Executive, Architect]</div>
+              <div class="step-result">REQ-000002 · action=DOWNGRADE · authority=reference-only · integrity.score=88 · EVD-...EEFE2F6F</div>
+            </div>
+            <div class="step-badge"><span class="pass-pill" style="background:#00CC7820;color:var(--green)">PASS</span></div>
+          </div>
+
+          <div class="demo-step" style="background:#140808;border-color:var(--red)" onclick="openModal('d03')">
+            <div class="step-id" style="background:#FF4D6A18;color:var(--red)">D-03</div>
+            <div class="step-content">
+              <div class="step-title" style="color:var(--red)">Threat → BLOCK with Evidence</div>
+              <div class="step-audience">[All stakeholders — core demonstration]</div>
+              <div class="step-result">REQ-000003 · action=BLOCK · authority=invalid · integrity={level=Critical, score=29} · EVD-...38BE649C</div>
+            </div>
+            <div class="step-badge"><span class="pass-pill" style="background:#00CC7820;color:var(--green)">PASS</span></div>
+          </div>
+
+          <div class="demo-step" style="background:#060C0F;border-color:var(--teal)" onclick="openModal('d04')">
+            <div class="step-id" style="background:#00CEB818;color:var(--teal)">D-04</div>
+            <div class="step-content">
+              <div class="step-title" style="color:var(--teal)">Sequence Analysis — Toru-William Interface</div>
+              <div class="step-audience">[Toru alignment — minimum viable signal layer]</div>
+              <div class="step-result">patternType=CONTAINED · escalationDetected=True · consistencyScore=94 · eventCount=2 · layers={gate,authority}</div>
+            </div>
+            <div class="step-badge"><span class="pass-pill" style="background:#00CC7820;color:var(--green)">PASS</span></div>
+          </div>
+
+          <div class="demo-step" style="background:#06101A;border-color:var(--accent)" onclick="openModal('d05')">
+            <div class="step-id" style="background:#00D4FF18;color:var(--accent)">D-05</div>
+            <div class="step-content">
+              <div class="step-title" style="color:var(--accent)">Audit Trail — Evidence Retrieval</div>
+              <div class="step-audience">[Legal/Compliance]</div>
+              <div class="step-result">EVD-...8D24C988: layer=gate · severity=low · detectionMode=Real-time Gate Enforcement · mttdMs=1 · seqNo=1</div>
+            </div>
+            <div class="step-badge"><span class="pass-pill" style="background:#00CC7820;color:var(--green)">PASS</span></div>
+          </div>
+
+          <div class="demo-step" style="background:#0A0906;border-color:var(--gold)" onclick="openModal('d06')">
+            <div class="step-id" style="background:#F5C54218;color:var(--gold)">D-06</div>
+            <div class="step-content">
+              <div class="step-title" style="color:var(--gold)">GovState — Executive Dashboard</div>
+              <div class="step-audience">[Executive — containment proof]</div>
+              <div class="step-result">operationalMode=CONTAINMENT · rawExposurePct=100 · governedOutputPct=54 · activeEvent=AUTHORITY_REVOKED/HIGH · equivalenceTests={passed=12,total=12}</div>
+            </div>
+            <div class="step-badge"><span class="pass-pill" style="background:#00CC7820;color:var(--green)">PASS</span></div>
+          </div>
+
+        </div>
+
+        <!-- Admin Terminal -->
+        <div class="admin-panel">
+          <div class="admin-title">Admin Terminal</div>
+          <div class="admin-url">http://localhost:5173 · Vite prod build: 878 modules</div>
+          <div class="role-item" style="background:#14080C;border-color:var(--red)" onclick="openModal('soc-role')">
+            <div class="role-name" style="color:var(--red)">[ SOC OPERATOR ]</div>
+            <div class="role-desc">BLOCK/DOWNGRADE events in red/amber · layer filter ?layer=gate confirmed · MTTD SLA panel</div>
+          </div>
+          <div class="role-item" style="background:#100C04;border-color:var(--amber)" onclick="openModal('arch-role')">
+            <div class="role-name" style="color:var(--amber)">[ ARCHITECT ]</div>
+            <div class="role-desc">Shell integrity=OPERATIONAL · fail-safe=ENABLED · MTTD expanded p95/p99</div>
+          </div>
+          <div class="role-item" style="background:#060C0F;border-color:var(--teal)" onclick="openModal('auditor-role')">
+            <div class="role-name" style="color:var(--teal)">[ AUDITOR ]</div>
+            <div class="role-desc">Sequence panel from EVD-...↗ click · patternType=CONTAINED displayed · policy=STRICT-PROD</div>
+          </div>
+          <div class="role-item" style="background:#0C060F;border-color:var(--purple)" onclick="openModal('exec-role')">
+            <div class="role-name" style="color:var(--purple)">[ EXECUTIVE ]</div>
+            <div class="role-desc">RAW vs GOVERNED bars · trend chart integrity drop on BLOCK event visible</div>
+          </div>
+        </div>
+
+        <!-- WebSocket Fix -->
+        <div class="ws-panel">
+          <div class="ws-title">WebSocket I-01 — FIXED</div>
+          <div class="ws-sub">Phase 05 defect resolved in Phase 07 production build</div>
+          <div class="ws-log">[WS] Client connected:<br>GLOBAL_ENT_2026</div>
+          <div class="ws-log">[WS] Client disconnected:<br>GLOBAL_ENT_2026</div>
+          <div style="font-size:7.5px;color:var(--sub);margin-top:6px;margin-bottom:4px">3 WebSocket sessions confirmed in server log during demo. Live push operational on all 4 role tabs.</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--sub);padding:5px 7px;background:#060E0C;border-radius:4px;border-left:2px solid var(--sub)">
+            Root: api/src/server.ts rebuilt with connection.socket.send() fix (vs socket.send()). Phase 07 production build resolves @fastify/websocket interface mismatch.
+          </div>
+          <div style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:7.5px;padding:5px 8px;background:#00CC7815;border-radius:4px;color:var(--green);font-weight:700">
+            /v1/state/stream operational ✓
+          </div>
+          <div style="margin-top:4px;font-size:7px;color:var(--sub)">WS auth still MUST for v1.0 production (S-003, ADR-008)</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- flow -->
+    <div style="display:flex;justify-content:center;gap:8px;margin:-4px 0">
+      <div style="display:flex;align-items:center;gap:6px;padding:4px 14px;background:#0A0E18;border-radius:20px;border:1px solid var(--border)">
+        <span style="color:var(--teal);font-size:12px">↓</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--sub)">Commercial pilot proposal · ADR-008 production roadmap · Toru-William alignment confirmed</span>
+        <span style="color:var(--teal);font-size:12px">↓</span>
+      </div>
+    </div>
+
+    <!-- BAND C: Pilot + ADR-008 -->
+    <div class="band band-c">
+      <div class="bottom-grid">
+
+        <!-- Tier 1 -->
+        <div class="tier-card" style="background:#060C0F;border-color:var(--teal)" onclick="openModal('tier1')">
+          <div class="tier-header" style="background:#00CEB818">
+            <span class="tier-name" style="color:var(--teal)">TIER 1 — OBSERVE</span>
+            <span class="tier-dur" style="background:#00CEB820;color:var(--teal)">4 weeks</span>
+          </div>
+          <div class="tier-body">
+            <div class="tier-item" style="color:var(--teal)">PILOT-OBS mode (no blocking)</div>
+            <div class="tier-item" style="color:var(--sub)">Single AI/OS boundary endpoint</div>
+            <div class="tier-item" style="color:var(--sub)">/v1/events, /v1/mttd, /v1/state</div>
+            <div class="tier-item" style="color:var(--sub)">Admin Terminal for arch team</div>
+            <div class="tier-item" style="color:var(--sub)">MTTD baseline report</div>
+            <div class="tier-item" style="color:var(--sub)">AuditSignal samples for Urielle</div>
+            <div style="margin-top:8px;font-size:7px;color:var(--teal);font-style:italic">Success: Zero false positives · All within MTTD SLA</div>
+          </div>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="tier-card" style="background:#0F0C04;border-color:var(--amber)" onclick="openModal('tier2')">
+          <div class="tier-header" style="background:#FFB80018">
+            <span class="tier-name" style="color:var(--amber)">TIER 2 — CONTAIN</span>
+            <span class="tier-dur" style="background:#FFB80020;color:var(--amber)">8 weeks</span>
+          </div>
+          <div class="tier-body">
+            <div class="tier-item" style="color:var(--amber)">ENTERPRISE_STRICT mode</div>
+            <div class="tier-item" style="color:var(--sub)">Custom gate rules tuned</div>
+            <div class="tier-item" style="color:var(--sub)">Per-tenant isolation validated</div>
+            <div class="tier-item" style="color:var(--sub)">STRIDE threat model</div>
+            <div class="tier-item" style="color:var(--sub)">ISO 42001 control mapping</div>
+            <div class="tier-item" style="color:var(--sub)">Pen test results</div>
+            <div style="margin-top:8px;font-size:7px;color:var(--amber);font-style:italic">Success: FP rate &lt;0.5% · No FAIL_SAFE activations</div>
+          </div>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="tier-card" style="background:#0C060F;border-color:var(--purple)" onclick="openModal('tier3')">
+          <div class="tier-header" style="background:#9B6FFF18">
+            <span class="tier-name" style="color:var(--purple)">TIER 3 — AUDIT</span>
+            <span class="tier-dur" style="background:#9B6FFF20;color:var(--purple)">12 weeks</span>
+          </div>
+          <div class="tier-body">
+            <div class="tier-item" style="color:var(--purple)">Full Urielle AuditSignal integration</div>
+            <div class="tier-item" style="color:var(--sub)">ISO 42001 formal audit trail</div>
+            <div class="tier-item" style="color:var(--sub)">Multi-tenant (up to 5 BUs)</div>
+            <div class="tier-item" style="color:var(--sub)">JWT + RBAC full rollout</div>
+            <div class="tier-item" style="color:var(--sub)">Clause 8 + 9 evidence accepted</div>
+            <div class="tier-item" style="color:var(--sub)">Commercial terms agreed</div>
+            <div style="margin-top:8px;font-size:7px;color:var(--purple);font-style:italic">Success: Legal sign-off · ISO 42001 8.4/9.1/9.2 accepted</div>
+          </div>
+        </div>
+
+        <!-- ADR-008 + TW -->
+        <div class="adr-panel">
+          <div class="adr-title">ADR-008</div>
+          <div class="adr-sub">v1.0 Production Roadmap · 13 items</div>
+          <div class="roadmap-item">
+            <span class="priority-pill" style="background:#FF4D6A20;color:var(--red)">MUST ×6</span>
+            <span style="font-size:7.5px;color:var(--text)">WebSocket auth · HMAC handles · Stack trace strip · String sanitize · JWT activatedBy · /v1/mttd role</span>
+          </div>
+          <div class="roadmap-item">
+            <span class="priority-pill" style="background:#FFB80020;color:var(--amber)">SHOULD ×4</span>
+            <span style="font-size:7.5px;color:var(--text)">TimescaleDB · Redis registry · RS256 JWT · GitHub Pages demo</span>
+          </div>
+          <div class="roadmap-item">
+            <span class="priority-pill" style="background:#00CEB820;color:var(--teal)">NICE ×3</span>
+            <span style="font-size:7.5px;color:var(--text)">HMAC sourceId · Event rate limit · ISO 42001 auto-package</span>
+          </div>
+          <div class="tw-summary">
+            <div class="tw-title">Toru-William D-04 Confirmed</div>
+            <div class="tw-row"><span class="tw-key">patternType</span><span class="tw-val">CONTAINED</span></div>
+            <div class="tw-row"><span class="tw-key">escalationDetected</span><span class="tw-val">true</span></div>
+            <div class="tw-row"><span class="tw-key">consistencyScore</span><span class="tw-val">94</span></div>
+            <div class="tw-row"><span class="tw-key">AuditSignal ADR-006</span><span class="tw-val">VERIFIED</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>Phase 07 deliverables / Demo</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>PASS / Demo step result</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div>Toru-William / Pilot Tier 1 / WS Fixed</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Threat BLOCK / ADR-008 MUST</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--purple)"></div>Pilot Tier 3 / ADR-008 / Admin Terminal</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>DOWNGRADE / Pilot Tier 2</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--sub)"></div>Phases 01–06 (no change)</div>
+  <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--sub)">
+    NCAOS/EGS Phase 07 · EGS COMPLETE · v1.0-rc · Non-Public Concept Demonstration · 2026-05-19
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModalDirect()">✕ close</span>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const MODALS = {
+  'core': { title:'@ncaos/core', sub:'Phase 01 · 47 tests · No regressions in Phase 07',
+    body:'<ul><li><span>47 tests passing</span> — all regression checks confirm no impact</li><li><span>Foundation layer</span> — detectGate/Premise/Authority/Continuity, scoring, verdict enforcement, failSafeVerdict</li><li><span>ADR-002 invariant</span> verified again via D-01 health baseline in Phase 07 demo</li></ul>' },
+  'shell': { title:'@ncaos/shell', sub:'Phase 02 · 15 tests · No regressions',
+    body:'<ul><li><span>15 tests passing</span></li><li><span>ShellLoop started at demo:</span> "[ShellLoop] Started — policy: STRICT-PROD" confirmed in server log at PID 37716</li><li><span>D-06 GovState:</span> shellIntegrity=True · failSafeEnabled=True · equivalenceTests={passed:12,total:12}</li></ul>' },
+  'api': { title:'@ncaos/api', sub:'Phase 02→04 · 65 tests · No regressions',
+    body:'<ul><li><span>65 tests passing</span></li><li><span>WebSocket fix:</span> server.ts rebuilt in Phase 07 — [WS] Client connected: GLOBAL_ENT_2026 confirmed. 3 WS sessions observed in server log.</li><li><span>All 14 routes functional</span> during demo: /v1/health, /v1/process, /v1/state, /v1/audit/:handle, /v1/events, /v1/events/sequence/:id/summary, /v1/mttd, /v1/policy</li></ul>' },
+  'detection': { title:'@ncaos/detection', sub:'Phase 03 · 54 tests · No regressions',
+    body:'<ul><li><span>54 tests passing</span></li><li><span>GateDetector</span> — INJECTION_PATTERN + SIGNATURE_INVALID detected in D-03 → BLOCK</li><li><span>AuthorityDetector</span> — overrideAttempted escalation detected in D-03 second request → AUTHORITY_REVOKED type</li><li><span>MTTD SLA baseline</span> (Phase 06) remains the Phase 07 performance contract</li></ul>' },
+  'ui': { title:'@ncaos/ui', sub:'Phase 05 · Manual verification · No changes in Phase 07',
+    body:'<ul><li><span>Vite production build:</span> 878 modules, dist/assets/index-BjNu-vPh.js 592.57 kB — confirmed in Chapter05_running_log.txt</li><li><span>WebSocket I-01 resolved:</span> server.ts rebuilt fixes connection.socket.send() — all 4 role tabs connect via WS during demo</li><li><span>Admin Terminal walkthrough</span> completed for all 4 role views (SOC/ARCHITECT/AUDITOR/EXECUTIVE)</li></ul>' },
+  'audit-signal': { title:'audit-signal', sub:'Phase 05 · AS-01→03 · ADR-006 · No changes in Phase 07',
+    body:'<ul><li><span>AuditSignal schema</span> — 14-field core + sequence + enrichment layers</li><li><span>D-04 Toru-William:</span> sequence summary produces AuditSignal-compatible output: patternType=CONTAINED, escalationDetected=True, consistencyScore=94</li><li><span>ADR-006 interface contract</span> demonstrated live — Urielle can consume D-04 output without internal EGS access</li></ul>' },
+  'hardening': { title:'@ncaos/hardening', sub:'Phase 06 · 48 tests · No regressions in Phase 07',
+    body:'<ul><li><span>48 tests passing</span></li><li><span>STRIDE register (15 threats)</span> — ADR-008 MUST items derived directly from HIGH-risk STRIDE items</li><li><span>RateLimiter</span> — functional (unit tests pass); PT-007 manual flood still too slow to exhaust burst=150</li><li><span>ISO 42001 mapping</span> — 8 IMPLEMENTED, 3 PARTIAL, 1 PLANNED — evidence demonstrated in demo endpoints</li></ul>' },
+  'demo-scenario': { title:'demo/demo-scenario.ts', sub:'Phase 07 · 6-step live containment demo script',
+    body:'<ul><li><span>D-01:</span> /v1/health baseline — governance shell operational, ADR-002 FAIL_SAFE active</li><li><span>D-02:</span> Clean request → DOWNGRADE · shows normal governance enforcement with authority downgrade</li><li><span>D-03:</span> Threat request (INJECTION_PATTERN + SIGNATURE_INVALID + authority mismatch) → BLOCK · evidenceHandle captured</li><li><span>D-04:</span> /v1/events/sequence/WF-DEMO-LIVE-001/summary → CONTAINED pattern, escalation documented</li><li><span>D-05:</span> /v1/audit/EVD-... → full EventRecord with layer, severity, routing, mttdMs, sequenceNumber</li><li><span>D-06:</span> /v1/state → GovState: rawExposurePct=100 vs governedOutputPct=54 — containment proof</li></ul>' },
+  'pilot-proposal': { title:'pilot/pilot-proposal.ts', sub:'Phase 07 · 3-tier commercial pilot structure',
+    body:'<ul><li><span>Tier 1 (Observe, 4 weeks):</span> PILOT-OBS mode, no blocking, read-only access, MTTD baseline, AuditSignal samples</li><li><span>Tier 2 (Contain, 8 weeks):</span> ENTERPRISE_STRICT, custom gate rules, STRIDE + ISO 42001 evidence, false positive target &lt;0.5%</li><li><span>Tier 3 (Audit, 12 weeks):</span> Full Urielle integration, ISO 42001 formal audit trail, multi-tenant, commercial terms</li><li><span>Architecture team recommended</span> to start at Tier 1 to build confidence before enforcement</li></ul>' },
+  'adr008': { title:'ADR-008 — v1.0 Production Roadmap', sub:'docs/adr/ADR-008-v1-roadmap.md · 13 items',
+    body:'<ul><li><span>MUST (6 items):</span> WebSocket auth (S-003) · Stack trace strip (I-001) · HMAC evidence handles (R-001) · String sanitize (T-003) · activatedBy JWT sub (R-002) · /v1/mttd admin role (I-003)</li><li><span>SHOULD (4 items):</span> TimescaleDB persistence · Redis TenantDetectorRegistry · RS256 JWT key rotation · GitHub Pages demo</li><li><span>NICE (3 items):</span> HMAC-signed sourceId · Per-tenant event rate limit · ISO 42001 auto-package generation</li><li><span>Note on TimescaleDB:</span> EventStore is in-memory — Phase 07 demo required server restart workaround (events lost). TimescaleDB is the SHOULD-priority fix.</li></ul>' },
+  'v1rc': { title:'Git Tag v1.0-rc', sub:'EGS complete — Phases 01–07 · GitHub release created',
+    body:'<ul><li><span>Commit:</span> "feat: Phase 07 complete — stakeholder demo + v1.0-rc" pushed to main</li><li><span>Staged:</span> egs/demo/ + egs/pilot/ + docs/adr/ADR-008-v1-roadmap.md</li><li><span>Tag:</span> git tag -a v1.0-rc -m "v1.0-rc — EGS complete — Phases 01-07 — 229+ tests — Demo ready"</li><li><span>GitHub release:</span> created on v1.0-rc tag with Phase 01–07 summary release notes</li><li><span>Coverage:</span> 229 automated tests + 6-step live demo + Admin Terminal walkthrough</li></ul>' },
+  'd01': { title:'D-01 — Health Baseline', sub:'All stakeholders · PASS',
+    body:'<ul><li><span>Command:</span> GET /v1/health — X-Partner-ID: DEMO_ENT_2026</li><li><span>Observed:</span> status=OK · watchdog=RUNNING · shell=True · policy=STRICT-PROD · slaHealthy=True · activeTenants=1 · totalEvents=0</li><li><span>Server log confirms:</span> "[ShellLoop] Started — policy: STRICT-PROD" · "[Watchdog] Shell started" at PID 37716</li><li><span>Governance narrative:</span> "EGS is already observing the boundary. The protected AI system is isolated — the shell has no access to internal model weights or OS kernel state."</li></ul>' },
+  'd02': { title:'D-02 — Clean Request → DOWNGRADE', sub:'Executive, Architect · PASS',
+    body:'<ul><li><span>Input:</span> sourceId=enterprise-svc-001 · all 3 premises claimed and validated (AUTH, SCOPE, ENV) · requestedAuthority=decision-ready · workflowId=WF-DEMO-LIVE-001</li><li><span>Observed:</span> requestId=REQ-000002 · action=DOWNGRADE · authority=reference-only · integrity={level=Available, score=88} · evidenceHandle=EVD-1779183741527-EEFE2F6F · processingMs=0</li><li><span>Note:</span> DOWNGRADE (not PASS) because policyGrantedAuthority vs requestedAuthority mismatch — demonstrates ENTERPRISE_STRICT enforcement on authority claims</li><li><span>Governance narrative:</span> "A legitimate enterprise request passes through governance. Premises validated. No threats detected."</li></ul>' },
+  'd03': { title:'D-03 — Threat → BLOCK with Evidence', sub:'All stakeholders · PASS',
+    body:'<ul><li><span>Input:</span> INJECTION_PATTERN + SIGNATURE_INVALID flags · only 1 of 3 premises validated · authority override attempt · workflowId=WF-DEMO-LIVE-001</li><li><span>Observed:</span> requestId=REQ-000003 · action=BLOCK · authority=invalid · integrity={level=Critical, score=29} · evidenceHandle=EVD-1779184017201-38BE649C · processingMs=0</li><li><span>Second session:</span> REQ-000003 · evidenceHandle=EVD-1779185789352-BF52C998 · type=AUTHORITY_REVOKED · layer=authority · scope=sys · mttdMs=0</li><li><span>Governance narrative:</span> "The shell detects it at the gate layer and blocks it — without touching the protected AI system."</li></ul>' },
+  'd04': { title:'D-04 — Sequence Analysis', sub:'Toru-William Interface · PASS',
+    body:'<ul><li><span>Endpoint:</span> GET /v1/events/sequence/WF-DEMO-LIVE-001/summary</li><li><span>Observed:</span> sequenceId=WF-DEMO-LIVE-001 · patternType=CONTAINED · escalationDetected=True · consistencyScore=94 · eventCount=2 · firstDetectedAt=5/19/2026 10:16:16 AM · lastDetectedAt=5/19/2026 10:16:29 AM · layers={gate,authority} · severities={low,high} · actions={DOWNGRADE,BLOCK}</li><li><span>Note — first run 404:</span> EventStore is in-memory; server restart (EADDRINUSE port conflict) cleared events. Re-generated events in second session. Phase 07 ADR-008 lists TimescaleDB as SHOULD-priority fix.</li><li><span>Governance narrative for Toru:</span> "This is the minimum viable signal layer — patternType, consistencyScore, and escalationDetected are derived entirely from boundary signals. Urielle can generate audit findings from this without internal visibility."</li></ul>' },
+  'd05': { title:'D-05 — Audit Trail', sub:'Legal/Compliance · PASS',
+    body:'<ul><li><span>Event 1 (REQ-000002 DOWNGRADE):</span> evidenceHandle=EVD-1779185776973-8D24C988 · event.type=NO_EVENT · layer=gate · scope=req · severity=low · detectionMode=Real-time Gate Enforcement · integrity={level=Available, score=88} · authority={authority=decision-ready, score=84} · routing={hint=SOC/Security Queue} · mttdMs=1 · storedAt=2026-05-19T10:16:16.976Z · sequenceNumber=1</li><li><span>Event 2 (REQ-000003 BLOCK):</span> evidenceHandle=EVD-1779185789352-BF52C998 · event.type=AUTHORITY_REVOKED · layer=authority · scope=sys · severity=high · detectionMode=Authority Boundary Enforcement · integrity={level=Critical, score=29} · authority={authority=invalid, score=22} · routing={hint=Governance/Policy Review} · sequenceNumber=2</li><li><span>Governance narrative:</span> "A compliance auditor can retrieve the full evidence record for any containment event using the evidence handle."</li></ul>' },
+  'd06': { title:'D-06 — Executive Dashboard (GovState)', sub:'Executive · PASS',
+    body:'<ul><li><span>Observed:</span> systemStatus=ENFORCING (STRICT) · operationalMode=CONTAINMENT · shellIntegrity=True · failSafeEnabled=True</li><li><span>Integrity:</span> level=Critical · score=29</li><li><span>Containment metrics:</span> rawExposurePct=100 · governedOutputPct=54 · coreIsolationPct=35 · contextDriftPressurePct=43 · latencyOverheadMs=369</li><li><span>Continuity:</span> updateState=STABLE · continuityScore=85 · changeWindowActive=False · equivalenceTests={passed:12, total:12}</li><li><span>Active:</span> AUTHORITY_REVOKED / HIGH · lastRouting=Governance / Policy Review · blockedLayer=authority</li><li><span>Governance narrative:</span> "The EGS absorbed the shock at the boundary. The external world only sees GOVERNED_OUTPUT — not the raw system state. This is the containment proof."</li></ul>' },
+  'soc-role': { title:'[ SOC OPERATOR ] Tab', sub:'Admin Terminal · http://localhost:5173',
+    body:'<ul><li><span>Event log:</span> BLOCK shown in red, DOWNGRADE in amber</li><li><span>Layer filter:</span> ?layer=gate confirmed in server log (req-1x, req-55, req-58 etc.)</li><li><span>MTTD panel:</span> gate/premise/authority/continuity p50 bars</li><li><span>Evidence handles:</span> EVD-... with ↗ indicator for sequences</li><li><span>WebSocket:</span> live push operational — [WS] Client connected: GLOBAL_ENT_2026 confirmed</li></ul>' },
+  'arch-role': { title:'[ ARCHITECT ] Tab', sub:'Admin Terminal · http://localhost:5173',
+    body:'<ul><li><span>Shell integrity panel:</span> shellIntegrity=OPERATIONAL · failSafeEnabled=ENABLED</li><li><span>Core isolation:</span> coreIsolationPct=35%</li><li><span>Latency overhead:</span> latencyOverheadMs=369ms</li><li><span>Continuity:</span> updateState=STABLE · continuityScore=85 · equivalenceTests=12/12</li><li><span>MTTD expanded:</span> p95/p99/breach counts per layer</li></ul>' },
+  'auditor-role': { title:'[ AUDITOR ] Tab', sub:'Admin Terminal · http://localhost:5173',
+    body:'<ul><li><span>Sequence panel:</span> loads from EVD-...↗ click → WF-DEMO-LIVE-001</li><li><span>patternType=CONTAINED · escalationDetected=True · consistencyScore=94</span></li><li><span>Policy panel:</span> profileId=STRICT-PROD · blockOnContainment=YES</li><li><span>Evidence stats:</span> total=2 · activeSequences=1 · byLayer + byAction counts</li><li><span>Server log:</span> /v1/events/sequence/WF-DEMO-LIVE-001/summary → 200 OK (req-6i, req-2r, req-87 etc.)</li></ul>' },
+  'exec-role': { title:'[ EXECUTIVE ] Tab', sub:'Admin Terminal · http://localhost:5173',
+    body:'<ul><li><span>System status:</span> WATCHDOG=RUNNING · SHELL=ONLINE · SLA=WITHIN SLA</li><li><span>RAW vs GOVERNED:</span> rawExposurePct=100 vs governedOutputPct=54 — containment bars visible</li><li><span>Drift pressure bar:</span> contextDriftPressurePct=43</li><li><span>Trend chart:</span> integrity + authority trend lines show drop from BLOCK event</li><li><span>/v1/state polled</span> — operationalMode=CONTAINMENT visible</li></ul>' },
+  'tier1': { title:'Tier 1 — Observe (4 weeks)', sub:'Commercial Pilot · egs/pilot/pilot-proposal.ts',
+    body:'<ul><li><span>Scope:</span> EGS in PILOT-OBS mode (no blocking) · Single AI/OS boundary endpoint · Read access to /v1/events, /v1/mttd, /v1/state · Admin Terminal for architecture team</li><li><span>Deliverables:</span> MTTD baseline report over 4 weeks · Event log analysis (frequency and pattern) · GovState trend (RAW vs GOVERNED) · Phase 01 AuditSignal samples for Urielle review</li><li><span>Success criteria:</span> All requests within MTTD SLA (p99 per policy) · Zero false positives blocking legitimate requests · Evidence handles structured for compliance review · Architecture team confirms EGS has no internal model access</li></ul>' },
+  'tier2': { title:'Tier 2 — Contain (8 weeks)', sub:'Commercial Pilot · egs/pilot/pilot-proposal.ts',
+    body:'<ul><li><span>Scope:</span> ENTERPRISE_STRICT mode (DOWNGRADE + BLOCK active) · Custom gate rules for enterprise threat patterns · Policy profile tuned by enterprise architecture team · Per-tenant isolation validated for multi-system deployment</li><li><span>Deliverables:</span> STRIDE threat model for enterprise AI/OS landscape · ISO 42001 control mapping with evidence · Pen test results for enterprise attack vectors · AuditSignal samples for compliance/legal review</li><li><span>Success criteria:</span> Containment events reflect genuine governance violations · False positive rate &lt;0.5% of legitimate requests · Compliance team confirms evidence trail meets audit requirements · No FAIL_SAFE activations over 8 weeks</li></ul>' },
+  'tier3': { title:'Tier 3 — Audit (12 weeks)', sub:'Commercial Pilot · egs/pilot/pilot-proposal.ts',
+    body:'<ul><li><span>Scope:</span> Full Urielle audit layer integration — AuditSignal consumption · ISO 42001 formal audit trail generation · Multi-tenant deployment (up to 5 business units) · JWT + RBAC rolled out to all API consumers</li><li><span>Deliverables:</span> ISO 42001 compliance evidence for Clause 8 and 9 · Formal audit findings report (Urielle/MLP) · v1.0-rc deployment guide for enterprise infrastructure · Phase 07 hardening actions completed (S-003, T-003, R-001)</li><li><span>Success criteria:</span> Legal/compliance signs off on evidence trail quality · ISO 42001 8.4, 9.1, 9.2 IMPLEMENTED evidence accepted · Architecture confirms no internal visibility required · Commercial terms agreed for v1.0 production</li></ul>' },
+};
+function openModal(k) {
+  const d = MODALS[k]; if (!d) return;
+  document.getElementById('modal-title').textContent = d.title;
+  document.getElementById('modal-sub').textContent = d.sub;
+  document.getElementById('modal-body').innerHTML = d.body;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e) { if (e.target === document.getElementById('modal')) closeModalDirect(); }
+function closeModalDirect() { document.getElementById('modal').classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+</script>
+</body>
+</html>

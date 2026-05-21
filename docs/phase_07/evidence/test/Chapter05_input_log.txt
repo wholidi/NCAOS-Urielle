@@ -1,0 +1,100 @@
+PowerShell 7.4.0-preview.2
+
+   A new PowerShell preview release is available: v7.7.0-preview.1
+   Upgrade now, or check out the release page at:
+     https://aka.ms/PowerShell-Release?tag=v7.7.0-preview.1
+
+PS C:\Users\930140> cd\
+PS C:\> cd "AI Project"
+PS C:\AI Project> cd NCAOS-Urielle
+PS C:\AI Project\NCAOS-Urielle> cd egs
+PS C:\AI Project\NCAOS-Urielle\egs> $clean = @{
+>>   sourceId="enterprise-svc-001"; inputHash="sha256-clean-abc"
+>>   inputFlags=@(); claimedPremises=@("AUTH","SCOPE","ENV")
+>>   validatedPremises=@("AUTH","SCOPE","ENV")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="decision-ready"; overrideAttempted=$false
+>>   workflowId="WF-DEMO-LIVE-001"
+>> } | ConvertTo-Json
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $clean
+
+requestId      : REQ-000002
+action         : DOWNGRADE
+authority      : reference-only
+integrity      : @{level=Available; score=88}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1779183741527-EEFE2F6F
+processingMs   : 0
+
+PS C:\AI Project\NCAOS-Urielle\egs> $threat = @{
+>>   sourceId="external-attacker-2026"; inputHash="sha256-injected"
+>>   inputFlags=@("INJECTION_PATTERN","SIGNATURE_INVALID")
+>>   claimedPremises=@("AUTH","SCOPE","ADMIN")
+>>   validatedPremises=@("AUTH")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="reference-only"; overrideAttempted=$false
+>>   workflowId="WF-DEMO-LIVE-001"
+>> } | ConvertTo-Json
+PS C:\AI Project\NCAOS-Urielle\egs> $result = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $threat
+PS C:\AI Project\NCAOS-Urielle\egs> $result
+
+requestId      : REQ-000003
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1779184017201-38BE649C
+processingMs   : 0
+
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = $result.evidenceHandle
+PS C:\AI Project\NCAOS-Urielle\egs> Write-Host "Evidence handle: $handle"
+Evidence handle: EVD-1779184017201-38BE649C
+PS C:\AI Project\NCAOS-Urielle\egs> # Full event chain
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+sequenceId       records
+----------       -------
+WF-DEMO-LIVE-001 {@{evidenceHandle=EVD-1779183741527-EEFE2F6F; partnerId=DEMO_ENT_2026; event=; verdict…
+
+PS C:\AI Project\NCAOS-Urielle\egs> # Behavioral pattern summary (Toru-William interface)
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001/summary" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+sequenceId         : WF-DEMO-LIVE-001
+partnerId          : DEMO_ENT_2026
+eventCount         : 2
+firstDetectedAt    : 5/19/2026 9:42:21 AM
+lastDetectedAt     : 5/19/2026 9:46:57 AM
+layers             : {gate}
+severities         : {low, high}
+actions            : {DOWNGRADE, BLOCK}
+escalationDetected : True
+consistencyScore   : 94
+patternType        : CONTAINED
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+sequenceId       records count
+----------       ------- -----
+WF-DEMO-LIVE-001 {}          0
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001/summary" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+Invoke-RestMethod:
+{
+  "error": "NOT_FOUND",
+  "message": "No sequence found: WF-DEMO-LIVE-001"
+}
+PS C:\AI Project\NCAOS-Urielle\egs>
