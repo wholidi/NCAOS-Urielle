@@ -6,6 +6,23 @@
 >
 > **Urielle AI** provides governance assurance.
 
+## Architecture
+
+Detailed architecture documentation is available for both governance enforcement and governance assurance layers.
+
+### NCAOS / External Governance Shell (EGS)
+
+Governance boundary responsible for observation, detection, containment and enforcement.
+
+- 📐 [Interactive Architecture Diagram](docs/NCAOS/phase_07/architecture/NCAOS_Phase07_Architecture.html)
+- 📄 [Architecture PDF](docs/NCAOS/phase_07/architecture/NCAOS_Phase07_Architecture.pdf)
+
+### Urielle AI
+
+Audit Intelligence Layer responsible for runtime verification, governance evidence and audit reporting.
+
+- 📐 [Interactive Architecture Diagram](docs/Urielle/phase_07/architecture/Urielle_Architecture.html)
+- 📄 [Architecture PDF](docs/Urielle/phase_07/architecture/Urielle_Architecture.pdf)
 ---
 
 ## Overview
