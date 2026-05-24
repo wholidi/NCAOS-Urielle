@@ -1,84 +1,438 @@
-# NCAOS × Urielle — Decoupled Assurance Monitor
+# NCAOS-Urielle
 
-A lightweight proof of concept showing how boundary-emitted governance signals can be interpreted by an external audit layer without requiring access to internal system logic.
+> Decoupled AI Governance Infrastructure
+>
+> **NCAOS** provides governance enforcement.
+>
+> **Urielle AI** provides governance assurance.
 
-## What this demonstrates
+---
 
-This PoC validates that a minimal boundary event schema can be:
+## Overview
 
-- consistently interpreted as governance-relevant signals
-- mapped into control domains
-- translated into structured audit artifacts
-- used without breaking architectural independence between control and audit layers
+NCAOS-Urielle demonstrates a decoupled approach to AI governance where governance enforcement and governance assurance remain structurally independent from the protected AI system.
 
-## Context
+The platform consists of two complementary layers:
 
-The PoC uses an illustrative event set representing boundary-emitted governance signals:
+### NCAOS / EGS (External Governance Shell)
 
-- `policy_violation`
-- `unauthorized_access`
-- `state_anomaly`
-- `integrity_breach`
+An independent governance boundary responsible for:
 
-These events are processed by a lightweight audit interpretation layer that generates:
+- Observation
+- Detection
+- Policy Evaluation
+- Containment
+- Enforcement
+- Runtime Governance Controls
 
-- severity classification
-- control category mapping
-- NIST AI RMF references
-- Japan AI Guidelines for Business references
-- audit findings
-- recommended analyst actions
-- schema gap indicators
+### Urielle AI
 
-## Why this matters
+An Audit Intelligence Layer responsible for:
 
-The exercise validates a decoupled governance model:
+- Runtime Verification
+- Governance Evidence
+- Audit Findings
+- Sequence Analysis
+- ISO 42001 Evidence Mapping
+- MTTD Analysis
+- Audit-Ready Reporting
 
-- **NCAOS / boundary layer** emits structured governance signals
-- **Urielle / audit layer** interprets them into assurance outputs
+Together they demonstrate how AI systems can be governed, monitored, and audited without requiring access to model weights, prompts, proprietary algorithms, or internal reasoning processes.
 
-This suggests that external auditability can be achieved without internal model access, while preserving separation of concerns.
+---
 
-## Included artifacts
+## Why This Matters
 
-- `audit_results.json` — structured interpreted outputs
-- `audit_results.csv` — tabular export for review
-- `NCAOS_Urielle_Interface_Validation.pdf` — executive summary of interface validation
-- UI screenshots — visual reference of the PoC console
+Most AI governance solutions focus on documentation, policies, or static controls.
 
-## Reference implementation
+NCAOS-Urielle explores a different approach:
 
-CodeSandbox:
-`https://codesandbox.io/p/sandbox/n4cfst`
+> Treat governance as runtime infrastructure.
 
-## Validation outcome
+Instead of asking:
 
-The current boundary event schema is sufficient for:
+- Was a control designed?
+- Was a policy written?
 
-- consistent interpretation
+The system asks:
+
+- Was a governance event detected?
+- Was containment triggered?
+- Was enforcement applied?
+- Was evidence generated?
+- Can the result be independently audited?
+
+This creates a separation between:
+
+| Layer | Responsibility |
+|---------|---------|
+| Protected AI System | Produces outputs |
+| NCAOS / EGS | Governs behaviour |
+| Urielle AI | Verifies governance outcomes |
+
+---
+
+## High-Level Architecture
+
+```text
+Protected AI System
+        │
+        ▼
+
+ ┌───────────────────────┐
+ │      NCAOS / EGS      │
+ │ External Governance   │
+ │        Shell          │
+ └───────────────────────┘
+
+ Observer
+     │
+     ▼
+ Judge
+     │
+     ▼
+ Enforcer
+
+     │
+     ▼
+
+ AuditSignal (ADR-006)
+
+     │
+     ▼
+
+ ┌───────────────────────┐
+ │      Urielle AI       │
+ │ Audit Intelligence    │
+ │        Layer          │
+ └───────────────────────┘
+
+ Findings
+ Evidence
+ ISO42001 Mapping
+ MTTD Analysis
+ Audit Reports
+```
+
+The two systems communicate through the **ADR-006 AuditSignal Contract**, preserving structural independence between governance enforcement and governance assurance.
+
+---
+
+# NCAOS / EGS
+
+## Core Engine
+
+Shared governance framework providing:
+
+- Governance Contracts
+- Integrity Scoring
+- Verdict Generation
+- Routing Logic
+- Policy Loading
+- Detection Layer Integration
+
+Core modules include:
+
+- Verdict Engine
+- Routing Engine
+- Integrity Scoring
+- Governance Contracts
+- Policy Loader
+
+---
+
+## Detection Engine
+
+Independent governance detectors:
+
+### Gate Detector
+
+Validates entry conditions and governance boundaries.
+
+### Premise Detector
+
+Evaluates contextual assumptions and policy premises.
+
+### Authority Detector
+
+Detects authority violations and decision boundary breaches.
+
+### Continuity Detector
+
+Monitors workflow continuity and governance consistency.
+
+### MTTD Tracker
+
+Measures Mean Time To Detection across governance layers.
+
+---
+
+## Governance Shell Runtime
+
+The governance shell operates through a structured:
+
+```text
+Observer → Judge → Enforcer
+```
+
+pipeline.
+
+Supporting services include:
+
+- Shell Loop
+- Observer Runtime
+- Judge Runtime
+- Enforcer Runtime
+- Governance Watchdog
+
+---
+
+## Governance API
+
+The API layer provides:
+
+- Event Processing
+- Audit Retrieval
+- Policy Management
+- Tenant Registry
+- Event Store
+- Governance State Access
+
+Representative endpoints:
+
+```text
+/v1/events
+/v1/events/sequence/:id
+/v1/events/sequence/:id/summary
+/v1/audit/:handle
+/v1/mttd
+/v1/state
+/v1/policy
+/v1/health
+```
+
+---
+
+## Governance Dashboard
+
+Provides operational visibility into:
+
+- Governance Events
+- Detection Activity
+- Runtime Signals
+- Audit Evidence
+- Governance Health
+
+Built using:
+
+- React
+- Vite
+- TypeScript
+
+---
+
+# Urielle AI
+
+## Audit Intelligence Layer
+
+Urielle consumes governance signals generated by NCAOS through the ADR-006 interface contract.
+
+Urielle does **not** access:
+
+- model weights
+- prompts
+- protected system state
+- internal scoring logic
+
+Instead it processes governance evidence generated at the governance boundary.
+
+---
+
+## Audit Signal Consumer
+
+Validates and interprets AuditSignal objects.
+
+Functions include:
+
+- schema validation
+- evidence assessment
 - control mapping
-- audit artifact generation
+- audit summarisation
 
-The PoC also surfaced optional enrichment fields that would improve audit depth, such as:
+---
 
-- source identity
-- session ID
-- asset context
-- anomaly context / baseline reference
+## Finding Generator
 
-## Scope note
+Transforms governance events into structured audit findings.
 
-This repository represents a **PoC evaluation artifact**, not a production system.
+Produces:
 
-It is intended to demonstrate interface sufficiency and audit interpretation behavior only. It does not expose proprietary internal control logic or production audit methodology.
+- Audit Findings
+- Severity Assessments
+- Control Status Evaluations
+- STRIDE Context References
 
-## Screenshot
+---
 
-Add one dashboard screenshot here, for example:
+## Sequence Analyzer
 
-![Decoupled Assurance Monitor](./screenshots/dashboard-overview.png)
+Evaluates behavioural patterns across governance event sequences.
 
-## Author
+Produces:
 
-Toru Takahashi  / William Holidi Hartono  
-NCAOS / Urielle AI
+- Governance Posture
+- Sequence Audit Reports
+- Tenant Posture Summaries
+
+Example posture states:
+
+```text
+HEALTHY
+UNDER_PRESSURE
+CONTAINED
+UNSTABLE
+```
+
+---
+
+## ISO 42001 Evidence Engine
+
+Builds structured evidence packages supporting:
+
+- ISO 42001 controls
+- Coverage assessment
+- Audit readiness evaluation
+
+---
+
+## MTTD Monitor
+
+Measures governance detection effectiveness through:
+
+- SLA Evaluation
+- Baseline Monitoring
+- Detection Regression Analysis
+
+---
+
+## Report Builder
+
+Assembles complete audit deliverables including:
+
+- Findings
+- Sequence Reports
+- Coverage Reports
+- MTTD Reports
+- Tenant Audit Reports
+
+into a single audit package.
+
+---
+
+# Security & Governance Validation
+
+Dedicated validation modules include:
+
+## Threat Modelling
+
+- STRIDE
+- AI/ML Threat Models
+
+## Governance Standards
+
+- ISO 42001 Mapping
+
+## Security Validation
+
+- Authentication Validation
+- Pentest Scenarios
+- Chaos Testing
+- Detection Regression Testing
+
+---
+
+# Architectural Principles
+
+The platform follows several core principles:
+
+1. Governance remains external to system intelligence
+2. Enforcement and assurance remain independent
+3. Fail-safe containment takes precedence over availability
+4. Governance decisions must be observable
+5. Audit evidence must be reproducible
+6. Tenant isolation is mandatory
+7. Detector independence reduces single-point governance failure
+
+Architecture decisions are documented through ADR-001 to ADR-008.
+
+---
+
+# Repository Structure
+
+```text
+NCAOS-Urielle
+│
+├── egs/
+│   ├── api/
+│   ├── core/
+│   ├── detection/
+│   ├── shell/
+│   ├── ui/
+│   ├── hardening/
+│   └── docs/
+│
+└── urielle/
+    ├── audit-signal-consumer
+    ├── finding-generator
+    ├── sequence-analyzer
+    ├── iso42001-evidence
+    ├── mttd-monitor
+    └── report-builder
+```
+
+---
+
+# Current Status
+
+Current implementation includes:
+
+- External Governance Shell (EGS)
+- Observer → Judge → Enforcer architecture
+- Independent governance detectors
+- Multi-tenant governance support
+- Runtime event monitoring
+- Audit signal generation
+- Audit intelligence processing
+- ISO 42001 evidence mapping
+- Security hardening framework
+- Governance dashboard
+- ADR-based architecture documentation
+
+---
+
+# Research Areas
+
+- AI Governance Infrastructure
+- Runtime Verification
+- Governance Evidence
+- Audit Signal Standards
+- Governance Observability
+- Governance Containment
+- Audit Automation
+- AI Assurance Engineering
+
+---
+
+# Authors
+
+**Toru Takahashi**  
+NCAOS
+
+**William Hartono**  
+Urielle AI
+
+---
+
+## Concept
+
+**Decoupled Governance Enforcement + Independent Governance Assurance**
