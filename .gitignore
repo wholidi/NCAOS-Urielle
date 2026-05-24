@@ -1,0 +1,14 @@
+# Node.js
+node_modules/
+dist/
+
+# Urielle
+urielle/node_modules/
+urielle/dist/
+
+# Archives
+*.tar.gz
+
+# Office temp files
+~$*.docx
+~$*.xlsx

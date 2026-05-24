@@ -1,0 +1,97 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd urielle
+PS D:\Projects\NCAOS-Urielle\urielle> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/health" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+
+status        : OK
+watchdog      : RUNNING
+shell         : True
+policy        : STRICT-PROD
+slaHealthy    : True
+activeTenants : 1
+totalEvents   : 0
+timestamp     : 2026-05-23T16:06:12.379Z
+
+
+
+PS D:\Projects\NCAOS-Urielle\urielle> $clean = @{
+>>   sourceId="enterprise-svc-001"; inputHash="sha256-clean-abc"
+>>   inputFlags=@(); claimedPremises=@("AUTH","SCOPE","ENV")
+>>   validatedPremises=@("AUTH","SCOPE","ENV")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="decision-ready"; overrideAttempted=$false
+>>   workflowId="WF-DEMO-LIVE-001"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\urielle>
+PS D:\Projects\NCAOS-Urielle\urielle> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $clean
+
+
+requestId      : REQ-000002
+action         : DOWNGRADE
+authority      : reference-only
+integrity      : @{level=Available; score=88}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter; rotate credentials if needed.}
+evidenceHandle : EVD-1779552419794-5194514C
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\urielle> $threat = @{
+>>   sourceId="external-attacker-2026"; inputHash="sha256-injected"
+>>   inputFlags=@("INJECTION_PATTERN","SIGNATURE_INVALID")
+>>   claimedPremises=@("AUTH","SCOPE","ADMIN"); validatedPremises=@("AUTH")
+>>   contractVersion="1.0"; requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="reference-only"; overrideAttempted=$false
+>>   workflowId="WF-DEMO-LIVE-001"
+>> } | ConvertTo-Json
+PS D:\Projects\NCAOS-Urielle\urielle>
+PS D:\Projects\NCAOS-Urielle\urielle> $result = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $threat
+PS D:\Projects\NCAOS-Urielle\urielle> $handle = $result.evidenceHandle
+PS D:\Projects\NCAOS-Urielle\urielle>
+PS D:\Projects\NCAOS-Urielle\urielle> $result = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $threat
+PS D:\Projects\NCAOS-Urielle\urielle> $handle = $result.evidenceHandle
+PS D:\Projects\NCAOS-Urielle\urielle>
+PS D:\Projects\NCAOS-Urielle\urielle> $result | Format-List
+
+
+requestId      : REQ-000004
+action         : BLOCK
+authority      : invalid
+integrity      : @{level=Critical; score=29}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter; rotate credentials if needed.}
+evidenceHandle : EVD-1779552503543-9924888A
+processingMs   : 0
+
+
+
+PS D:\Projects\NCAOS-Urielle\urielle> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001/summary" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+
+sequenceId         : WF-DEMO-LIVE-001
+partnerId          : DEMO_ENT_2026
+eventCount         : 3
+firstDetectedAt    : 2026-05-23T16:06:59.795Z
+lastDetectedAt     : 2026-05-23T16:08:23.543Z
+layers             : {gate}
+severities         : {low, high, high}
+actions            : {DOWNGRADE, BLOCK, BLOCK}
+escalationDetected : True
+consistencyScore   : 94
+patternType        : CONTAINED

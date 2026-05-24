@@ -1,0 +1,184 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\conve> d:
+PS D:\> cd Projects
+PS D:\Projects> cd NCAOS-Urielle
+PS D:\Projects\NCAOS-Urielle> cd urielle
+PS D:\Projects\NCAOS-Urielle\urielle> $handle = "EVD-1779552503543-9924888A"
+PS D:\Projects\NCAOS-Urielle\urielle>
+PS D:\Projects\NCAOS-Urielle\urielle> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} |
+>>   ConvertTo-Json -Depth 10 |
+>>   Out-File ".\tier3-audit-finding.json"
+PS D:\Projects\NCAOS-Urielle\urielle> $seq = Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+PS D:\Projects\NCAOS-Urielle\urielle>
+PS D:\Projects\NCAOS-Urielle\urielle> $seq | ConvertTo-Json -Depth 10
+{
+    "sequenceId":  "WF-DEMO-LIVE-001",
+    "records":  [
+                    {
+                        "evidenceHandle":  "EVD-1779552419794-5194514C",
+                        "partnerId":  "DEMO_ENT_2026",
+                        "event":  {
+                                      "requestId":  "REQ-000002",
+                                      "evidenceHandle":  "EVD-1779552419794-5194514C",
+                                      "workflowId":  "WF-DEMO-LIVE-001",
+                                      "tenant":  {
+                                                     "partnerId":  "GLOBAL_ENT_2026",
+                                                     "instanceId":  "EGS_INST_001",
+                                                     "deployment":  "ENTERPRISE"
+                                                 },
+                                      "type":  "NO_EVENT",
+                                      "layer":  "gate",
+                                      "scope":  "req",
+                                      "severity":  "low",
+                                      "detectionMode":  "Real-time Gate Enforcement",
+                                      "integrity":  {
+                                                        "level":  "Available",
+                                                        "score":  88
+                                                    },
+                                      "authority":  {
+                                                        "authority":  "decision-ready",
+                                                        "score":  84
+                                                    },
+                                      "routing":  {
+                                                      "hint":  "SOC / Security Queue",
+                                                      "recommendedAction":  "Review and validate."
+                                                  },
+                                      "detectedAt":  "2026-05-23T16:06:59.795Z",
+                                      "mttdMs":  1
+                                  },
+                        "verdict":  {
+                                        "requestId":  "REQ-000002",
+                                        "action":  "DOWNGRADE",
+                                        "authority":  "reference-only",
+                                        "integrity":  {
+                                                          "level":  "Available",
+                                                          "score":  88
+                                                      },
+                                        "routing":  {
+                                                        "hint":  "SOC / Security Queue",
+                                                        "recommendedAction":  "Isolate inputs; validate perimeter; rotate credentials if needed."
+                                                    },
+                                        "policyProfileId":  "STRICT-PROD",
+                                        "enforcedAt":  "2026-05-23T16:06:59.795Z",
+                                        "processingMs":  0
+                                    },
+                        "storedAt":  "2026-05-23T16:06:59.795Z",
+                        "sequenceNumber":  1,
+                        "sequenceId":  "WF-DEMO-LIVE-001"
+                    },
+                    {
+                        "evidenceHandle":  "EVD-1779552473839-179F36B0",
+                        "partnerId":  "DEMO_ENT_2026",
+                        "event":  {
+                                      "requestId":  "REQ-000003",
+                                      "evidenceHandle":  "EVD-1779552473839-179F36B0",
+                                      "workflowId":  "WF-DEMO-LIVE-001",
+                                      "tenant":  {
+                                                     "partnerId":  "GLOBAL_ENT_2026",
+                                                     "instanceId":  "EGS_INST_001",
+                                                     "deployment":  "ENTERPRISE"
+                                                 },
+                                      "type":  "EXTERNAL_THREAT_BLOCKED",
+                                      "layer":  "gate",
+                                      "scope":  "sys",
+                                      "severity":  "high",
+                                      "detectionMode":  "Real-time Gate Enforcement",
+                                      "integrity":  {
+                                                        "level":  "Critical",
+                                                        "score":  29
+                                                    },
+                                      "authority":  {
+                                                        "authority":  "invalid",
+                                                        "score":  22
+                                                    },
+                                      "routing":  {
+                                                      "hint":  "SOC / Security Queue",
+                                                      "recommendedAction":  "Isolate inputs; validate perimeter; rotate credentials if needed."
+                                                  },
+                                      "detectedAt":  "2026-05-23T16:07:53.840Z",
+                                      "mttdMs":  1
+                                  },
+                        "verdict":  {
+                                        "requestId":  "REQ-000003",
+                                        "action":  "BLOCK",
+                                        "authority":  "invalid",
+                                        "integrity":  {
+                                                          "level":  "Critical",
+                                                          "score":  29
+                                                      },
+                                        "routing":  {
+                                                        "hint":  "SOC / Security Queue",
+                                                        "recommendedAction":  "Isolate inputs; validate perimeter; rotate credentials if needed."
+                                                    },
+                                        "policyProfileId":  "STRICT-PROD",
+                                        "enforcedAt":  "2026-05-23T16:07:53.840Z",
+                                        "processingMs":  0
+                                    },
+                        "storedAt":  "2026-05-23T16:07:53.840Z",
+                        "sequenceNumber":  2,
+                        "sequenceId":  "WF-DEMO-LIVE-001"
+                    },
+                    {
+                        "evidenceHandle":  "EVD-1779552503543-9924888A",
+                        "partnerId":  "DEMO_ENT_2026",
+                        "event":  {
+                                      "requestId":  "REQ-000004",
+                                      "evidenceHandle":  "EVD-1779552503543-9924888A",
+                                      "workflowId":  "WF-DEMO-LIVE-001",
+                                      "tenant":  {
+                                                     "partnerId":  "GLOBAL_ENT_2026",
+                                                     "instanceId":  "EGS_INST_001",
+                                                     "deployment":  "ENTERPRISE"
+                                                 },
+                                      "type":  "EXTERNAL_THREAT_BLOCKED",
+                                      "layer":  "gate",
+                                      "scope":  "sys",
+                                      "severity":  "high",
+                                      "detectionMode":  "Real-time Gate Enforcement",
+                                      "integrity":  {
+                                                        "level":  "Critical",
+                                                        "score":  29
+                                                    },
+                                      "authority":  {
+                                                        "authority":  "invalid",
+                                                        "score":  22
+                                                    },
+                                      "routing":  {
+                                                      "hint":  "SOC / Security Queue",
+                                                      "recommendedAction":  "Isolate inputs; validate perimeter; rotate credentials if needed."
+                                                  },
+                                      "detectedAt":  "2026-05-23T16:08:23.543Z",
+                                      "mttdMs":  0
+                                  },
+                        "verdict":  {
+                                        "requestId":  "REQ-000004",
+                                        "action":  "BLOCK",
+                                        "authority":  "invalid",
+                                        "integrity":  {
+                                                          "level":  "Critical",
+                                                          "score":  29
+                                                      },
+                                        "routing":  {
+                                                        "hint":  "SOC / Security Queue",
+                                                        "recommendedAction":  "Isolate inputs; validate perimeter; rotate credentials if needed."
+                                                    },
+                                        "policyProfileId":  "STRICT-PROD",
+                                        "enforcedAt":  "2026-05-23T16:08:23.543Z",
+                                        "processingMs":  0
+                                    },
+                        "storedAt":  "2026-05-23T16:08:23.543Z",
+                        "sequenceNumber":  3,
+                        "sequenceId":  "WF-DEMO-LIVE-001"
+                    }
+                ],
+    "count":  3
+}
+PS D:\Projects\NCAOS-Urielle\urielle>

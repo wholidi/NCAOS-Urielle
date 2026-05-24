@@ -1,0 +1,77 @@
+PS D:\Projects\NCAOS-Urielle\urielle> npm test
+
+> @urielle/audit@0.7.0 test
+> vitest run
+
+
+ RUN  v1.6.1 D:/Projects/NCAOS-Urielle/urielle
+
+ ✓ tests/urielle.test.ts (53)
+   ✓ AuditSignal Schema (Phase 05 — ADR-006) (7)
+     ✓ validates a correct core signal
+     ✓ validates a core signal with sequence layer
+     ✓ validates a signal with enrichment layer
+     ✓ rejects invalid schema (bad data)
+     ✓ rejects invalid layer value
+     ✓ rejects invalid action value
+     ✓ all 14 core fields are present in SIGNAL_BLOCK
+   ✓ evidenceLevel (Phase 05 — Toru-William) (4)
+     ✓ returns MODERATE for high-severity BLOCK without sequence
+     ✓ returns STRONG for high-severity BLOCK with escalation in sequence
+     ✓ returns WEAK for low-severity DOWNGRADE
+     ✓ STRONG requires both high severity AND escalationDetected=true
+   ✓ auditFindingSummary (3)
+     ✓ produces a human-readable summary for core-only signal
+     ✓ includes sequence pattern when sequence is present
+     ✓ does not include sequence info when sequence is absent
+   ✓ ISO 42001 control mapping (Phase 06) (4)
+     ✓ gate layer maps to correct ISO controls
+     ✓ authority layer maps to correct ISO controls
+     ✓ all 4 layers have at least 3 controls mapped
+     ✓ control IDs are unique across the map
+   ✓ generateFinding (Phase 03–06) (7)
+     ✓ generates a HIGH finding for BLOCK + high severity
+     ✓ generates a LOW finding for DOWNGRADE + low severity
+     ✓ escalated finding when sequence has escalationDetected
+     ✓ finding includes STRIDE context for each layer
+     ✓ generates CRITICAL finding for FAIL_SAFE action
+     ✓ batch generates findings preserving order
+     ✓ finding ID is unique across calls
+   ✓ sequence-analyzer (Phase 04–05) (7)
+     ✓ CONTAINED pattern → CONTAINED posture
+     ✓ STABLE pattern → HEALTHY posture
+     ✓ VOLATILE pattern → UNSTABLE posture
+     ✓ DEGRADING with escalation → UNDER_PRESSURE
+     ✓ builds a sequence report with correct posture and summary
+     ✓ sequence report includes all ISO controls from findings
+     ✓ tenant posture summary counts CONTAINED correctly
+   ✓ mttd-monitor (Phase 03/06) (6)
+     ✓ evaluates gate mttdMs=1ms as ELEVATED (above 0.03ms p99 baseline, within 50ms SLA)
+     ✓ evaluates gate mttdMs=60ms as SLA_BREACH (SLA=50ms)
+     ✓ SLA values match Phase 06 contract
+     ✓ baseline p99 values are all below 0.1ms (Phase 06 observed)
+     ✓ buildMttdReport: gate mttdMs=1ms from Phase 07 demo shows ELEVATED (regression flag vs 0.03ms baseline)
+     ✓ regression flag fires when mttdMs exceeds baseline by >10%
+   ✓ iso42001-evidence (Phase 06) (3)
+     ✓ builds coverage report from demo signals
+     ✓ evidenced controls have at least one evidence handle
+     ✓ audit readiness READY when coverage ≥ 70%
+   ✓ buildTenantAuditReport (Phase 07) (7)
+     ✓ builds a complete report for DEMO_ENT_2026
+     ✓ posture summary reflects CONTAINED sequence
+     ✓ ISO 42001 report has coverage data
+     ✓ MTTD report reflects actual mttdMs from signals
+     ✓ report includes boundary note (ADR-006 compliance)
+     ✓ classification is Non-Public concept artifact
+     ✓ report is reproducible: same inputs produce consistent structure
+   ✓ Toru-William boundary contract (ADR-006) (5)
+     ✓ Urielle can process D-04 sequence summary without EGS internals
+     ✓ consistencyScore=94 produces STRONG evidence when BLOCK+escalation
+     ✓ AuditSignal schema boundary: no internal EGS fields accepted
+     ✓ schemaVersion 1.0 is present on every parsed signal
+     ✓ ISO control evidence is derived from layer only — no internal access
+
+ Test Files  1 passed (1)
+      Tests  53 passed (53)
+   Start at  23:11:15
+   Duration  1.20s (transform 344ms, setup 0ms, collect 561ms, tests 35ms, environment 0ms, prepare 235ms)

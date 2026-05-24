@@ -1,0 +1,50 @@
+{
+    "evidenceHandle":  "EVD-1779552503543-9924888A",
+    "event":  {
+                  "requestId":  "REQ-000004",
+                  "evidenceHandle":  "EVD-1779552503543-9924888A",
+                  "workflowId":  "WF-DEMO-LIVE-001",
+                  "tenant":  {
+                                 "partnerId":  "GLOBAL_ENT_2026",
+                                 "instanceId":  "EGS_INST_001",
+                                 "deployment":  "ENTERPRISE"
+                             },
+                  "type":  "EXTERNAL_THREAT_BLOCKED",
+                  "layer":  "gate",
+                  "scope":  "sys",
+                  "severity":  "high",
+                  "detectionMode":  "Real-time Gate Enforcement",
+                  "integrity":  {
+                                    "level":  "Critical",
+                                    "score":  29
+                                },
+                  "authority":  {
+                                    "authority":  "invalid",
+                                    "score":  22
+                                },
+                  "routing":  {
+                                  "hint":  "SOC / Security Queue",
+                                  "recommendedAction":  "Isolate inputs; validate perimeter; rotate credentials if needed."
+                              },
+                  "detectedAt":  "2026-05-23T16:08:23.543Z",
+                  "mttdMs":  0
+              },
+    "verdict":  {
+                    "requestId":  "REQ-000004",
+                    "action":  "BLOCK",
+                    "authority":  "invalid",
+                    "integrity":  {
+                                      "level":  "Critical",
+                                      "score":  29
+                                  },
+                    "routing":  {
+                                    "hint":  "SOC / Security Queue",
+                                    "recommendedAction":  "Isolate inputs; validate perimeter; rotate credentials if needed."
+                                },
+                    "policyProfileId":  "STRICT-PROD",
+                    "enforcedAt":  "2026-05-23T16:08:23.543Z",
+                    "processingMs":  0
+                },
+    "storedAt":  "2026-05-23T16:08:23.543Z",
+    "sequenceNumber":  3
+}
