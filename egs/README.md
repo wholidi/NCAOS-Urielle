@@ -1,5 +1,21 @@
 # NCAOS-Urielle
 
+# EGS — External Governance Shell
+
+> Structural decoupling of governance from system intelligence.
+
+## Architecture
+
+📐 Interactive architecture:
+
+[Open NCAOS Architecture](../docs/NCAOS/phase_07/architecture/NCAOS_Phase07_Architecture.html)
+
+📄 PDF version:
+
+[NCAOS Architecture PDF](../docs/NCAOS/phase_07/architecture/NCAOS_Phase07_Architecture.pdf)
+
+---
+
 > **Decoupled Governance Enforcement + Independent Governance Assurance**
 
 NCAOS-Urielle demonstrates an approach to **AI Governance Infrastructure** where governance enforcement and governance assurance remain structurally independent from the protected AI system.
