@@ -1,123 +1,442 @@
-# NCAOS — External Governance Shell (EGS)
+# NCAOS-Urielle
 
-> **Structural decoupling of system governance from system intelligence.**
+> **Decoupled Governance Enforcement + Independent Governance Assurance**
 
-[![CI](https://github.com/wholidi/NCAOS-Urielle/actions/workflows/ci.yml/badge.svg)](https://github.com/wholidi/NCAOS-Urielle/actions)
+NCAOS-Urielle demonstrates an approach to **AI Governance Infrastructure** where governance enforcement and governance assurance remain structurally independent from the protected AI system.
+
+The platform combines:
+
+### NCAOS / EGS
+
+External Governance Shell responsible for:
+
+- Observation
+- Detection
+- Policy Evaluation
+- Containment
+- Enforcement
+
+### Urielle AI
+
+Audit Intelligence Layer responsible for:
+
+- Runtime Verification
+- Governance Evidence
+- Audit Findings
+- ISO 42001 Evidence Mapping
+- MTTD Analysis
+- Audit Reporting
+
+The two systems communicate exclusively through the **ADR-006 AuditSignal Contract**, preserving independence between governance controls and governance verification.
 
 ---
 
-## What This Is
+# Why This Exists
 
-NCAOS implements an **External Governance Shell (EGS)** — a decoupled
-observer-judge-enforce layer that sits at the I/O boundary of an AI or autonomous
-system. It governs outputs without interfering with internal model weights or
-OS kernel logic.
+Most governance solutions focus on:
 
-**Three core capabilities:**
+- Policies
+- Documentation
+- Checklists
+- Offline reviews
 
-| Capability | What it means |
-|---|---|
-| **Boundary Governance** | Observes system outputs at the perimeter without touching internal state |
-| **Visibility** | Translates high-entropy signals into human-readable integrity and authority indicators |
-| **Containment** | Separates "unfiltered" internal state from "governed" external output |
+NCAOS-Urielle explores a different approach:
 
-## Architecture
+> Treat governance as runtime infrastructure.
 
-```
+Instead of asking:
+
+- Was a policy written?
+- Was a control documented?
+
+The system asks:
+
+- Was a governance event detected?
+- Was containment triggered?
+- Was enforcement applied?
+- Was evidence generated?
+- Can the outcome be independently audited?
+
+---
+
+# Architecture
+
+```text
 External Environment
         │
         ▼
+
 ┌─────────────────────────────────────────┐
-│       External Governance Shell (EGS)   │  ← this repo
-│  Observer → Judge → Enforcer → Verdict  │
+│       External Governance Shell (EGS)   │
+│                                         │
+│ Observer → Judge → Enforcer → Verdict   │
+│                                         │
 │  ┌──────┬──────────┬──────────┬───────┐ │
-│  │ Gate │ Premise  │Authority │Contin.│ │  ← 4 detection layers
+│  │ Gate │ Premise  │Authority │Contin.│ │
 │  └──────┴──────────┴──────────┴───────┘ │
+│                                         │
+│ Boundary Governance                     │
+│ Runtime Detection                       │
+│ Policy Enforcement                      │
+│ Containment Decisions                   │
 └─────────────────────────────────────────┘
-        │
-        ▼ (observe-only, no modification)
+                │
+                ▼
+
+         AuditSignal
+            ADR-006
+
+                │
+                ▼
+
 ┌─────────────────────────────────────────┐
-│       Protected Core (Black Box)        │
-│       AI model / OS runtime             │
+│          Urielle AI Assurance Layer     │
+│                                         │
+│ Audit Signal Consumer                   │
+│ Finding Generator                       │
+│ Sequence Analyzer                       │
+│ ISO42001 Evidence Builder               │
+│ MTTD Monitor                            │
+│ Report Builder                          │
+│                                         │
+│ Governance Evidence                     │
+│ Audit Findings                          │
+│ Assurance Reporting                     │
 └─────────────────────────────────────────┘
+                │
+                ▼
+
+         Audit-Ready Outputs
 ```
 
-## Repository Structure
+The protected AI system remains a black box.
 
-```
-ncaos/
-├── core/           # @ncaos/core — Type contracts, scoring, detection, enforcement
-│   ├── src/
-│   │   ├── types/contracts.ts     # Canonical type definitions (Zod schemas)
-│   │   ├── detection/layers.ts    # Four containment layer detection modules
-│   │   ├── engine/verdict.ts      # Enforcer: event → verdict
-│   │   ├── engine/routing.ts      # Triage routing decisions
-│   │   ├── engine/ids.ts          # RequestId, EvidenceHandle generation
-│   │   ├── scoring/integrity.ts   # Integrity, authority, containment metrics
-│   │   └── policy/loader.ts       # PolicyProfile loader + builtin profiles
-│   └── tests/                     # Unit tests (Vitest)
-│
-├── shell/          # @ncaos/shell — Process-isolated observer-judge-enforce loop
-├── api/            # @ncaos/api   — REST + WebSocket server
-├── ui/             # @ncaos/ui    — React Admin Terminal (replaces PoC HTML)
-├── infra/          # Deployment configs (Docker, compose)
-├── docs/adr/       # Architecture Decision Records
-└── .github/        # CI/CD workflows
-```
+Neither EGS nor Urielle require access to:
 
-## Quick Start
-
-```bash
-# Install dependencies
-npm install
-
-# Run all tests
-npm test
-
-# Type-check all workspaces
-npm run typecheck
-
-# Start development (API + UI)
-npm run dev:api   # Terminal 1
-npm run dev:ui    # Terminal 2
-```
-
-## Design Invariants
-
-1. **EGS never modifies internal model weights or OS kernel state.**
-2. **The shell fails SAFE (BLOCK / `invalid` authority) on any internal error.**
-   See [ADR-002](docs/adr/ADR-002-fail-safe-invariant.md).
-3. **No root-cause inference.** The shell reports impact signals only —
-   never claims to know why the protected core produced a given output.
-4. **Evidence trail is structurally independent of the AI's internal logs.**
-5. **Tenant isolation is enforced at every layer** — `PARTNER_ID` scopes all
-   governance state, policy profiles, and event logs.
-
-## Key Types
-
-All shared contracts live in `@ncaos/core`. The four you'll use most:
-
-```typescript
-import type { GovEvent, GovState, PolicyProfile, Verdict } from '@ncaos/core';
-```
-
-See [`core/src/types/contracts.ts`](core/src/types/contracts.ts) for full definitions.
-
-## Builtin Policy Profiles
-
-| Profile ID | Gov Level | Blocks on |
-|---|---|---|
-| `STRICT-PROD` | `ENTERPRISE_STRICT` | med + high severity |
-| `CRITICAL-STRICT` | `CRITICAL_STRICT` | any severity |
-| `PILOT-OBS` | `PILOT` | never (observe only) |
-
-## Architecture Decision Records
-
-- [ADR-001: Type Contracts as Architectural Boundary](docs/adr/ADR-001-type-contracts.md)
-- [ADR-002: Fail-Safe Default-Deny Invariant](docs/adr/ADR-002-fail-safe-invariant.md)
+- Model weights
+- Internal reasoning chains
+- Proprietary inference logic
+- Operating system internals
 
 ---
 
-**Classification:** Non-Public / Concept Demonstration → Enterprise Pilot
-**PoC Reference:** `NCAOS_UI_final.html` + `Proof_of_Concept_final.docx`
-**GitHub:** [wholidi/NCAOS-Urielle](https://github.com/wholidi/NCAOS-Urielle)
+# NCAOS / EGS
+
+## Observer → Judge → Enforcer
+
+EGS implements a process-isolated governance loop:
+
+```text
+Observer
+    │
+    ▼
+Judge
+    │
+    ▼
+Enforcer
+    │
+    ▼
+Verdict
+```
+
+This architecture allows governance decisions to remain independent from the protected system.
+
+---
+
+## Detection Architecture
+
+EGS uses four independent governance detectors:
+
+| Layer | Purpose |
+|---------|---------|
+| Gate | Boundary and containment validation |
+| Premise | Assumption and context validation |
+| Authority | Privilege and authority enforcement |
+| Continuity | Workflow consistency and behavioural stability |
+
+Independent detectors reduce single-point governance failure.
+
+---
+
+## Governance Verdicts
+
+Supported governance actions include:
+
+| Verdict | Meaning |
+|----------|----------|
+| PASS | No governance concern detected |
+| DOWNGRADE | Reduced authority output |
+| BLOCK | Containment triggered |
+| FAIL_SAFE | Default deny behaviour |
+
+---
+
+## Governance API
+
+Representative endpoints:
+
+```text
+/v1/events
+/v1/events/sequence/:id
+/v1/events/sequence/:id/summary
+/v1/audit/:handle
+/v1/mttd
+/v1/state
+/v1/policy
+/v1/health
+```
+
+The API exposes governance signals while preserving internal isolation.
+
+---
+
+## Governance Dashboard
+
+The UI provides:
+
+- Runtime event monitoring
+- Governance state visibility
+- Detection activity
+- Audit signal review
+- Operational analytics
+
+Built using:
+
+- React
+- Vite
+- TypeScript
+
+---
+
+# Urielle AI
+
+## Audit Intelligence Layer
+
+Urielle consumes governance signals generated by EGS through the ADR-006 interface contract.
+
+Urielle does not access:
+
+- Model internals
+- Prompt history
+- Protected state
+- Internal scoring logic
+
+Instead, Urielle evaluates governance evidence emitted at the boundary.
+
+---
+
+## Audit Signal Consumer
+
+Validates and interprets AuditSignal objects.
+
+Capabilities:
+
+- Schema validation
+- Evidence classification
+- Control mapping
+- Signal normalization
+
+---
+
+## Finding Generator
+
+Transforms governance events into structured audit findings.
+
+Produces:
+
+- Audit Findings
+- Severity Assessments
+- Control Status Evaluations
+- STRIDE Context References
+
+---
+
+## Sequence Analyzer
+
+Evaluates behavioural patterns across governance events.
+
+Produces:
+
+```text
+HEALTHY
+UNDER_PRESSURE
+CONTAINED
+UNSTABLE
+```
+
+Governance posture classifications.
+
+---
+
+## ISO 42001 Evidence Builder
+
+Creates structured evidence packages supporting:
+
+- ISO 42001 controls
+- Coverage analysis
+- Audit readiness evaluation
+
+---
+
+## MTTD Monitor
+
+Measures governance effectiveness through:
+
+- Detection latency
+- SLA evaluation
+- Regression monitoring
+- Baseline comparison
+
+---
+
+## Report Builder
+
+Generates complete audit deliverables including:
+
+- Findings
+- Sequence Reports
+- Coverage Reports
+- MTTD Reports
+- Tenant Audit Reports
+
+---
+
+# Architectural Principles
+
+The platform follows several core principles.
+
+### External Governance
+
+Governance remains external to system intelligence.
+
+### Independent Assurance
+
+Governance assurance remains independent from governance enforcement.
+
+### Fail Safe by Default
+
+Containment takes precedence over permissive execution.
+
+### No Root-Cause Speculation
+
+Only observable governance signals are evaluated.
+
+### Independent Evidence
+
+Audit evidence remains separate from protected system logs.
+
+### Tenant Isolation
+
+Governance state is isolated per tenant.
+
+### Detector Independence
+
+Detection layers operate independently to improve resilience.
+
+---
+
+# Repository Structure
+
+```text
+NCAOS-Urielle
+│
+├── egs/
+│   ├── api/
+│   ├── core/
+│   ├── detection/
+│   ├── shell/
+│   ├── ui/
+│   ├── hardening/
+│   ├── audit-signal/
+│   └── docs/
+│
+└── urielle/
+    ├── audit-signal-consumer/
+    ├── finding-generator/
+    ├── sequence-analyzer/
+    ├── iso42001-evidence/
+    ├── mttd-monitor/
+    └── report-builder/
+```
+
+---
+
+# Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run tests:
+
+```bash
+npm test
+```
+
+Type-check all workspaces:
+
+```bash
+npm run typecheck
+```
+
+Start API:
+
+```bash
+npm run dev:api
+```
+
+Start UI:
+
+```bash
+npm run dev:ui
+```
+
+---
+
+# Current Status
+
+Implemented capabilities include:
+
+- External Governance Shell (EGS)
+- Observer → Judge → Enforcer architecture
+- Four independent governance detectors
+- Runtime event monitoring
+- Governance verdict engine
+- Multi-tenant governance support
+- AuditSignal contract (ADR-006)
+- Runtime verification pipeline
+- ISO 42001 evidence generation
+- MTTD monitoring
+- Security hardening framework
+- Audit-ready report generation
+
+---
+
+# Research Areas
+
+- AI Governance Infrastructure
+- Runtime Verification
+- Governance Evidence
+- Governance Telemetry
+- Audit Signal Standards
+- Governance Observability
+- Containment Engineering
+- AI Assurance Engineering
+
+---
+
+# Authors
+
+**Toru Takahashi**  
+NCAOS
+
+**William Hartono**  
+Urielle AI
+
+---
+
+## Concept
+
+**Structural Independence Between Governance Enforcement and Governance Assurance**
