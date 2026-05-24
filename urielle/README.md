@@ -1,6 +1,15 @@
 # Urielle AI
 
 > Audit Intelligence Layer for Runtime Governance
+## Architecture
+
+**Interactive Architecture Diagram**
+
+[Open Urielle Architecture](../docs/Urielle/phase_07/architecture/Urielle_Architecture.html)
+
+[Architecture PDF](../docs/Urielle/phase_07/architecture/Urielle_Architecture.pdf)
+
+---
 
 Urielle AI transforms runtime governance signals into audit-ready evidence, findings, coverage assessments, and assurance reports.
 
