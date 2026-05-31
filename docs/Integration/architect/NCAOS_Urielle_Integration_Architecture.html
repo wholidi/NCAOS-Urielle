@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCAOS/EGS x Urielle AI - Integration Architecture ADR-006</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;700;800&display=swap');
+:root {
+  --bg:#040608;--panel:#080C14;--border:#1A2438;--gold:#F5C542;--green:#00CC78;
+  --amber:#FFB800;--red:#FF4D6A;--purple:#9B6FFF;--teal:#00CEB8;--accent:#00D4FF;
+  --orange:#FF7A30;--text:#E2E8F0;--sub:#6B7FA8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+.header{background:#030508;border-bottom:1px solid #1A2438;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.hbars{display:flex;gap:3px;height:40px;align-items:stretch;margin-right:12px;}
+.hbar-gold{width:4px;background:var(--gold);border-radius:2px;}
+.hbar-teal{width:4px;background:var(--teal);border-radius:2px;}
+.htitle{font-size:17px;font-weight:800;}
+.hsub{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--sub);margin-top:3px;}
+.badges{display:flex;gap:6px;flex-wrap:wrap;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:4px 10px;border-radius:4px;}
+.integration-layout{display:grid;grid-template-columns:200px minmax(300px,1fr) minmax(400px,1.5fr);gap:0;min-height:calc(100vh - 68px);}
+.col-egs{background:#06080E;border-right:2px solid var(--gold);display:flex;flex-direction:column;padding:14px 10px;gap:6px;}
+.col-egs-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--gold);text-align:center;margin-bottom:4px;}
+.col-egs-sub{font-size:7px;color:var(--sub);text-align:center;margin-bottom:8px;}
+.egs-pkg{border-radius:6px;overflow:hidden;cursor:pointer;transition:transform 0.13s;border:1px solid;}
+.egs-pkg:hover{transform:translateX(3px);}
+.egs-pkg-h{padding:5px 8px;font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:700;text-align:center;}
+.egs-pkg-b{padding:3px 8px;font-size:7px;color:var(--sub);display:flex;justify-content:space-between;}
+.egs-api-list{margin-top:8px;border-top:1px solid var(--border);padding-top:8px;}
+.egs-api-title{font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:700;color:var(--teal);margin-bottom:5px;text-align:center;}
+.egs-endpoint{background:#060C10;border:1px solid var(--teal);border-radius:4px;padding:4px 6px;margin-bottom:3px;font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--teal);cursor:pointer;transition:background 0.13s;}
+.egs-endpoint:hover{background:#0A1418;}
+.egs-total{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;text-align:center;padding:5px;border-radius:4px;background:#00CC7820;color:var(--green);margin-top:6px;border:1px solid var(--green);}
+.col-boundary{background:#060C10;border-right:1px solid #1A2438;border-left:2px solid var(--teal);display:flex;flex-direction:column;padding:14px 12px;gap:10px;}
+.boundary-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--teal);text-align:center;}
+.boundary-sub{font-size:7.5px;color:var(--sub);text-align:center;margin-top:2px;margin-bottom:4px;}
+.adr-banner{background:#040C10;border:1px solid var(--teal);border-radius:8px;padding:10px;}
+.adr-banner-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--teal);margin-bottom:8px;text-align:center;}
+.schema-layer{border-radius:5px;padding:7px 9px;margin-bottom:6px;border:1px solid;cursor:pointer;transition:border-color 0.13s;}
+.schema-layer-name{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;margin-bottom:3px;}
+.schema-layer-fields{font-size:7px;color:var(--sub);line-height:1.5;}
+.flow-arrows{display:flex;flex-direction:column;gap:5px;}
+.fa-row{display:flex;align-items:center;gap:6px;padding:5px 7px;background:#060A0C;border-radius:5px;border:1px solid var(--border);}
+.fa-label{font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--sub);flex:1;}
+.fa-arrow{color:var(--teal);font-size:14px;font-weight:700;}
+.fa-from{font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:700;color:var(--gold);}
+.fa-to{font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:700;color:var(--teal);}
+.observed-box{background:#040C10;border:1px solid var(--teal);border-radius:6px;padding:10px;cursor:pointer;}
+.ob-title{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;color:var(--teal);margin-bottom:6px;}
+.ob-row{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid #0D2020;font-size:7.5px;}
+.ob-row:last-child{border-bottom:none;}
+.ob-key{color:var(--sub);}
+.ob-val{font-family:'JetBrains Mono',monospace;font-weight:700;}
+.bb-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px;}
+.bb{font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:700;padding:3px 8px;border-radius:3px;}
+.col-urielle{background:#08080E;display:flex;flex-direction:column;padding:14px 12px;gap:10px;border-left:2px solid var(--teal);}
+.col-urielle-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--teal);text-align:center;}
+.col-urielle-sub{font-size:7px;color:var(--sub);text-align:center;margin-top:2px;}
+.consumer-strip{background:#060C0F;border:1px solid var(--teal);border-radius:8px;padding:10px;}
+.cs-title{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--teal);margin-bottom:6px;}
+.cs-exports{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.cs-export{background:#060E10;border:1px solid var(--teal);border-radius:4px;padding:6px 5px;cursor:pointer;transition:transform 0.13s;text-align:center;}
+.cs-export:hover{transform:translateY(-2px);}
+.cs-export-name{font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:700;color:var(--teal);line-height:1.3;}
+.modules-strip{background:#09090E;border:1px solid #1A2438;border-radius:8px;padding:10px;}
+.ms-title{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.mods-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.mod-card{border-radius:6px;overflow:hidden;cursor:pointer;transition:transform 0.13s;border:1px solid;}
+.mod-card:hover{transform:translateY(-2px);}
+.mod-header{padding:7px 8px;font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:700;text-align:center;}
+.mod-ph{font-family:'JetBrains Mono',monospace;font-size:6px;color:var(--sub);padding:2px 7px;border-bottom:1px solid #1A2438;text-align:center;}
+.mod-body{padding:7px 8px;}
+.mod-item{font-size:7px;color:var(--sub);margin-bottom:3px;line-height:1.4;}
+.mod-item span{font-weight:700;}
+.mod-tests{font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:700;color:var(--green);margin-top:5px;}
+.rb-strip{background:#0A0806;border:1px solid var(--gold);border-radius:8px;padding:10px;cursor:pointer;transition:border-color 0.13s;}
+.rb-strip:hover{border-color:var(--teal);}
+.rb-title{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.rb-steps{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.rb-step{background:#100C04;border:1px solid var(--gold);border-radius:4px;padding:4px 8px;display:flex;align-items:center;gap:5px;}
+.rb-num{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;background:var(--gold);color:#000;padding:1px 5px;border-radius:2px;}
+.rb-fn{font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:700;}
+.rb-out{background:#06100A;border:1px solid var(--green);border-radius:4px;padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;color:var(--green);}
+.bottom-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.br-card{border-radius:7px;padding:10px;border:1px solid;cursor:pointer;transition:transform 0.13s;}
+.br-card:hover{transform:translateY(-2px);}
+.br-title{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;margin-bottom:5px;}
+.br-item{font-size:7.5px;color:var(--sub);padding:2px 0;border-bottom:1px solid #0D0D14;}
+.br-item:last-child{border-bottom:none;}
+.br-item span{font-weight:700;}
+.signing-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.sign-box{border-radius:4px;padding:6px;}
+.sign-box-title{font-family:'JetBrains Mono',monospace;font-size:7.5px;font-weight:700;margin-bottom:4px;}
+.sign-box-item{font-size:7px;color:var(--sub);}
+.legend{display:flex;gap:16px;flex-wrap:wrap;padding:10px 18px;border-top:1px solid var(--border);font-size:8px;color:var(--sub);background:#030508;}
+.leg-item{display:flex;align-items:center;gap:5px;}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.80);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(5px);}
+.modal-overlay.open{display:flex;}
+.modal{background:#0C1020;border:1px solid var(--teal);border-radius:12px;padding:24px;max-width:560px;width:90%;animation:su .18s ease;}
+@keyframes su{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.modal-title{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;margin-bottom:5px;}
+.modal-sub{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--sub);margin-bottom:14px;}
+.modal-body{font-size:11.5px;color:var(--sub);line-height:1.65;}
+.modal-body ul{padding-left:14px;}
+.modal-body li{margin-bottom:5px;}
+.modal-body li span{color:var(--text);}
+.modal-close{float:right;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--sub);cursor:pointer;padding:3px 7px;border:1px solid var(--border);border-radius:3px;margin-bottom:10px;}
+.modal-close:hover{color:var(--red);border-color:var(--red);}
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="display:flex;align-items:center">
+    <div class="hbars"><div class="hbar-gold"></div><div class="hbar-teal"></div></div>
+    <div>
+      <div class="htitle">NCAOS / EGS &nbsp;&times;&nbsp; Urielle AI &mdash; Integration Architecture</div>
+      <div class="hsub">Boundary Governance Shell &times; Audit Intelligence Layer &middot; ADR-006 (Toru-William) &middot; v1.0-rc &times; v0.7.0 &middot; 2026-05-30</div>
+    </div>
+  </div>
+  <div class="badges">
+    <div class="badge" style="background:#F5C54220;color:var(--gold)">EGS v1.0-rc</div>
+    <div class="badge" style="background:#00CEB820;color:var(--teal)">Urielle v0.7.0</div>
+    <div class="badge" style="background:#00CC7820;color:var(--green)">229+54 TESTS</div>
+    <div class="badge" style="background:#00CC7820;color:var(--green)">ALL PASS</div>
+    <div class="badge" style="background:#00CEB820;color:var(--teal)">ADR-006</div>
+    <div class="badge" style="background:#00CEB820;color:var(--teal)">CONTAINED &check;</div>
+  </div>
+</div>
+
+<div class="integration-layout">
+
+<!-- COL A: EGS -->
+<div class="col-egs">
+  <div class="col-egs-title">NCAOS / EGS</div>
+  <div class="col-egs-sub">v1.0-rc &middot; Phases 01&ndash;07 &middot; 229 tests</div>
+  <div class="egs-pkg" style="border-color:var(--green)" onclick="openModal('egs-core')">
+    <div class="egs-pkg-h" style="background:#00CC7820;color:var(--green)">@ncaos/core</div>
+    <div class="egs-pkg-b"><span>Phase 01</span><span style="color:var(--green)">47 tests</span></div>
+  </div>
+  <div class="egs-pkg" style="border-color:var(--amber)" onclick="openModal('egs-shell')">
+    <div class="egs-pkg-h" style="background:#FFB80020;color:var(--amber)">@ncaos/shell</div>
+    <div class="egs-pkg-b"><span>Phase 02</span><span style="color:var(--amber)">15 tests</span></div>
+  </div>
+  <div class="egs-pkg" style="border-color:var(--accent)" onclick="openModal('egs-api')">
+    <div class="egs-pkg-h" style="background:#00D4FF20;color:var(--accent)">@ncaos/api</div>
+    <div class="egs-pkg-b"><span>Ph 02&rarr;04</span><span style="color:var(--accent)">65 tests</span></div>
+  </div>
+  <div class="egs-pkg" style="border-color:var(--purple)" onclick="openModal('egs-detection')">
+    <div class="egs-pkg-h" style="background:#9B6FFF20;color:var(--purple)">@ncaos/detection</div>
+    <div class="egs-pkg-b"><span>Phase 03</span><span style="color:var(--purple)">54 tests</span></div>
+  </div>
+  <div class="egs-pkg" style="border-color:#FF7A30" onclick="openModal('egs-hardening')">
+    <div class="egs-pkg-h" style="background:#FF7A3020;color:#FF7A30">@ncaos/hardening</div>
+    <div class="egs-pkg-b"><span>Phase 06</span><span style="color:#FF7A30">48 tests</span></div>
+  </div>
+  <div class="egs-pkg" style="border-color:var(--sub)">
+    <div class="egs-pkg-h" style="background:#6B7FA820;color:var(--sub)">@ncaos/ui</div>
+    <div class="egs-pkg-b"><span>Phase 05</span><span style="color:var(--sub)">manual</span></div>
+  </div>
+  <div class="egs-pkg" style="border-color:var(--teal)" onclick="openModal('egs-auditsignal')">
+    <div class="egs-pkg-h" style="background:#00CEB820;color:var(--teal)">audit-signal</div>
+    <div class="egs-pkg-b"><span>Phase 05</span><span style="color:var(--teal)">ADR-006</span></div>
+  </div>
+  <div class="egs-api-list">
+    <div class="egs-api-title">API ENDPOINTS FOR URIELLE</div>
+    <div class="egs-endpoint" onclick="openModal('ep-health')">GET /v1/health</div>
+    <div class="egs-endpoint" onclick="openModal('ep-events')">GET /v1/events</div>
+    <div class="egs-endpoint" onclick="openModal('ep-seq')">GET /v1/events/sequence/:id</div>
+    <div class="egs-endpoint" onclick="openModal('ep-summary')">GET /v1/events/sequence/:id/summary</div>
+    <div class="egs-endpoint" onclick="openModal('ep-audit')">GET /v1/audit/:handle</div>
+    <div class="egs-endpoint" onclick="openModal('ep-mttd')">GET /v1/mttd</div>
+    <div class="egs-endpoint">GET /v1/state</div>
+    <div class="egs-endpoint">GET /v1/policy</div>
+  </div>
+  <div class="egs-total">229 TESTS &middot; ALL PASS</div>
+</div>
+
+<!-- COL B: ADR-006 BOUNDARY -->
+<div class="col-boundary">
+  <div class="boundary-title">ADR-006 &mdash; Toru-William Interface Contract</div>
+  <div class="boundary-sub">Boundary ONLY &middot; No EGS internals ever cross this line</div>
+
+  <div class="adr-banner">
+    <div class="adr-banner-title">AuditSignal Schema</div>
+    <div class="schema-layer" style="background:#060E10;border-color:var(--green)" onclick="openModal('schema-core')">
+      <div class="schema-layer-name" style="color:var(--green)">Core (14 fields &mdash; always present)</div>
+      <div class="schema-layer-fields">evidenceHandle &middot; sequenceNumber &middot; layer &middot; severity &middot; action &middot; authority &middot; integrityScore &middot; detectionMode &middot; routingHint &middot; mttdMs &middot; detectedAt &middot; storedAt &middot; policyProfileId &middot; partnerId</div>
+    </div>
+    <div class="schema-layer" style="background:#060C0F;border-color:var(--teal)" onclick="openModal('schema-seq')">
+      <div class="schema-layer-name" style="color:var(--teal)">Sequence (8 fields &mdash; when workflowId provided)</div>
+      <div class="schema-layer-fields">sequenceId &middot; patternType &middot; escalationDetected &middot; consistencyScore &middot; eventCount &middot; firstDetectedAt &middot; actionChain &middot; layersInvolved</div>
+    </div>
+    <div class="schema-layer" style="background:#0C0C08;border-color:var(--amber)" onclick="openModal('schema-enrich')">
+      <div class="schema-layer-name" style="color:var(--amber)">Enrichment (5 fields &mdash; all optional)</div>
+      <div class="schema-layer-fields">identityRef &middot; assetRef &middot; sessionId &middot; serviceComponent &middot; tags</div>
+    </div>
+  </div>
+
+  <div class="flow-arrows">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;color:var(--teal);margin-bottom:2px">DATA FLOWS</div>
+    <div class="fa-row"><span class="fa-from">EGS</span><span class="fa-arrow">&rarr;</span><span class="fa-label">GET /v1/events &middot; /v1/audit/:handle</span><span class="fa-to">Urielle</span></div>
+    <div class="fa-row"><span class="fa-from">EGS</span><span class="fa-arrow">&rarr;</span><span class="fa-label">/v1/events/sequence/:id/summary (D-04)</span><span class="fa-to">derivePosture()</span></div>
+    <div class="fa-row"><span class="fa-from">EGS</span><span class="fa-arrow">&rarr;</span><span class="fa-label">GET /v1/mttd &middot; p50/p95/p99 per layer</span><span class="fa-to">buildMttdReport()</span></div>
+    <div class="fa-row"><span class="fa-from">Urielle</span><span class="fa-arrow">&rarr;</span><span class="fa-label">AuditSignalSchema.parse() validates</span><span class="fa-to">AuditSignal</span></div>
+    <div class="fa-row" style="border-color:var(--red);background:#140808"><span style="font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--red);font-weight:700">NEVER</span><span class="fa-arrow" style="color:var(--red)">&times;</span><span class="fa-label" style="color:var(--sub)">model weights &middot; kernel state &middot; scoring inputs &middot; internal EGS logic</span></div>
+  </div>
+
+  <div class="observed-box" onclick="openModal('live-session')">
+    <div class="ob-title">Live Session &mdash; 2026-05-30 &middot; WF-DEMO-LIVE-001</div>
+    <div class="ob-row"><span class="ob-key">patternType</span><span class="ob-val" style="color:var(--teal)">CONTAINED</span></div>
+    <div class="ob-row"><span class="ob-key">escalationDetected</span><span class="ob-val" style="color:var(--green)">True</span></div>
+    <div class="ob-row"><span class="ob-key">consistencyScore</span><span class="ob-val" style="color:var(--green)">94</span></div>
+    <div class="ob-row"><span class="ob-key">eventCount</span><span class="ob-val" style="color:var(--teal)">2</span></div>
+    <div class="ob-row"><span class="ob-key">layers</span><span class="ob-val" style="color:var(--teal)">{gate}</span></div>
+    <div class="ob-row"><span class="ob-key">evidenceLevel (+seq)</span><span class="ob-val" style="color:var(--green)">STRONG</span></div>
+    <div class="ob-row"><span class="ob-key">auditReadiness</span><span class="ob-val" style="color:var(--green)">READY</span></div>
+    <div class="ob-row"><span class="ob-key">schemaVersion</span><span class="ob-val" style="color:var(--green)">'1.0'</span></div>
+  </div>
+
+  <div style="background:#060A0C;border:1px solid #1A2030;border-radius:7px;padding:10px;cursor:pointer" onclick="openModal('signing')">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;color:var(--sub);margin-bottom:6px;text-align:center">ENTERPRISE SIGNS SEPARATELY</div>
+    <div class="signing-grid">
+      <div class="sign-box" style="background:#0D2A1A;border:1px solid var(--green)">
+        <div class="sign-box-title" style="color:var(--green)">Urielle AI</div>
+        <div class="sign-box-item">AI operations &amp; deployment</div>
+        <div class="sign-box-item">Admin Terminal &amp; dashboards</div>
+        <div class="sign-box-item">Tenant management &amp; support</div>
+        <div class="sign-box-item">Governance operations layer</div>
+      </div>
+      <div class="sign-box" style="background:#0D2540;border:1px solid var(--accent)">
+        <div class="sign-box-title" style="color:var(--accent)">NCAOS Japan</div>
+        <div class="sign-box-item">Boundary Governance Layer</div>
+        <div class="sign-box-item">AuditSignal semantics (ADR-006)</div>
+        <div class="sign-box-item">Governance architecture rights</div>
+        <div class="sign-box-item">Structural independence &amp; audit</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bb-row">
+    <span class="bb" style="background:#00CC7820;color:var(--green)">54 TESTS PASS</span>
+    <span class="bb" style="background:#00CEB820;color:var(--teal)">ADR-006 &check;</span>
+    <span class="bb" style="background:#00CC7820;color:var(--green)">BOUNDARY INTACT</span>
+  </div>
+</div>
+
+<!-- COL C: URIELLE AI -->
+<div class="col-urielle">
+  <div class="col-urielle-title">URIELLE AI &mdash; @urielle/audit</div>
+  <div class="col-urielle-sub">v0.7.0 &middot; 54 tests &middot; Phases 01&ndash;07 aligned &middot; urielle-ai.com</div>
+
+  <div class="consumer-strip">
+    <div class="cs-title">audit-signal-consumer.ts &middot; Phase 05 &middot; ADR-006 boundary interface &middot; 7 tests PASS</div>
+    <div class="cs-exports">
+      <div class="cs-export" onclick="openModal('ex-schema')" style="border-color:var(--teal)"><div class="cs-export-name" style="color:var(--teal)">AuditSignal<br>Schema</div></div>
+      <div class="cs-export" onclick="openModal('ex-level')" style="border-color:var(--green)"><div class="cs-export-name" style="color:var(--green)">evidence<br>Level()</div></div>
+      <div class="cs-export" onclick="openModal('ex-summary')" style="border-color:var(--gold)"><div class="cs-export-name" style="color:var(--gold)">auditFinding<br>Summary()</div></div>
+      <div class="cs-export" onclick="openModal('ex-iso')" style="border-color:var(--teal)"><div class="cs-export-name" style="color:var(--teal)">isoControls<br>ForSignal()</div></div>
+      <div class="cs-export" onclick="openModal('ex-map')" style="border-color:var(--teal)"><div class="cs-export-name" style="color:var(--teal)">ISO42001<br>CONTROL_MAP</div></div>
+    </div>
+  </div>
+
+  <div class="modules-strip">
+    <div class="ms-title">Processing Modules</div>
+    <div class="mods-grid">
+      <div class="mod-card" style="background:#100D04;border-color:var(--gold)" onclick="openModal('mod-finding')">
+        <div class="mod-header" style="background:#F5C54220;color:var(--gold)">finding-generator.ts</div>
+        <div class="mod-ph">Phase 03&ndash;06</div>
+        <div class="mod-body">
+          <div class="mod-item"><span style="color:var(--gold)">generateFinding(signal)</span></div>
+          <div class="mod-item"><span style="color:var(--gold)">generateFindings(signals[])</span></div>
+          <div class="mod-item">FindingSeverity: INFO&rarr;CRITICAL</div>
+          <div class="mod-item">ControlStatus: TRIGGERED/ESCALATED</div>
+          <div class="mod-item">STRIDE context per layer</div>
+          <div class="mod-tests">7 tests PASS</div>
+        </div>
+      </div>
+      <div class="mod-card" style="background:#060C0F;border-color:var(--teal)" onclick="openModal('mod-seq')">
+        <div class="mod-header" style="background:#00CEB820;color:var(--teal)">sequence-analyzer.ts</div>
+        <div class="mod-ph">Phase 04&ndash;05</div>
+        <div class="mod-body">
+          <div class="mod-item"><span style="color:var(--teal)">derivePosture(seq)</span></div>
+          <div class="mod-item"><span style="color:var(--teal)">buildSequenceReport()</span></div>
+          <div class="mod-item"><span style="color:var(--teal)">summarizeTenantPosture()</span></div>
+          <div class="mod-item">CONTAINED confirmed D-04</div>
+          <div class="mod-item">consistencyScore=94 &check;</div>
+          <div class="mod-tests">7 tests PASS</div>
+        </div>
+      </div>
+      <div class="mod-card" style="background:#060A10;border-color:var(--accent)" onclick="openModal('mod-iso')">
+        <div class="mod-header" style="background:#00D4FF20;color:var(--accent)">iso42001-evidence.ts</div>
+        <div class="mod-ph">Phase 06</div>
+        <div class="mod-body">
+          <div class="mod-item"><span style="color:var(--accent)">buildControlEvidencePackage()</span></div>
+          <div class="mod-item"><span style="color:var(--accent)">buildCoverageReport()</span></div>
+          <div class="mod-item">auditReadiness=READY</div>
+          <div class="mod-item">5 EVIDENCED &middot; 4 PARTIAL</div>
+          <div class="mod-item">coveragePercent &ge; 70%</div>
+          <div class="mod-tests">3 tests PASS</div>
+        </div>
+      </div>
+      <div class="mod-card" style="background:#0C060F;border-color:var(--purple)" onclick="openModal('mod-mttd')">
+        <div class="mod-header" style="background:#9B6FFF20;color:var(--purple)">mttd-monitor.ts</div>
+        <div class="mod-ph">Phase 03/06</div>
+        <div class="mod-body">
+          <div class="mod-item"><span style="color:var(--purple)">evaluateMttd(layer, ms)</span></div>
+          <div class="mod-item"><span style="color:var(--purple)">buildMttdReport(signals)</span></div>
+          <div class="mod-item">SLA: gate=50ms</div>
+          <div class="mod-item">1ms&rarr;ELEVATED (no breach)</div>
+          <div class="mod-item">regression flag confirmed</div>
+          <div class="mod-tests">6 tests PASS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rb-strip" onclick="openModal('rb-detail')">
+    <div class="rb-title">report-builder.ts &middot; Phase 07 &middot; buildTenantAuditReport() &middot; 7 tests PASS</div>
+    <div class="rb-steps">
+      <div class="rb-step"><span class="rb-num">1</span><span class="rb-fn" style="color:var(--gold)">generateFindings()</span></div>
+      <div class="rb-step"><span class="rb-num">2</span><span class="rb-fn" style="color:var(--teal)">buildSequenceReport()</span></div>
+      <div class="rb-step"><span class="rb-num">3</span><span class="rb-fn" style="color:var(--teal)">summarizeTenantPosture()</span></div>
+      <div class="rb-step"><span class="rb-num">4</span><span class="rb-fn" style="color:var(--accent)">buildCoverageReport()</span></div>
+      <div class="rb-step"><span class="rb-num">5</span><span class="rb-fn" style="color:var(--purple)">buildMttdReport()</span></div>
+      <div class="rb-out">&rarr; UrielleTenantAuditReport</div>
+    </div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="br-card" style="background:#060C10;border-color:var(--accent)" onclick="openModal('live-evidence')">
+      <div class="br-title" style="color:var(--accent)">Live Evidence &middot; 2026-05-30</div>
+      <div class="br-item"><span style="color:var(--amber)">EVD-178015344...859D1FC2</span> DOWNGRADE</div>
+      <div class="br-item"><span style="color:var(--red)">EVD-captured</span> BLOCK &middot; Critical/29</div>
+      <div class="br-item"><span style="color:var(--gold)">EVD-178015736...6814B024</span> Tier 3 &check;</div>
+      <div class="br-item" style="color:var(--green)">tier3-audit-finding.json &check;</div>
+      <div class="br-item" style="color:var(--green)">sequence-integration.test 1/1 &check;</div>
+    </div>
+    <div class="br-card" style="background:#060C0F;border-color:var(--teal)" onclick="openModal('tw-alignment')">
+      <div class="br-title" style="color:var(--teal)">Toru-William D-04</div>
+      <div class="br-item">patternType <span style="color:var(--teal)">CONTAINED</span></div>
+      <div class="br-item">escalationDetected <span style="color:var(--green)">True</span></div>
+      <div class="br-item">consistencyScore <span style="color:var(--green)">94</span></div>
+      <div class="br-item">evidenceLevel <span style="color:var(--green)">STRONG</span></div>
+      <div class="br-item">ISO controls gate <span style="color:var(--teal)">[6.1.2, 8.4, 9.1]</span></div>
+      <div class="br-item">ADR-006 boundary <span style="color:var(--green)">INTACT &check;</span></div>
+    </div>
+    <div class="br-card" style="background:#08080C;border-color:var(--purple)" onclick="openModal('pilot-tiers')">
+      <div class="br-title" style="color:var(--purple)">Pilot Tier Readiness</div>
+      <div class="br-item"><span style="color:var(--teal)">TIER 1 &mdash; OBSERVE (4w)</span></div>
+      <div class="br-item">evidenceLevel() + buildMttdReport()</div>
+      <div class="br-item"><span style="color:var(--amber)">TIER 2 &mdash; CONTAIN (8w)</span></div>
+      <div class="br-item">generateFindings() &rarr; auditReadiness=READY</div>
+      <div class="br-item"><span style="color:var(--purple)">TIER 3 &mdash; AUDIT (12w)</span></div>
+      <div class="br-item">buildTenantAuditReport() &middot; <span style="color:var(--green)">tier3 &check;</span></div>
+    </div>
+  </div>
+
+  <div style="font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--sub);text-align:center;padding:5px 0;border-top:1px solid var(--border)">
+    54 / 54 tests PASS &middot; 1.14s &middot; 2026-05-30 23:53:34 &middot; 53 unit + 1 integration (sequence-integration.test.ts)
+  </div>
+</div>
+
+</div>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>NCAOS/EGS packages / API</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div>ADR-006 boundary / Toru-William / Urielle</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>PASS / READY / EVIDENCED / STRONG</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--purple)"></div>Pilot Tiers / report-builder</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--accent)"></div>API endpoints / Live evidence</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Boundary violations &mdash; NEVER cross</div>
+  <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--sub)">NCAOS/EGS &times; Urielle AI &middot; Integration Architecture &middot; ADR-006 &middot; Non-Public Concept Demonstration &middot; 2026-05-30</div>
+</div>
+
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModalDirect()">&times; close</span>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const MD = {
+  'egs-core':{t:'@ncaos/core',s:'Phase 01 &middot; 47 tests &middot; Foundation layer',b:'<ul><li><span>detectGate/Premise/Authority/Continuity()</span> &mdash; four detection layer functions</li><li><span>verdictEngine(event, policy)</span> &mdash; PASS/DOWNGRADE/BLOCK/FAIL_SAFE</li><li><span>ADR-002 FAIL_SAFE invariant</span> &mdash; failSafeVerdict() on shell error</li></ul>'},
+  'egs-shell':{t:'@ncaos/shell',s:'Phase 02 &middot; 15 tests &middot; Process isolation',b:'<ul><li><span>ShellLoop</span> &mdash; Observer-Judge-Enforcer loop</li><li><span>Watchdog</span> &mdash; monitors ShellLoop health</li><li><span>workflowId &rarr; sequenceId (F-02/F-03)</span> &mdash; links events to WF-DEMO-LIVE-001</li><li><span>PILOT-OBS / ENTERPRISE_STRICT / CRITICAL_STRICT</span></li></ul>'},
+  'egs-api':{t:'@ncaos/api',s:'Phase 02&rarr;04 &middot; 65 tests &middot; 14 REST+WS routes',b:'<ul><li><span>14 routes</span> including all Urielle-facing endpoints</li><li><span>EventStore</span> &mdash; in-memory tenant-scoped event log (23 tests)</li><li><span>TenantDetectorRegistry</span> &mdash; ADR-005 isolation (8 tests)</li><li><span>WebSocket</span> &mdash; I-01 resolved in Phase 07 production build</li></ul>'},
+  'egs-detection':{t:'@ncaos/detection',s:'Phase 03 &middot; 54 tests &middot; MTTD + 4 detection layers',b:'<ul><li><span>GateDetector</span> &mdash; 10 configurable gate rules</li><li><span>MTTD tracker</span> &mdash; p50/p95/p99 per layer</li><li><span>Phase 06 p99 baselines</span>: gate=0.03ms, premise=0.05ms, authority=0.03ms, continuity=0.05ms</li></ul>'},
+  'egs-hardening':{t:'@ncaos/hardening',s:'Phase 06 &middot; 48 tests &middot; STRIDE + ISO 42001 + Pen Test',b:'<ul><li><span>STRIDE register</span> &mdash; 15 threats, 4 HIGH risks (8 tests)</li><li><span>JWT + RateLimiter</span> &mdash; HS256, RBAC, 100 req/s burst 150 (8 tests)</li><li><span>ISO 42001 mapping</span> &mdash; 14 controls, F-01 applied (19 tests)</li><li><span>MTTD regression</span> &mdash; 1000 iterations all within SLA (5 tests)</li></ul>'},
+  'egs-auditsignal':{t:'audit-signal',s:'Phase 05 &middot; ADR-006 &middot; AuditSignal schema definition',b:'<ul><li><span>Defines the AuditSignal interface</span> &mdash; the ONLY data Urielle may consume</li><li><span>3 layers</span>: Core (14), Sequence (8), Enrichment (5)</li><li><span>Toru-William interface contract</span> &mdash; bilaterally agreed</li><li><span>schemaVersion=&apos;1.0&apos;</span> &mdash; forward-compatibility field</li></ul>'},
+  'ep-health':{t:'GET /v1/health',s:'D-01 Health Baseline &middot; 2026-05-30 15:02:35',b:'<ul><li><span>Observed:</span> status=OK &middot; watchdog=RUNNING &middot; shell=True &middot; policy=STRICT-PROD &middot; slaHealthy=True &middot; activeTenants=1 &middot; totalEvents=0</li><li><span>Urielle use:</span> Pre-flight check before consuming events</li></ul>'},
+  'ep-events':{t:'GET /v1/events',s:'Primary Urielle feed &middot; Chapter 08.01',b:'<ul><li><span>Returns:</span> records[] with evidenceHandle, event, verdict, storedAt, sequenceNumber, sequenceId</li><li><span>Pagination:</span> total, hasMore, nextCursor, limit</li><li><span>Observed 2026-05-30:</span> total=1 &middot; EVD-1780157367727-6814B024</li><li><span>Note:</span> Use $events.records.Count (not $events.Count)</li></ul>'},
+  'ep-seq':{t:'GET /v1/events/sequence/:id',s:'Full sequence chain &middot; Chapter 08.02 + 09',b:'<ul><li><span>Returns:</span> sequenceId, records[], count</li><li><span>sequenceId field</span> present on all records (F-02/F-03 fix)</li><li><span>Urielle use:</span> Feed records into AuditSignalSchema.parse()</li></ul>'},
+  'ep-summary':{t:'GET /v1/events/sequence/:id/summary',s:'Toru-William D-04 interface &middot; 2026-05-30 15:04:09',b:'<ul><li><span>Observed:</span> patternType=CONTAINED &middot; escalationDetected=True &middot; consistencyScore=94 &middot; eventCount=2 &middot; layers={gate} &middot; actions={DOWNGRADE,BLOCK}</li><li><span>Urielle consumes:</span> derivePosture() &rarr; CONTAINED &rarr; buildSequenceReport()</li></ul>'},
+  'ep-audit':{t:'GET /v1/audit/:handle',s:'Forensic evidence retrieval &middot; Chapter 08.03 + 5.4',b:'<ul><li><span>Observed 2026-05-30:</span> EVD-1780157367727-6814B024 &rarr; tier3-audit-finding.json saved</li><li><span>event:</span> type=NO_EVENT &middot; layer=gate &middot; severity=low &middot; mttdMs=0</li><li><span>Tier 3 deliverable:</span> Full EventRecord = formal audit finding</li></ul>'},
+  'ep-mttd':{t:'GET /v1/mttd',s:'MTTD SLA monitoring &middot; Phase 06 contract',b:'<ul><li><span>Phase 06 p99 baselines:</span> gate=0.03ms, premise=0.05ms, authority=0.03ms, continuity=0.05ms</li><li><span>Urielle MTTD_BASELINE_P99_MS</span> mirrors these &mdash; regression flag at &gt;10%</li><li><span>1ms &rarr; ELEVATED</span> &mdash; above baseline, within 50ms SLA</li></ul>'},
+  'schema-core':{t:'AuditSignalCore &mdash; 14 Fields',s:'Always present &middot; ADR-006 minimum viable signal',b:'<ul><li><span>evidenceHandle:</span> EVD-{timestamp}-{hex} &mdash; immutable forensic ID</li><li><span>layer:</span> gate | premise | authority | continuity</li><li><span>action:</span> PASS | DOWNGRADE | BLOCK | FAIL_SAFE</li><li><span>integrityScore:</span> 0&ndash;100 (88=Available, 29=Critical)</li><li><span>mttdMs:</span> 0ms or 1ms observed</li><li><span>schemaVersion:</span> &apos;1.0&apos; (Zod default)</li></ul>'},
+  'schema-seq':{t:'AuditSignalSequence &mdash; 8 Fields',s:'Optional &middot; Toru-William interface',b:'<ul><li><span>patternType:</span> STABLE | DEGRADING | CONTAINED | VOLATILE &mdash; observed: CONTAINED</li><li><span>escalationDetected:</span> true &mdash; DOWNGRADE&rarr;BLOCK rank increase</li><li><span>consistencyScore:</span> 94</li><li><span>eventCount:</span> 2 (2026-05-30) / 3 (2026-05-23)</li><li><span>actionChain:</span> [DOWNGRADE, BLOCK]</li></ul>'},
+  'schema-enrich':{t:'AuditSignalEnrichment &mdash; 5 Fields',s:'All optional &middot; Caller-supplied &middot; Not from EGS internals',b:'<ul><li><span>identityRef, assetRef, sessionId, serviceComponent, tags</span> &mdash; all optional</li><li><span>Design:</span> enrichment from caller, never EGS internals</li><li><span>Zod strips unknown fields</span> &mdash; EGS internals cannot leak</li></ul>'},
+  'live-session':{t:'Live Session &mdash; 2026-05-30',s:'WF-DEMO-LIVE-001 &middot; DEMO_ENT_2026 &middot; Chapter 5',b:'<ul><li><span>5.1:</span> status=OK &middot; slaHealthy=True &middot; 15:02:35</li><li><span>5.2 D-02:</span> REQ-000002 &rarr; DOWNGRADE &middot; EVD-1780153449356-859D1FC2</li><li><span>5.2 D-03:</span> INJECTION_PATTERN + SIGNATURE_INVALID &rarr; BLOCK &middot; handle captured</li><li><span>5.3:</span> CONTAINED &middot; escalation=True &middot; score=94 &middot; eventCount=2</li><li><span>5.3 test:</span> sequence-integration.test.ts 1/1 PASS</li><li><span>5.4:</span> EVD-1780157367727-6814B024 &rarr; tier3-audit-finding.json saved</li><li><span>5.5:</span> tsc clean &middot; tsx tier3-report.ts clean</li></ul>'},
+  'signing':{t:'Enterprise Agreement &mdash; Bilateral Signing',s:'Enterprise signs separately with each party',b:'<ul><li><span>Urielle AI:</span> AI operations &amp; deployment &middot; Admin Terminal &amp; dashboards &middot; Tenant management &middot; Governance operations layer</li><li><span>NCAOS Japan:</span> Boundary Governance Layer &middot; AuditSignal semantics (ADR-006) &middot; Governance architecture rights &middot; Structural independence and audit authority</li></ul>'},
+  'ex-schema':{t:'AuditSignalSchema',s:'Zod validator &middot; Strips unknown fields &middot; ADR-006',b:'<ul><li><span>Validates:</span> core (required) + sequence (optional) + enrichment (optional)</li><li><span>Strips unknown fields:</span> internal EGS state cannot leak through</li><li><span>7 tests:</span> valid core, valid+sequence, valid+enrichment, rejects bad data/layer/action, all 14 fields</li></ul>'},
+  'ex-level':{t:'evidenceLevel(signal)',s:'WEAK / MODERATE / STRONG',b:'<ul><li><span>STRONG:</span> severity=high AND action=BLOCK AND sequence.escalationDetected=true</li><li><span>MODERATE:</span> severity=high OR action=BLOCK</li><li><span>WEAK:</span> low severity / DOWNGRADE/PASS</li></ul>'},
+  'ex-summary':{t:'auditFindingSummary(signal)',s:'Human-readable finding string',b:'<ul><li>Core: "Containment event at gate. Severity: high. Action: BLOCK. mttdMs: 0ms."</li><li>With sequence: Appends "Pattern: CONTAINED. Escalation: true. Score: 94/100."</li></ul>'},
+  'ex-iso':{t:'isoControlsForSignal(signal)',s:'ISO 42001:2023 controls per layer',b:'<ul><li>gate &rarr; [6.1.2, 8.4, 9.1]</li><li>premise &rarr; [6.1.3, 8.3, 9.2]</li><li>authority &rarr; [8.5, 9.3, 10.1]</li><li>continuity &rarr; [8.6, 9.1, 10.2]</li></ul>'},
+  'ex-map':{t:'ISO42001_CONTROL_MAP',s:'Static 4-layer &rarr; control ID map',b:'<ul><li>Used by isoControlsForSignal() and iso42001-evidence.ts</li><li>Derived from Phase 06 iso42001-mapping.ts (14 controls)</li><li>Layer-only derivation &mdash; no EGS internal access needed</li></ul>'},
+  'mod-finding':{t:'finding-generator.ts',s:'Phase 03&ndash;06 &middot; 7 tests',b:'<ul><li><span>FindingSeverity:</span> FAIL_SAFE&rarr;CRITICAL &middot; BLOCK+high&rarr;HIGH &middot; BLOCK&rarr;MEDIUM &middot; DOWNGRADE&rarr;LOW</li><li><span>ControlStatus:</span> escalationDetected&rarr;ESCALATED &middot; BLOCK/DOWNGRADE&rarr;TRIGGERED</li><li><span>STRIDE context:</span> gate=S-001/T-001/D-001 &middot; authority=E-001/T-002</li></ul>'},
+  'mod-seq':{t:'sequence-analyzer.ts',s:'Phase 04&ndash;05 &middot; 7 tests',b:'<ul><li><span>CONTAINED &rarr; CONTAINED posture</span> confirmed WF-DEMO-LIVE-001</li><li><span>Narrative:</span> "Threat escalation detected and contained at the governance boundary."</li><li><span>ISO rollup:</span> de-duplicated union of isoControls from all findings</li></ul>'},
+  'mod-iso':{t:'iso42001-evidence.ts',s:'Phase 06 &middot; 3 tests',b:'<ul><li><span>EVIDENCED:</span> &ge;2 evidence handles &middot; PARTIAL: exactly 1 &middot; NOT_EVIDENCED: 0</li><li><span>coveragePercent:</span> (EVIDENCED + PARTIAL&times;0.5) / total &times; 100</li><li><span>Live session:</span> 5 EVIDENCED + 4 PARTIAL &rarr; &gt;70% &rarr; auditReadiness=READY</li></ul>'},
+  'mod-mttd':{t:'mttd-monitor.ts',s:'Phase 03/06 &middot; 6 tests',b:'<ul><li><span>ELEVATED:</span> mttdMs &gt; baseline&times;1.10 BUT &le; SLA &mdash; flag, not breach</li><li><span>1ms &rarr; ELEVATED:</span> 1ms &gt; 0.033ms &rarr; regressionFlag=true. No SLA breach (SLA=50ms).</li><li>Per ADR-008: ELEVATED = investigate before v1.0 GA</li></ul>'},
+  'rb-detail':{t:'buildTenantAuditReport()',s:'Phase 07 &middot; 7 tests &middot; Pilot Tier 2/3 deliverable',b:'<ul><li>1: generateFindings() &rarr; AuditFinding[]</li><li>2: buildSequenceReport() &rarr; SequenceAuditReport</li><li>3: summarizeTenantPosture() &rarr; TenantPostureSummary</li><li>4: buildCoverageReport() &rarr; ISO42001CoverageReport</li><li>5: buildMttdReport() &rarr; MttdAuditReport</li><li><span>boundaryNote:</span> "No internal AI system state accessed. ADR-006."</li></ul>'},
+  'live-evidence':{t:'Live Evidence &mdash; 2026-05-30',s:'DEMO_ENT_2026 &middot; WF-DEMO-LIVE-001',b:'<ul><li><span>EVD-1780153449356-859D1FC2:</span> DOWNGRADE &middot; gate &middot; low &middot; score=88 &middot; findingSeverity=LOW</li><li><span>EVD-captured:</span> BLOCK &middot; gate &middot; high &middot; score=29 &middot; findingSeverity=HIGH</li><li><span>EVD-1780157367727-6814B024:</span> DOWNGRADE &middot; storedAt=2026-05-30T16:09:27.729Z &middot; tier3-audit-finding.json &check;</li><li><span>sequence-integration.test.ts:</span> 1/1 PASS &mdash; validates WF-DEMO-LIVE-001</li></ul>'},
+  'tw-alignment':{t:'Toru-William Alignment &mdash; 2026-05-30',s:'ADR-006 confirmed &middot; vs 2026-05-23 baseline',b:'<ul><li><span>patternType:</span> CONTAINED &larr; MATCH</li><li><span>escalationDetected:</span> True &larr; MATCH</li><li><span>consistencyScore:</span> 94 &larr; MATCH</li><li><span>eventCount:</span> 2 (vs 3 baseline) &larr; NOTE: different session length</li><li><span>evidenceLevel (+sequence):</span> STRONG &larr; MATCH</li><li><span>All 11 Toru-William concepts VERIFIED/DONE</span></li></ul>'},
+  'pilot-tiers':{t:'Pilot Tier Readiness',s:'pilot-proposal.ts &middot; Phase 07 deliverable',b:'<ul><li><span>Tier 1 &mdash; Observe (4w):</span> PILOT-OBS, evidenceLevel() + buildMttdReport()</li><li><span>Tier 2 &mdash; Contain (8w):</span> ENTERPRISE_STRICT, generateFindings() &rarr; buildCoverageReport() &rarr; READY</li><li><span>Tier 3 &mdash; Audit (12w):</span> buildTenantAuditReport() &rarr; formal ISO 42001. tier3-audit-finding.json confirmed 2026-05-30 &check;</li></ul>'},
+};
+function openModal(k){const d=MD[k];if(!d)return;document.getElementById('modal-title').innerHTML=d.t;document.getElementById('modal-sub').innerHTML=d.s;document.getElementById('modal-body').innerHTML=d.b;document.getElementById('modal').classList.add('open');}
+function closeModal(e){if(e.target===document.getElementById('modal'))closeModalDirect();}
+function closeModalDirect(){document.getElementById('modal').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModalDirect();});
+</script>
+</body>
+</html>

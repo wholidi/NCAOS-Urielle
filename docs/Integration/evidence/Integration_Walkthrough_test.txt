@@ -1,0 +1,433 @@
+5.1 Step 1 — Verify EGS Health
+
+# PowerShell — D-01 Health Baseline
+Invoke-RestMethod `
+  -Uri "http://localhost:3000/v1/health" `
+  -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+# Observed 2026-05-23T16:06:12.379Z:
+# status        : OK
+# watchdog      : RUNNING
+# shell         : True
+# policy        : STRICT-PROD
+# slaHealthy    : True
+# activeTenants : 1
+# totalEvents   : 0
+
+Test Result:
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/health" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+status        : OK
+watchdog      : RUNNING
+shell         : True
+policy        : STRICT-PROD
+slaHealthy    : True
+activeTenants : 1
+totalEvents   : 0
+timestamp     : 5/30/2026 3:02:35 PM
+
+5.2 Step 2 — Generate Boundary Events
+# D-02: Clean request — produces DOWNGRADE event
+$clean = @{
+  sourceId="enterprise-svc-001"; inputHash="sha256-clean-abc"
+  inputFlags=@(); claimedPremises=@("AUTH","SCOPE","ENV")
+  validatedPremises=@("AUTH","SCOPE","ENV")
+  requestedAuthority="decision-ready"
+  policyGrantedAuthority="decision-ready"; overrideAttempted=$false
+  workflowId="WF-DEMO-LIVE-001"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+  -Method POST -ContentType "application/json" `
+  -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $clean
+# REQ-000002 → DOWNGRADE · score=88 · EVD-1779552419794-5194514C
+
+PS C:\AI Project\NCAOS-Urielle\egs> $clean = @{
+>>   sourceId="enterprise-svc-001"; inputHash="sha256-clean-abc"
+>>   inputFlags=@(); claimedPremises=@("AUTH","SCOPE","ENV")
+>>   validatedPremises=@("AUTH","SCOPE","ENV")
+>>   requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="decision-ready"; overrideAttempted=$false
+>>   workflowId="WF-DEMO-LIVE-001"
+>> } | ConvertTo-Json
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $clean
+
+requestId      : REQ-000002
+action         : DOWNGRADE
+authority      : reference-only
+integrity      : @{level=Available; score=88}
+routing        : @{hint=SOC / Security Queue; recommendedAction=Isolate inputs; validate perimeter;
+                 rotate credentials if needed.}
+evidenceHandle : EVD-1780153449356-859D1FC2
+processingMs   : 0
+
+# D-03: Threat request — produces BLOCK event
+$threat = @{
+  sourceId="external-attacker-2026"; inputHash="sha256-injected"
+  inputFlags=@("INJECTION_PATTERN","SIGNATURE_INVALID")
+  claimedPremises=@("AUTH","SCOPE","ADMIN"); validatedPremises=@("AUTH")
+  requestedAuthority="decision-ready"
+  policyGrantedAuthority="reference-only"; overrideAttempted=$false
+  workflowId="WF-DEMO-LIVE-001"
+} | ConvertTo-Json
+
+$result = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+  -Method POST -ContentType "application/json" `
+  -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $threat
+$handle = $result.evidenceHandle
+# REQ-000003 → BLOCK · score=29 · Critical · EVD-1779552473839-179F36B0
+
+PS C:\AI Project\NCAOS-Urielle\egs> $threat = @{
+>>   sourceId="external-attacker-2026"; inputHash="sha256-injected"
+>>   inputFlags=@("INJECTION_PATTERN","SIGNATURE_INVALID")
+>>   claimedPremises=@("AUTH","SCOPE","ADMIN"); validatedPremises=@("AUTH")
+>>   requestedAuthority="decision-ready"
+>>   policyGrantedAuthority="reference-only"; overrideAttempted=$false
+>>   workflowId="WF-DEMO-LIVE-001"
+>> } | ConvertTo-Json
+PS C:\AI Project\NCAOS-Urielle\egs> $result = Invoke-RestMethod -Uri http://localhost:3000/v1/process `
+>>   -Method POST -ContentType "application/json" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} -Body $threat
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = $result.evidenceHandle
+
+5.3 Step 3 — Retrieve Sequence Summary (Toru-William D-04)
+Invoke-RestMethod `
+  -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001/summary" `
+  -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+
+# Observed 2026-05-23:
+# sequenceId         : WF-DEMO-LIVE-001
+# patternType        : CONTAINED
+# escalationDetected : True
+# consistencyScore   : 94
+# eventCount         : 3
+# layers             : {gate}
+# actions            : {DOWNGRADE, BLOCK, BLOCK}
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events/sequence/WF-DEMO-LIVE-001/summary" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"}
+sequenceId         : WF-DEMO-LIVE-001
+partnerId          : DEMO_ENT_2026
+eventCount         : 2
+firstDetectedAt    : 5/30/2026 3:04:09 PM
+lastDetectedAt     : 5/30/2026 3:05:25 PM
+layers             : {gate}
+severities         : {low, high}
+actions            : {DOWNGRADE, BLOCK}
+escalationDetected : True
+consistencyScore   : 94
+patternType        : CONTAINED
+
+// TypeScript — Urielle sequence processing
+import { AuditSignalSchema, evidenceLevel } from "@urielle/audit";
+import { derivePosture, buildSequenceReport } from "@urielle/audit";
+
+// 1. Validate signals from GET /v1/events/sequence/WF-DEMO-LIVE-001
+const signals = rawRecords.map(r => AuditSignalSchema.parse({
+  evidenceHandle:  r.evidenceHandle,
+  sequenceNumber:  r.sequenceNumber,
+  layer:           r.event.layer,
+  severity:        r.event.severity,
+  action:          r.verdict.action,
+  authority:       r.verdict.authority,
+  integrityScore:  r.event.integrity.score,
+  detectionMode:   r.event.detectionMode,
+  routingHint:     r.event.routing.hint,
+  mttdMs:          r.event.mttdMs,
+  detectedAt:      r.event.detectedAt,
+  storedAt:        r.storedAt,
+  policyProfileId: r.verdict.policyProfileId,
+  partnerId:       r.partnerId,
+  sequence: {      // from /v1/events/sequence/:id/summary
+    sequenceId:         "WF-DEMO-LIVE-001",
+    patternType:        "CONTAINED",
+    escalationDetected: true,
+    consistencyScore:   94,
+    eventCount:         3,
+    actionChain:        ["DOWNGRADE", "BLOCK", "BLOCK"],
+    layersInvolved:     ["gate"],
+    firstDetectedAt:    "2026-05-23T16:06:59.795Z",
+  }
+}));
+
+// 2. Derive posture from sequence summary
+const posture = derivePosture(summary);  // → "CONTAINED"
+
+// 3. evidenceLevel for the BLOCK signal with sequence
+const level = evidenceLevel(signals[1]); // → "STRONG"
+
+PS C:\AI Project\NCAOS-Urielle> cd egs
+PS C:\AI Project\NCAOS-Urielle\egs> npm.cmd run dev:api
+
+> ncaos@0.1.0 dev:api
+> npm run dev --workspace=api
+
+
+> @ncaos/api@0.2.0 dev
+> node --watch --env-file=.env dist/server.js
+
+[ShellLoop] Started — policy: STRICT-PROD
+[Watchdog] Shell started
+{"level":30,"time":1780155700561,"pid":14228,"hostname":"SGWLWH000683","msg":"Server listening at http://0.0.0.0:3000"}
+[API] EGS API running on http://0.0.0.0:3000
+
+
+PS C:\AI Project\NCAOS-Urielle\urielle> npm.cmd install
+
+added 79 packages, and audited 80 packages in 6s
+
+25 packages are looking for funding
+  run `npm fund` for details
+
+4 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+PS C:\AI Project\NCAOS-Urielle\urielle> npm.cmd test
+
+> @urielle/audit@0.7.0 test
+> vitest run
+
+
+ RUN  v1.6.1 C:/AI Project/NCAOS-Urielle/urielle
+
+ ✓ tests/sequence-integration.test.ts (1)
+ ✓ tests/urielle.test.ts (53)
+
+ Test Files  2 passed (2)
+      Tests  54 passed (54)
+   Start at  23:53:34
+   Duration  1.14s (transform 310ms, setup 0ms, collect 783ms, tests 41ms, environment 0ms, prepare 566ms)
+
+PS C:\AI Project\NCAOS-Urielle\urielle> dir tests
+
+    Directory: C:\AI Project\NCAOS-Urielle\urielle\tests
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a---           5/30/2026 11:43 PM           1285 sequence-integration.test.ts
+-a---           5/30/2026  9:41 PM          26403 urielle.test.ts
+
+PS C:\AI Project\NCAOS-Urielle\urielle> npx.cmd vitest run tests/sequence-integration.test.ts
+
+ RUN  v1.6.1 C:/AI Project/NCAOS-Urielle/urielle
+
+ ✓ tests/sequence-integration.test.ts (1)
+   ✓ NCAOS Sequence Integration (1)
+     ✓ validates WF-DEMO-LIVE-001 sequence
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  23:54:02
+   Duration  1.03s (transform 198ms, setup 0ms, collect 371ms, tests 4ms, environment 0ms, prepare 296ms)
+
+5.4 Step 4 — Retrieve Evidence Record (Tier 3 Audit)
+
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Method Post `
+>>   -Uri "http://localhost:3000/v1/process" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} `
+>>   -ContentType "application/json" `
+>>   -Body '{
+>>     "sourceId": "SRC-DEMO-LIVE-001",
+>>     "inputHash": "HASH-DEMO-EXTERNAL-THREAT-001",
+>>     "sequenceId": "WF-DEMO-LIVE-001",
+>>     "input": "external threat blocked",
+>>     "layer": "gate",
+>>     "severity": "high"
+>>   }' |
+>>   ConvertTo-Json -Depth 10
+{
+  "requestId": "REQ-000002",
+  "action": "DOWNGRADE",
+  "authority": "reference-only",
+  "integrity": {
+    "level": "Available",
+    "score": 88
+  },
+  "routing": {
+    "hint": "SOC / Security Queue",
+    "recommendedAction": "Isolate inputs; validate perimeter; rotate credentials if needed."
+  },
+  "evidenceHandle": "EVD-1780157367727-6814B024",
+  "processingMs": 0
+}
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/events" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} |
+>>   ConvertTo-Json -Depth 10
+{
+  "records": [
+    {
+      "evidenceHandle": "EVD-1780157367727-6814B024",
+      "partnerId": "DEMO_ENT_2026",
+      "event": {
+        "requestId": "REQ-000002",
+        "evidenceHandle": "EVD-1780157367727-6814B024",
+        "tenant": {
+          "partnerId": "GLOBAL_ENT_2026",
+          "instanceId": "EGS_INST_001",
+          "deployment": "ENTERPRISE"
+        },
+        "type": "NO_EVENT",
+        "layer": "gate",
+        "scope": "req",
+        "severity": "low",
+        "detectionMode": "Real-time Gate Enforcement",
+        "integrity": {
+          "level": "Available",
+          "score": 88
+        },
+        "authority": {
+          "authority": "decision-ready",
+          "score": 84
+        },
+        "routing": {
+          "hint": "SOC / Security Queue",
+          "recommendedAction": "Review and validate."
+        },
+        "detectedAt": "2026-05-30T16:09:27.728Z",
+        "mttdMs": 0
+      },
+      "verdict": {
+        "requestId": "REQ-000002",
+        "action": "DOWNGRADE",
+        "authority": "reference-only",
+        "integrity": {
+          "level": "Available",
+          "score": 88
+        },
+        "routing": {
+          "hint": "SOC / Security Queue",
+          "recommendedAction": "Isolate inputs; validate perimeter; rotate credentials if needed."
+        },
+        "policyProfileId": "STRICT-PROD",
+        "enforcedAt": "2026-05-30T16:09:27.728Z",
+        "processingMs": 0
+      },
+      "storedAt": "2026-05-30T16:09:27.729Z",
+      "sequenceNumber": 1
+    }
+  ],
+  "pagination": {
+    "total": 1,
+    "hasMore": false,
+    "nextCursor": null,
+    "limit": 20
+  }
+}
+
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = "EVD-1780157367727-6814B024"
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} |
+>>   ConvertTo-Json -Depth 10 |
+>>   Out-File ".\tier3-audit-finding.json"
+PS C:\AI Project\NCAOS-Urielle\egs>
+
+5.5 Step 5 — Build Full Urielle Tenant Report
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = "EVD-1780157367727-6814B024"
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} |
+>>   ConvertTo-Json -Depth 10
+{
+  "evidenceHandle": "EVD-1780157367727-6814B024",
+  "event": {
+    "requestId": "REQ-000002",
+    "evidenceHandle": "EVD-1780157367727-6814B024",
+    "tenant": {
+      "partnerId": "GLOBAL_ENT_2026",
+      "instanceId": "EGS_INST_001",
+      "deployment": "ENTERPRISE"
+    },
+    "type": "NO_EVENT",
+    "layer": "gate",
+    "scope": "req",
+    "severity": "low",
+    "detectionMode": "Real-time Gate Enforcement",
+    "integrity": {
+      "level": "Available",
+      "score": 88
+    },
+    "authority": {
+      "authority": "decision-ready",
+      "score": 84
+    },
+    "routing": {
+      "hint": "SOC / Security Queue",
+      "recommendedAction": "Review and validate."
+    },
+    "detectedAt": "2026-05-30T16:09:27.728Z",
+    "mttdMs": 0
+  },
+  "verdict": {
+    "requestId": "REQ-000002",
+    "action": "DOWNGRADE",
+    "authority": "reference-only",
+    "integrity": {
+      "level": "Available",
+      "score": 88
+    },
+    "routing": {
+      "hint": "SOC / Security Queue",
+      "recommendedAction": "Isolate inputs; validate perimeter; rotate credentials if needed."
+    },
+    "policyProfileId": "STRICT-PROD",
+    "enforcedAt": "2026-05-30T16:09:27.728Z",
+    "processingMs": 0
+  },
+  "storedAt": "2026-05-30T16:09:27.729Z",
+  "sequenceNumber": 1
+}
+
+PS C:\AI Project\NCAOS-Urielle\egs> $handle = "EVD-1780157367727-6814B024"
+PS C:\AI Project\NCAOS-Urielle\egs>
+PS C:\AI Project\NCAOS-Urielle\egs> Invoke-RestMethod `
+>>   -Uri "http://localhost:3000/v1/audit/$handle" `
+>>   -Headers @{"X-Partner-ID"="DEMO_ENT_2026"} |
+>>   ConvertTo-Json -Depth 10 |
+>>   Out-File ".\tier3-audit-finding.json"
+PS C:\AI Project\NCAOS-Urielle\egs> cd..
+PS C:\AI Project\NCAOS-Urielle> cd urielle
+PS C:\AI Project\NCAOS-Urielle\urielle> npm.cmd install
+
+up to date, audited 80 packages in 2s
+
+25 packages are looking for funding
+  run `npm fund` for details
+
+4 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+PS C:\AI Project\NCAOS-Urielle\urielle> npm.cmd run build
+
+> @urielle/audit@0.7.0 build
+> tsc
+
+PS C:\AI Project\NCAOS-Urielle\urielle> npm.cmd install -D tsx
+
+added 3 packages, and audited 83 packages in 4s
+
+25 packages are looking for funding
+  run `npm fund` for details
+
+4 moderate severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+PS C:\AI Project\NCAOS-Urielle\urielle> npx.cmd tsx tests/tier3-report.ts
+PS C:\AI Project\NCAOS-Urielle\urielle>
+
